@@ -1,0 +1,27 @@
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/setup-go@v3
+        with:
+          go-version: "1.19"
+
+      - name: checkout
+        uses: actions/checkout@v3
+
+      - name: install dependencies
+        run: make deps
+
+      - name: auto generate code
+        run: make generate
+
+      - name: check source code for changes
+        run: git diff --exit-code
+
+      - name: run tests
+        run: make test
