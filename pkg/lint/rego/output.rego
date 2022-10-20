@@ -17,7 +17,7 @@ package kurl.installer
 # selected a container runtime. a container runtime is necessary to run the kube
 # distribution.
 lint[output] {
-	input.spec.kubernetes.version
+	installer.spec.kubernetes.version
 	count(container_runtimes) == 0
 	output :=  {
 		"type": "misconfiguration",
@@ -40,9 +40,9 @@ lint[output] {
 # generates an error if kubernetes is the selected distribution but no cni plugin has
 # been selected by the user.
 lint[output] {
-	input.spec.kubernetes.version
-	not input.spec.weave.version
-	not input.spec.antrea.version
+	installer.spec.kubernetes.version
+	not installer.spec.weave.version
+	not installer.spec.antrea.version
 	output :=  {
 		"type": "misconfiguration",
 		"message": "No CNI plugin (Weave or Antrea) selected",
@@ -74,7 +74,8 @@ lint[output] {
 # runtime. the only thing verified here is that we are not trying to run kubernetes 1.24+
 # with the "docker" container runtime as they are incompatible.
 lint[output] {
-	not valid_runtime_for_kubernetes
+	is_addon_version_greater_than_or_equal("kubernetes", "1.24.0")
+	installer.spec.docker.version
 	output := {
 		"type": "incompatibility",
 		"message": "Kubernetes 1.24+ does not support Docker runtime, Containerd is recommended",
@@ -84,10 +85,20 @@ lint[output] {
 
 # verifies if the kubernetes service cidr override provided by the user is valid.
 lint[output] {
-	not valid_kubernetes_service_cidr_range_override
+	not valid_kubernetes_service_cidr_override
 	output := {
 		"type": "misconfiguration",
 		"message": "Invalid Kubernetes services CIDR",
+		"field": "spec.kubernetes.serviceCIDR"
+	}
+}
+
+# verifies if the kubernetes service cidr range override provided by the user is valid.
+lint[output] {
+	not valid_kubernetes_service_cidr_range_override
+	output := {
+		"type": "misconfiguration",
+		"message": "Invalid Kubernetes services CIDR range",
 		"field": "spec.kubernetes.serviceCidrRange"
 	}
 }
@@ -97,25 +108,46 @@ lint[output] {
 	not valid_pod_cidr_range_override("weave")
 	output := {
 		"type": "misconfiguration",
-		"message": "Invalid Weave pod CIDR",
+		"message": "Invalid Weave pod CIDR range",
 		"field": "spec.weave.podCidrRange"
+	}
+}
+
+# verifies if the weave pod cidr override provided by the user is valid.
+lint[output] {
+	installer.spec.weave.podCIDR
+	not valid_ipv4_cidr(installer.spec.weave.podCIDR)
+	output := {
+		"type": "misconfiguration",
+		"message": "Invalid Weave pod CIDR",
+		"field": "spec.weave.podCIDR"
+	}
+}
+
+# verifies if the antrea pod cidr range override provided by the user is valid.
+lint[output] {
+	not valid_pod_cidr_range_override("antrea")
+	output := {
+		"type": "misconfiguration",
+		"message": "Invalid Antrea pod CIDR range",
+		"field": "spec.antrea.podCidrRange"
 	}
 }
 
 # verifies if the antrea pod cidr override provided by the user is valid.
 lint[output] {
-	not valid_pod_cidr_range_override("antrea")
+	not valid_antrea_pod_cidr_override
 	output := {
 		"type": "misconfiguration",
 		"message": "Invalid Antrea pod CIDR",
-		"field": "spec.antrea.podCidrRange"
+		"field": "spec.antrea.podCIDR"
 	}
 }
 
 # returns an error if the config has weave and antrea selected at the same time.
 lint[output] {
-	input.spec.weave.version
-	input.spec.antrea.version
+	installer.spec.weave.version
+	installer.spec.antrea.version
 	output := {
 		"type": "misconfiguration",
 		"message": "Multiple CNI plugins selected, choose or Weave or Antrea",
@@ -153,7 +185,7 @@ lint[output] {
 	not valid_add_on_version(name)
 	output := {
 		"type": "unknown-addon",
-		"message": sprintf("Unknown %v add-on version %v", [name, input.spec[name].version]),
+		"message": sprintf("Unknown %v add-on version %v", [name, installer.spec[name].version]),
 		"field": sprintf("spec.%v.version", [name])
 	}
 }
@@ -194,13 +226,11 @@ lint[output] {
 # reports an error if openebs >= 2.12.9 and cstor is enabled. this configuration is not
 # supported by kurl.
 lint[output] {
-	input.spec.openebs.isCstorEnabled
+	installer.spec.openebs.isCstorEnabled
 	is_addon_version_greater_than_or_equal("openebs", "2.12.9")
-	version := input.spec.openebs.version
-	message := sprintf("OpenEBS version %v does not support cStor in kurl", [version])
 	output := {
-		"type": "misconfiguration",
-		"message": message,
+		"type": "incompatibility",
+		"message": "OpenEBS versions >= 2.12.9 dont support cStor in kurl",
 		"field": "spec.openebs.isCstorEnabled"
 	}
 }
@@ -240,7 +270,8 @@ lint[output] {
 
 # reports an error if prometheus service port is of invalid type.
 lint[output] {
-	svc_type := input.spec.prometheus.serviceType
+	svc_type := installer.spec.prometheus.serviceType
+	svc_type != ""
 	svc_type != "NodePort"
 	svc_type != "ClusterIP"
 	msg := sprintf("Prometheus service types are NodePort and ClusterIP, not %v", [svc_type])
@@ -253,7 +284,7 @@ lint[output] {
 
 # prometheus service type is only supported for versions >= 0.48.1
 lint[output] {
-	input.spec.prometheus.serviceType
+	installer.spec.prometheus.serviceType
 	is_addon_version_lower_than("prometheus", "0.48.1")
 	output := {
 		"type": "misconfiguration",
@@ -264,8 +295,8 @@ lint[output] {
 
 # this next rule evaluates if all selected add-ons are supported by k3s.
 lint[output] {
-	input.spec.k3s
-	input.spec[addon]
+	installer.spec.k3s
+	installer.spec[addon]
 	not add_on_compatible_with_k3s(addon)
 	output := {
 		"type": "incompatibility",
@@ -276,8 +307,8 @@ lint[output] {
 
 # this next rule evaluates if all selected add-ons are supported by rke2.
 lint[output] {
-	input.spec.rke2
-	input.spec[addon]
+	installer.spec.rke2
+	installer.spec[addon]
 	not add_on_compatible_with_rke2(addon)
 	output := {
 		"type": "incompatibility",
@@ -287,9 +318,9 @@ lint[output] {
 }
 
 lint[output] {
-	input.spec.k3s.version
-	input.spec.kotsadm.uiBindPort
-	port_out_of_range(input.spec.kotsadm.uiBindPort, 30000, 32767)
+	installer.spec.k3s.version
+	installer.spec.kotsadm.uiBindPort
+	port_out_of_range(installer.spec.kotsadm.uiBindPort, 30000, 32767)
 	output := {
 		"type": "misconfiguration",
 		"message": "NodePorts for K3s must use a NodePort between 30000-32767",
@@ -298,9 +329,9 @@ lint[output] {
 }
 
 lint[output] {
-	input.spec.rke2.version
-	input.spec.kotsadm.uiBindPort
-	port_out_of_range(input.spec.kotsadm.uiBindPort, 30000, 32767)
+	installer.spec.rke2.version
+	installer.spec.kotsadm.uiBindPort
+	port_out_of_range(installer.spec.kotsadm.uiBindPort, 30000, 32767)
 	output := {
 		"type": "misconfiguration",
 		"message": "NodePorts for RKE2 must use a NodePort between 30000-32767",

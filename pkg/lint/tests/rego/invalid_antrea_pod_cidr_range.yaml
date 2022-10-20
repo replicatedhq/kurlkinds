@@ -1,14 +1,14 @@
 installer:
   spec:
     kubernetes:
-      serviceCidrRange: 10.0.10.0/16
+      serviceCidrRange: /16
       version: 1.24.x
-    weave:
+    antrea:
       podCidrRange: a.b.c.d/e
       version: latest
     containerd:
       version: latest
 output:
-  - message: Invalid Weave pod CIDR
-    field: spec.weave.podCidrRange
+  - message: Invalid Antrea pod CIDR range
+    field: spec.antrea.podCidrRange
     type: misconfiguration

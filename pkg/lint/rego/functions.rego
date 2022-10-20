@@ -17,33 +17,33 @@ package kurl.installer
 # or rke2). this is useful if we want to check how many got selected and return an error if more
 # than one has been selected.
 kube_distributions[distro] {
-	input.spec.kubernetes.version
+	installer.spec.kubernetes.version
 	distro := "kubernetes"
 }
 kube_distributions[distro] {
-	input.spec.k3s.version
+	installer.spec.k3s.version
 	distro := "k3s"
 }
 kube_distributions[distro] {
-	input.spec.rke2.version
+	installer.spec.rke2.version
 	distro := "rke2"
 }
 
 # container_runtime gather the selected container runtimes in an array. we use this to evaluate
 # how many of them got selected.
 container_runtimes[runtime] {
-	input.spec.docker.version
+	installer.spec.docker.version
 	runtime := "docker"
 }
 container_runtimes[runtime] {
-	input.spec.containerd.version
+	installer.spec.containerd.version
 	runtime := "containerd"
 }
 
 # evaluates to true if the given addon has its version is lower (older) than or equal to the
 # provided semantic version.
 is_addon_version_lower_than_or_equal(addon, version) {
-	no_latest := replace(input.spec[addon].version, "latest", known_versions[addon].latest)
+	no_latest := replace(installer.spec[addon].version, "latest", known_versions[addon].latest)
 	no_version_x := replace(no_latest, ".x", ".999")
 	semver.compare(no_version_x, version) <= 0
 }
@@ -51,7 +51,7 @@ is_addon_version_lower_than_or_equal(addon, version) {
 # evaluates to true if the given addon has its version is lower (older) than the provided
 # semantic version.
 is_addon_version_lower_than(addon, version) {
-	no_latest := replace(input.spec[addon].version, "latest", known_versions[addon].latest)
+	no_latest := replace(installer.spec[addon].version, "latest", known_versions[addon].latest)
 	no_version_x := replace(no_latest, ".x", ".999")
 	semver.compare(no_version_x, version) < 0
 }
@@ -59,7 +59,7 @@ is_addon_version_lower_than(addon, version) {
 # evaluates to true if the given addon has its version is greater than or equal to the provided
 # semantic version.
 is_addon_version_greater_than_or_equal(addon, version) {
-	no_latest := replace(input.spec[addon].version, "latest", known_versions[addon].latest)
+	no_latest := replace(installer.spec[addon].version, "latest", known_versions[addon].latest)
 	no_version_x := replace(no_latest, ".x", ".999")
 	semver.compare(no_version_x, version) >= 0
 }
@@ -67,7 +67,7 @@ is_addon_version_greater_than_or_equal(addon, version) {
 # evaluates to true if the given addon has its version is greater than to the provided semantic
 # version.
 is_addon_version_greater_than(addon, version) {
-	no_latest := replace(input.spec[addon].version, "latest", known_versions[addon].latest)
+	no_latest := replace(installer.spec[addon].version, "latest", known_versions[addon].latest)
 	no_version_x := replace(no_latest, ".x", ".999")
 	semver.compare(no_version_x, version) > 0
 }
@@ -80,7 +80,7 @@ addon_version_exists(addon, version) {
 	version == "latest"
 }
 addon_version_exists(addon, version) {
-	input.spec[addon].s3Override
+	installer.spec[addon].s3Override
 }
 addon_version_exists(addon, version) {
 	known_versions[addon].versions[_] == version
@@ -91,81 +91,77 @@ addon_version_exists(addon, version) {
 	startswith(known_versions[addon].versions[_], x_version_removed)
 }
 
-# valid_cidr evaluates to true if argument (string) is a valid cidr. XXX I could not find
-# a function to properly validate a CIDR and the approach of getting a list of IPs [1] works
-# but may generate a dos if the address space is too big. Implementing it using regex seems
-# fine. another approach could be done by registering a custom builtin function [2] but that
-# would make the rego files not compatible with oficial parsers, keeping the implementation
-# here in case we resolve to force users to use our own Lint() function (instead of using
-# the .rego files directly).
-#
-# [1]:
-# ips := net.cidr_expand(input.spec.kubernetes.serviceCidrRange)
-# count(ips) >= 256
-#
-# [2]:
-# go code:
-# rego.RegisterBuiltin1(
-#	&rego.Function{
-#		Name: "net.cidr_parse",
-#		Decl: types.NewFunction([]types.Type{types.S}, types.B),
-#	},
-#	func(bctx rego.BuiltinContext, op *ast.Term) (*ast.Term, error) {
-#		cidr, err := builtins.StringOperand(op.Value, 1)
-#		if err != nil {
-#			return ast.BooleanTerm(false), err
-#		}
-#
-#		if _, _, err := net.ParseCIDR(string(cidr)); err != nil {
-#			return ast.BooleanTerm(false), nil
-#		}
-#		return ast.BooleanTerm(true), nil
-#	},
-# )
-# rego code:
-# net.cidr_parse(cidr)
-valid_cidr(cidr) {
-	regex.match(`^\d+\.\d+\.\d+\.\d+\/\d+$`, cidr)
+# valid_ipv4_cidr evaluates to true if cidr is a valid ipv4 network cidr (address + netmask).
+valid_ipv4_cidr(cidr) {
+	# this regex evaluates for valid ipv4 network cidrs. here be dragons. 
+	regex.match(`^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(3[0-2]|[1-2][0-9]|[0-9]))$`, cidr)
+}
+
+# valid_ipv6_cidr evaluates to true if cidr is a valid ipv6 network cidr (address + netmask).
+valid_ipv6_cidr(cidr) {
+	# this regex evaluates for valid ipv6 network cidrs. here be dragons. 
+	regex.match(`^s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4]d|1dd|[1-9]?d)(.(25[0-5]|2[0-4]d|1dd|[1-9]?d)){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4]d|1dd|[1-9]?d)(.(25[0-5]|2[0-4]d|1dd|[1-9]?d)){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]d|1dd|[1-9]?d)(.(25[0-5]|2[0-4]d|1dd|[1-9]?d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]d|1dd|[1-9]?d)(.(25[0-5]|2[0-4]d|1dd|[1-9]?d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]d|1dd|[1-9]?d)(.(25[0-5]|2[0-4]d|1dd|[1-9]?d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]d|1dd|[1-9]?d)(.(25[0-5]|2[0-4]d|1dd|[1-9]?d)){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]d|1dd|[1-9]?d)(.(25[0-5]|2[0-4]d|1dd|[1-9]?d)){3}))|:)))(%.+)?s*(\/(12[0-8]|1[0-1][0-9]|[1-9][0-9]|[0-9]))$`, cidr)
+}
+
+# valid_cidr_range verifies if the provided cidr range is valid. the range may be provided in
+# 2 distinct ways, for example: '/16' or only '16'.
+valid_cidr_range(range) {
+	regex.match(`^\/\d+$`, range)
+}
+valid_cidr_range(range) {
+	regex.match(`^\d+$`, range)
 }
 
 # valid_kubernetes_service_cidr_range_override checks if the service cidr range override has
 # been passed on by the user and if it is valid.
 valid_kubernetes_service_cidr_range_override {
-	not input.spec.kubernetes.serviceCidrRange
+	not installer.spec.kubernetes.serviceCidrRange
 }
 valid_kubernetes_service_cidr_range_override {
-	valid_cidr(input.spec.kubernetes.serviceCidrRange)
+	valid_cidr_range(installer.spec.kubernetes.serviceCidrRange)
 }
 
-# valid_pod_cidr_range_override checks id the provided podCidrRange property represents a valid
-# net range.
-valid_pod_cidr_range_override(addon) {
-	not input.spec[addon].podCidrRange
+# valid_kubernetes_service_cidr_override checks if the service cidr range override has been
+# passed on by the user and if it is valid. kubernetes service cidr can be either ipv4 or
+# ipv6. if the property is not set valid_kubernetes_service_cidr_range_override evaluates to
+# true as well.
+valid_kubernetes_service_cidr_override {
+	not installer.spec.kubernetes.serviceCIDR
 }
-valid_pod_cidr_range_override(addon) {
-	valid_cidr(input.spec[addon].podCidrRange)
+valid_kubernetes_service_cidr_override {
+	valid_ipv4_cidr(installer.spec.kubernetes.serviceCIDR)
+}
+valid_kubernetes_service_cidr_override {
+	valid_ipv6_cidr(installer.spec.kubernetes.serviceCIDR)
 }
 
-# valid_runtime_for_kubernetes checks if the selected container runtime is accepted by
-# the kubernetes. if kubernetes version is greater or equal to v1.24 then containerd
-# must be the chosen runtime. this is equivalent to:
-#
-# 	return version < 1.24 || container_runtime == "containerd"
-#
-valid_runtime_for_kubernetes {
-	not is_addon_version_greater_than_or_equal("kubernetes", "1.24.0")
+# valid_pod_cidr_range_override checks if the provided podCidrRange property is valid.
+valid_pod_cidr_range_override(addon) {
+	not installer.spec[addon].podCidrRange
 }
-valid_runtime_for_kubernetes {
-	input.spec.containerd.version
+valid_pod_cidr_range_override(addon) {
+	valid_cidr_range(installer.spec[addon].podCidrRange)
+}
+
+# valid_pod_cidr checks id the provided podCIDR property is valid. antrea pod cidr can be
+# either ipv4 or ipv6.
+valid_antrea_pod_cidr_override() {
+	not installer.spec.antrea.podCIDR
+}
+valid_antrea_pod_cidr_override() {
+	valid_ipv4_cidr(installer.spec.antrea.podCIDR)
+}
+valid_antrea_pod_cidr_override() {
+	valid_ipv6_cidr(installer.spec.antrea.podCIDR)
 }
 
 # valid_addon_version checks if the version for the addon exists (is valid). if the addon
 # has not been selected (there is no version specified for it) then this evaluates to true.
 valid_add_on_version(addon) {
-	not input.spec[addon].version
+	not installer.spec[addon].version
 }
 valid_add_on_version(addon) {
-	addon_version_exists(addon, input.spec[addon].version)
+	addon_version_exists(addon, installer.spec[addon].version)
 }
 
 # add_on_compatible_with_k3s evaluates to true if the provided addon is compatible with
@@ -206,4 +202,3 @@ port_out_of_range(port, floor, ceil) {
 port_out_of_range(port, floor, ceil) {
 	port > ceil
 }
-

@@ -13,15 +13,24 @@
 # limitations under the License.
 package kurl.installer
 
+# installer holds or the installer struct or the yaml unmarshaled value of input.content.
+# allows for callers to pass as input an installer struct or a serialized installer struct.
+installer = content {
+	input.content
+	content := yaml.unmarshal(input.content)
+} else = content {
+	content := input
+}
+
 # api_base_url allows for overriding the place where the kurl api is hosted.
 api_base_url = "https://kurl.sh"
 
 # this rule determines what endpoint we need to reach when fetching add-on versions remotely
-# if there is a pre-determined version in input.spec.kurl.installerVersion we go for add-ons
+# if there is a pre-determined version in installer.spec.kurl.installerVersion we go for add-ons
 # specific to the informed version.
 add_ons_versions_endpoint = url {
-        input.spec.kurl.installerVersion != ""
-        url := sprintf("%v/installer/version/%v", [api_base_url, input.spec.kurl.installerVersion])
+        installer.spec.kurl.installerVersion != ""
+        url := sprintf("%v/installer/version/%v", [api_base_url, installer.spec.kurl.installerVersion])
 } else = url {
         url := sprintf("%v/installer", [api_base_url])
 }

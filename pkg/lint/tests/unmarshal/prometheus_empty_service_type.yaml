@@ -1,0 +1,30 @@
+err: ""
+data: |
+  apiVersion: cluster.kurl.sh/v1beta1
+  kind: Installer
+  metadata:
+    name: 6b7319b
+  spec:
+    kubernetes:
+      version: 1.21.x
+    weave:
+      version: 2.6.x
+    minio:
+      version: 2020-01-25T02-50-51Z
+    contour:
+      version: latest
+      tlsMinimumProtocolVersion: '1.2'
+      httpPort: 9100
+      httpsPort: 9101
+    registry:
+      version: 2.7.x
+    prometheus:
+      version: latest
+      serviceType: ''
+    ekco:
+      version: latest
+    containerd:
+      version: 1.4.x
+    longhorn:
+      version: 1.2.x
+output: []

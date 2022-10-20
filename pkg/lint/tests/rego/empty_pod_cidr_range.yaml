@@ -1,0 +1,19 @@
+installer:
+  spec:
+    kubernetes:
+      version: latest
+    docker:
+      version: latest
+    weave:
+      version: latest
+      podCIDR: 172.18.0.0/16
+      podCidrRange: ''
+    rook:
+      version: latest
+    contour:
+      version: latest
+    registry:
+      version: latest
+    prometheus:
+      version: latest
+output: []
