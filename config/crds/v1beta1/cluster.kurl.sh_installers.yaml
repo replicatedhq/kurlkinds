@@ -148,6 +148,8 @@ spec:
                     type: integer
                   minReadyWorkerNodeCount:
                     type: integer
+                  minioShouldDisableManagement:
+                    type: boolean
                   nodeUnreachableToleration:
                     type: string
                   podImageOverrides:
@@ -193,6 +195,19 @@ spec:
                     type: boolean
                   preserveConfig:
                     type: boolean
+                type: object
+              flannel:
+                properties:
+                  podCIDR:
+                    type: string
+                  podCIDRRange:
+                    type: string
+                  s3Override:
+                    type: string
+                  version:
+                    type: string
+                required:
+                - version
                 type: object
               fluentd:
                 properties:
