@@ -1,0 +1,17 @@
+installer:
+  spec:
+    kubernetes:
+      version: 1.21.8
+    flannel:
+      version: 0.20.0
+      podCIDR: 10.10.10.
+    openebs:
+      version: 2.6.0
+    ekco:
+      version: 0.11.0
+    containerd:
+      version: 1.4.6
+output:
+  - message: Invalid Flannel pod CIDR
+    field: spec.flannel.podCIDR
+    type: misconfiguration

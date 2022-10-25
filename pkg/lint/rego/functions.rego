@@ -40,6 +40,21 @@ container_runtimes[runtime] {
 	runtime := "containerd"
 }
 
+# cni_providers gather the selected cni providers in an array. we use this to evaluate
+# how many of them got selected.
+cni_providers[runtime] {
+	installer.spec.flannel.version
+	runtime := "flannel"
+}
+cni_providers[runtime] {
+	installer.spec.weave.version
+	runtime := "weave"
+}
+cni_providers[runtime] {
+	installer.spec.antrea.version
+	runtime := "antrea"
+}
+
 # evaluates to true if the given addon has its version is lower (older) than or equal to the
 # provided semantic version.
 is_addon_version_lower_than_or_equal(addon, version) {
@@ -136,11 +151,11 @@ valid_kubernetes_service_cidr_override {
 }
 
 # valid_pod_cidr_range_override checks if the provided podCidrRange property is valid.
-valid_pod_cidr_range_override(addon) {
-	not installer.spec[addon].podCidrRange
+valid_pod_cidr_range_override(podCidrRange) {
+	not podCidrRange
 }
-valid_pod_cidr_range_override(addon) {
-	valid_cidr_range(installer.spec[addon].podCidrRange)
+valid_pod_cidr_range_override(podCidrRange) {
+	valid_cidr_range(podCidrRange)
 }
 
 # valid_pod_cidr checks id the provided podCIDR property is valid. antrea pod cidr can be
