@@ -28,6 +28,7 @@ type InstallerSpec struct {
 	K3S             *K3S             `json:"k3s,omitempty" yaml:"k3s,omitempty"`
 	Docker          *Docker          `json:"docker,omitempty" yaml:"docker,omitempty"`
 	Weave           *Weave           `json:"weave,omitempty" yaml:"weave,omitempty"`
+	Flannel         *Flannel         `json:"flannel,omitempty" yaml:"flannel,omitempty"`
 	Antrea          *Antrea          `json:"antrea,omitempty" yaml:"antrea,omitempty"`
 	Calico          *Calico          `json:"calico,omitempty" yaml:"calico,omitempty"`
 	Contour         *Contour         `json:"contour,omitempty" yaml:"contour,omitempty"`
@@ -211,6 +212,13 @@ type Weave struct {
 	NoMasqLocal *bool `json:"noMasqLocal,omitempty" yaml:"noMasqLocal,omitempty"`
 }
 
+type Flannel struct {
+	PodCIDR      string `json:"podCIDR,omitempty" yaml:"podCIDR,omitempty"`
+	PodCIDRRange string `json:"podCIDRRange,omitempty" yaml:"podCIDRRange,omitempty"`
+	S3Override   string `json:"s3Override,omitempty" yaml:"s3Override,omitempty"`
+	Version      string `json:"version" yaml:"version"`
+}
+
 type Antrea struct {
 	IsEncryptionDisabled bool   `json:"isEncryptionDisabled,omitempty" yaml:"isEncryptionDisabled,omitempty"`
 	PodCIDR              string `json:"podCIDR,omitempty" yaml:"podCIDR,omitempty"`
@@ -259,6 +267,7 @@ type Ekco struct {
 	PodImageOverrides                          []string `json:"podImageOverrides,omitempty" yaml:"podImageOverrides,omitempty"`
 	ShouldDisableRestartFailedEnvoyPods        bool     `json:"shouldDisableRestartFailedEnvoyPods,omitempty" yaml:"shouldDisableRestartFailedEnvoyPods,omitempty"`
 	EnvoyPodsNotReadyDuration                  string   `json:"envoyPodsNotReadyDuration,omitempty" yaml:"envoyPodsNotReadyDuration,omitempty"`
+	MinioShouldDisableManagement               bool     `json:"minioShouldDisableManagement,omitempty" yaml:"minioShouldDisableManagement,omitempty"`
 }
 
 type Calico struct {

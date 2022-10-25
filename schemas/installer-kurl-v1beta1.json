@@ -194,6 +194,9 @@
             "minReadyWorkerNodeCount": {
               "type": "integer"
             },
+            "minioShouldDisableManagement": {
+              "type": "boolean"
+            },
             "nodeUnreachableToleration": {
               "type": "string"
             },
@@ -258,6 +261,26 @@
             },
             "preserveConfig": {
               "type": "boolean"
+            }
+          }
+        },
+        "flannel": {
+          "type": "object",
+          "required": [
+            "version"
+          ],
+          "properties": {
+            "podCIDR": {
+              "type": "string"
+            },
+            "podCIDRRange": {
+              "type": "string"
+            },
+            "s3Override": {
+              "type": "string"
+            },
+            "version": {
+              "type": "string"
             }
           }
         },
