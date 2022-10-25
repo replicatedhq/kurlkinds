@@ -371,3 +371,28 @@ lint[output] {
 		"field": "spec.kotsadm.uiBindPort"
 	}
 }
+
+# verifies rook 1.8.x is not compatible with EKCO versions < 0.22.0
+lint[output] {
+	is_addon_version_greater_than_or_equal("rook", "1.8.0")
+	not is_addon_version_greater_than_or_equal("rook", "1.9.0")
+	installer.spec.ekco.version
+	not is_addon_version_greater_than_or_equal("ekco", "0.22.0")
+	output := {
+		"type": "incompatibility",
+		"message": "Rook versions >= 1.8.0 are not compatible with EKCO versions < 0.22.0",
+		"field": "spec.ekco.version"
+	}
+}
+
+# verifies rook 1.9.x is not compatible with EKCO versions < 0.23.0
+lint[output] {
+	is_addon_version_greater_than_or_equal("rook", "1.9.0")
+	installer.spec.ekco.version
+	not is_addon_version_greater_than_or_equal("ekco", "0.23.0")
+	output := {
+		"type": "incompatibility",
+		"message": "Rook versions >= 1.9.0 are not compatible with EKCO versions < 0.23.0",
+		"field": "spec.ekco.version"
+	}
+}
