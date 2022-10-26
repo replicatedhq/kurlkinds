@@ -230,7 +230,7 @@ lint[output] {
 	is_addon_version_greater_than_or_equal("openebs", "2.12.9")
 	output := {
 		"type": "incompatibility",
-		"message": "OpenEBS versions >= 2.12.9 dont support cStor in kurl",
+		"message": "OpenEBS add-on versions >= 2.12.9 do not support cStor",
 		"field": "spec.openebs.isCstorEnabled"
 	}
 }
