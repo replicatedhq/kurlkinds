@@ -223,6 +223,20 @@ lint[output] {
 	}
 }
 
+# make sure we have been able to read add-on versions from the remote host. if the list of
+# add on versions is zeroed then we get the raw body of the request and return it as an error.
+# the body is trucated at 50 chars to avoid returning what can be a huge html file.
+lint[output] {
+	not remote_versions.error.message
+	count(known_versions) == 0
+	body := substring(remote_versions.raw_body, 0, 50)
+	message := sprintf("error reading add-ons, server returned %v: %v", [remote_versions.status, body])
+	output :=  {
+		"type": "preprocess",
+		"message": message,
+	}
+}
+
 # reports an error if openebs >= 2.12.9 and cstor is enabled. this configuration is not
 # supported by kurl.
 lint[output] {

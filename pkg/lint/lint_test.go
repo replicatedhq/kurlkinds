@@ -61,6 +61,47 @@ func TestStaticVersions(t *testing.T) {
 	}
 }
 
+func TestValidateWithWrongAPIEndpointReturn(t *testing.T) {
+	mocksrv := httptest.NewServer(
+		http.HandlerFunc(
+			func(w http.ResponseWriter, r *http.Request) {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte("internal server error"))
+			},
+		),
+	)
+	defer mocksrv.Close()
+
+	u, err := url.Parse(mocksrv.URL)
+	if err != nil {
+		t.Fatalf("unable to parse test url: %s", err)
+	}
+
+	installer := v1beta1.Installer{
+		Spec: v1beta1.InstallerSpec{
+			Kubernetes: &v1beta1.Kubernetes{
+				Version: "latest",
+			},
+			Containerd: &v1beta1.Containerd{
+				Version: "latest",
+			},
+			Weave: &v1beta1.Weave{
+				Version: "latest",
+			},
+		},
+	}
+
+	linter := New(WithAPIBaseURL(u))
+	if _, err = linter.Validate(context.Background(), installer); err == nil {
+		t.Error("expecting error, nil received instead")
+		return
+	}
+
+	if !strings.Contains(err.Error(), "internal server error") {
+		t.Errorf("unexpected error: %s", err)
+	}
+}
+
 func TestValidateWithInvalidURL(t *testing.T) {
 	u, err := url.Parse("https://i.do.not.exist")
 	if err != nil {
