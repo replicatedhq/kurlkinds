@@ -29,12 +29,12 @@ import (
 
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
-	"gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v3"
 
 	"github.com/replicatedhq/kurlkinds/pkg/apis/cluster/v1beta1"
 )
 
-//go:embed regotests
+//go:embed tests
 var staticTests embed.FS
 
 func TestStaticVersions(t *testing.T) {
@@ -96,19 +96,14 @@ func TestValidate(t *testing.T) {
 		Output    []Output          `yaml:"output"`
 	}
 
-	entries, err := staticTests.ReadDir("regotests")
+	entries, err := staticTests.ReadDir("tests/rego")
 	if err != nil {
 		t.Fatalf("unable to read test files: %s", err)
 	}
 
 	var tests []test
 	for _, entry := range entries {
-		// this file is used in our mock kurl api endpoint, just ignore it.
-		if entry.Name() == "versions.json" {
-			continue
-		}
-
-		fpath := path.Join("regotests", entry.Name())
+		fpath := path.Join("tests", "rego", entry.Name())
 		data, err := staticTests.ReadFile(fpath)
 		if err != nil {
 			t.Fatalf("unable to read test file %q: %s", fpath, err)
@@ -123,7 +118,7 @@ func TestValidate(t *testing.T) {
 		tests = append(tests, onetest)
 	}
 
-	apires, err := staticTests.ReadFile("regotests/versions.json")
+	apires, err := staticTests.ReadFile("tests/versions.json")
 	if err != nil {
 		t.Fatalf("unable to read mock webserver result: %s", err)
 	}
@@ -308,5 +303,81 @@ func TestVersions(t *testing.T) {
 		if !found {
 			t.Fatalf("latest version not in the list of versions for %s", name)
 		}
+	}
+}
+
+func TestValidateMarshaledYAML(t *testing.T) {
+	type test struct {
+		Name   string    `yaml:"name"`
+		Err    string    `yaml:"err"`
+		Data   yaml.Node `yaml:"data"`
+		Output []Output  `yaml:"output"`
+	}
+
+	entries, err := staticTests.ReadDir("tests/unmarshal")
+	if err != nil {
+		t.Fatalf("unable to read test files: %s", err)
+	}
+
+	var tests []test
+	for _, entry := range entries {
+		fpath := path.Join("tests", "unmarshal", entry.Name())
+		data, err := staticTests.ReadFile(fpath)
+		if err != nil {
+			t.Fatalf("unable to read test file %q: %s", fpath, err)
+		}
+
+		var onetest test
+		if err := yaml.Unmarshal(data, &onetest); err != nil {
+			t.Fatalf("invalid yaml on file %q: %s", fpath, err)
+		}
+
+		onetest.Name = fpath
+		tests = append(tests, onetest)
+	}
+
+	apires, err := staticTests.ReadFile("tests/versions.json")
+	if err != nil {
+		t.Fatalf("unable to read mock webserver result: %s", err)
+	}
+
+	mocksrv := httptest.NewServer(
+		http.HandlerFunc(
+			func(w http.ResponseWriter, r *http.Request) {
+				w.Header().Set("content-type", "application/json")
+				w.Write(apires)
+			},
+		),
+	)
+	defer mocksrv.Close()
+
+	mockurl, err := url.Parse(mocksrv.URL)
+	if err != nil {
+		t.Fatalf("unable to parse mock server url: %s", err)
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.Name, func(t *testing.T) {
+			linter := New(WithAPIBaseURL(mockurl))
+			result, err := linter.ValidateMarshaledYAML(context.Background(), tt.Data.Value)
+			if err != nil {
+				if len(tt.Err) == 0 {
+					t.Errorf("unexpected error: %s", err)
+				} else if !strings.Contains(err.Error(), tt.Err) {
+					t.Errorf("expecting %q, %q received instead", tt.Err, err)
+				}
+				return
+			}
+
+			if len(tt.Err) > 0 {
+				t.Errorf("expecting error %q, nil received instead", tt.Err)
+			}
+
+			less := func(a, b Output) bool { return a.Message < b.Message }
+			diff := cmp.Diff(result, tt.Output, cmpopts.SortSlices(less))
+			if diff != "" {
+				t.Errorf("unexpected return: %s", diff)
+			}
+		})
 	}
 }

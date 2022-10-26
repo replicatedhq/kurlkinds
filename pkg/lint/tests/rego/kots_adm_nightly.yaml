@@ -1,0 +1,14 @@
+installer:
+  spec:
+    kubernetes:
+      version: latest
+    containerd:
+      version: latest
+    weave:
+      version: latest
+    kotsadm:
+      version: nightly
+output:
+  - message: Unknown kotsadm add-on version nightly
+    field: spec.kotsadm.version
+    type: unknown-addon

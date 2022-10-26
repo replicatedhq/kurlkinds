@@ -1,0 +1,17 @@
+installer:
+  spec:
+    kubernetes:
+      version: 1.24.x
+    minio:
+      version: 2022-09-07T22-25-02Z
+    prometheus:
+      version: 0.58.x
+    fluentd:
+      version: latest
+output:
+- field: spec
+  type: misconfiguration
+  message: No CNI plugin (Weave or Antrea) selected
+- field: spec
+  type: misconfiguration
+  message: No container runtime (Docker or Containerd) selected

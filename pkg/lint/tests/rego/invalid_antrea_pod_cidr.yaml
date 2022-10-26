@@ -1,0 +1,13 @@
+installer:
+  spec:
+    kubernetes:
+      version: 1.24.x
+    antrea:
+      podCIDR: 800.666.555.444/1024
+      version: latest
+    containerd:
+      version: latest
+output:
+  - message: Invalid Antrea pod CIDR
+    field: spec.antrea.podCIDR
+    type: misconfiguration

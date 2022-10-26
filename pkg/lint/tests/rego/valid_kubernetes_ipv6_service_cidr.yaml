@@ -1,0 +1,10 @@
+installer:
+  spec:
+    kubernetes:
+      serviceCIDR: fde4:8dba:82e1:98e::/112
+      version: 1.24.x
+    weave:
+      version: latest
+    containerd:
+      version: latest
+output: []

@@ -1,0 +1,15 @@
+err: ""
+data: |
+  apiVersion: "cluster.kurl.sh/v1beta1"
+  kind: "Installer"
+  metadata:
+    name: "latest"
+  spec:
+    kubernetes:
+      version: 1.24.x
+    antrea:
+      podCIDR: fde4:8dba:82e1:98a::/64
+      version: latest
+    containerd:
+      version: latest
+output: []

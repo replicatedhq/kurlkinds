@@ -1,0 +1,14 @@
+installer:
+  spec:
+    kubernetes:
+      serviceCidrRange: /16
+      version: 1.24.x
+    weave:
+      podCidrRange: e
+      version: latest
+    containerd:
+      version: latest
+output:
+  - message: Invalid Weave pod CIDR range
+    field: spec.weave.podCidrRange
+    type: misconfiguration

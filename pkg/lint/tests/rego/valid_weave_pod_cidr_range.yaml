@@ -1,10 +1,11 @@
 installer:
   spec:
     kubernetes:
-      serviceCidrRange: 10.0.10.0/16
+      serviceCidrRange: /16
       version: 1.24.x
-    containerd:
-      version: latest
     weave:
+      podCidrRange: /16
+      version: latest
+    containerd:
       version: latest
 output: []

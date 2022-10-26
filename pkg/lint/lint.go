@@ -22,15 +22,21 @@ import (
 	"fmt"
 	"net/url"
 	"path"
+	"strings"
 
 	"github.com/mitchellh/mapstructure"
 	"github.com/open-policy-agent/opa/rego"
+	"gopkg.in/yaml.v2"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 	"github.com/replicatedhq/kurlkinds/pkg/apis/cluster/v1beta1"
 )
 
-//go:embed rego
-var static embed.FS
+var (
+	//go:embed rego
+	static          embed.FS
+	ErrNotInstaller = fmt.Errorf("object is not an installer")
+)
 
 // Output holds the outcome of a lint pass on top of a Installer struct.
 type Output struct {
@@ -99,8 +105,32 @@ func (l *Linter) Versions(ctx context.Context, inst v1beta1.Installer) (map[stri
 	return result, nil
 }
 
-// Validate checks the provided Installer for errors.
+// ValidateMarshaledYAML verifies if the provided data blob is an installer and applies the
+// lint rules. If you have an already unmarshaled Installer instruct use Validate() instead.
+func (l *Linter) ValidateMarshaledYAML(ctx context.Context, data string) ([]Output, error) {
+	var meta metav1.TypeMeta
+	if err := yaml.Unmarshal([]byte(data), &meta); err != nil {
+		return nil, fmt.Errorf("unable to unmarshal installer: %w", err)
+	}
+
+	if !strings.EqualFold(meta.Kind, "Installer") {
+		return nil, ErrNotInstaller
+	}
+
+	type blob struct {
+		Content string `json:"content"`
+	}
+	return l.validate(ctx, blob{data})
+}
+
+// Validate applies the lint rules on top of the provided Installer object.
 func (l *Linter) Validate(ctx context.Context, inst v1beta1.Installer) ([]Output, error) {
+	return l.validate(ctx, inst)
+}
+
+// Validate checks the provided blob for errors. This function receives an interface{} as it
+// is used in different contexts, keeping this "private" is by design.
+func (l *Linter) validate(ctx context.Context, blob interface{}) ([]Output, error) {
 	content, err := l.replaceAPIBaseURL(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("error preparing for api requests: %w", err)
@@ -109,7 +139,7 @@ func (l *Linter) Validate(ctx context.Context, inst v1beta1.Installer) ([]Output
 	options := []func(*rego.Rego){
 		rego.Query("data.kurl.installer.lint"),
 		rego.Module("rego/variables.rego", string(content)),
-		rego.Input(inst),
+		rego.Input(blob),
 	}
 
 	for _, fname := range []string{"functions.rego", "output.rego"} {

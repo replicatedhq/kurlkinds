@@ -1,7 +1,7 @@
 installer:
   spec:
     kubernetes:
-      serviceCidrRange: x.a.b.c
+      serviceCIDR: fde4:8dba:82e1:98e::/9999999
       version: 1.24.x
     weave:
       version: latest
@@ -9,5 +9,5 @@ installer:
       version: latest
 output:
   - message: Invalid Kubernetes services CIDR
-    field: spec.kubernetes.serviceCidrRange
+    field: spec.kubernetes.serviceCIDR
     type: misconfiguration

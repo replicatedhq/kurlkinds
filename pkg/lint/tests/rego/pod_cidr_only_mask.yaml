@@ -1,0 +1,26 @@
+installer:
+  spec:
+    kubernetes:
+      version: 1.21.8
+    weave:
+      version: 2.8.1
+      podCidrRange: /22
+    openebs:
+      version: 2.6.0
+    minio:
+      version: 2020-01-25T02-50-51Z
+    contour:
+      version: 1.18.0
+    registry:
+      version: 2.7.1
+    kotsadm:
+      version: 1.56.0
+    velero:
+      version: 1.6.2
+    ekco:
+      version: 0.11.0
+    containerd:
+      version: 1.4.6
+    metricsServer:
+      version: 0.4.1
+output: []

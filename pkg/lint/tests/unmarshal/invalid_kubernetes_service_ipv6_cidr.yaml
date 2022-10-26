@@ -1,0 +1,18 @@
+err: ""
+data: |
+  apiVersion: "cluster.kurl.sh/v1beta1"
+  kind: "Installer"
+  metadata:
+    name: "latest"
+  spec:
+    kubernetes:
+      serviceCIDR: fde4:8dba:82e1:98x::/64
+      version: 1.24.x
+    antrea:
+      version: latest
+    containerd:
+      version: latest
+output:
+  - message: Invalid Kubernetes services CIDR
+    type: misconfiguration
+    field: spec.kubernetes.serviceCIDR
