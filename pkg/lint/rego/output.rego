@@ -17,7 +17,7 @@ package kurl.installer
 # selected a container runtime. a container runtime is necessary to run the kube
 # distribution.
 lint[output] {
-	installer.spec.kubernetes.version
+	installer.spec.kubernetes.version != ""
 	count(container_runtimes) == 0
 	output :=  {
 		"type": "misconfiguration",
@@ -40,7 +40,7 @@ lint[output] {
 # generates an error if kubernetes is the selected distribution but no cni plugin has
 # been selected by the user.
 lint[output] {
-	installer.spec.kubernetes.version
+	installer.spec.kubernetes.version != ""
 	count(cni_providers) == 0
 	output :=  {
 		"type": "misconfiguration",
@@ -328,7 +328,7 @@ lint[output] {
 
 # this next rule evaluates if all selected add-ons are supported by k3s.
 lint[output] {
-	installer.spec.k3s
+	installer.spec.k3s.version != ""
 	installer.spec[addon]
 	not add_on_compatible_with_k3s(addon)
 	output := {
@@ -340,7 +340,7 @@ lint[output] {
 
 # this next rule evaluates if all selected add-ons are supported by rke2.
 lint[output] {
-	installer.spec.rke2
+	installer.spec.rke2.version != ""
 	installer.spec[addon]
 	not add_on_compatible_with_rke2(addon)
 	output := {
@@ -351,8 +351,8 @@ lint[output] {
 }
 
 lint[output] {
-	installer.spec.k3s.version
-	installer.spec.kotsadm.uiBindPort
+	installer.spec.k3s.version != ""
+	installer.spec.kotsadm.uiBindPort != ""
 	port_out_of_range(installer.spec.kotsadm.uiBindPort, 30000, 32767)
 	output := {
 		"type": "misconfiguration",
@@ -362,8 +362,8 @@ lint[output] {
 }
 
 lint[output] {
-	installer.spec.rke2.version
-	installer.spec.kotsadm.uiBindPort
+	installer.spec.rke2.version != ""
+	installer.spec.kotsadm.uiBindPort != ""
 	port_out_of_range(installer.spec.kotsadm.uiBindPort, 30000, 32767)
 	output := {
 		"type": "misconfiguration",
@@ -376,7 +376,7 @@ lint[output] {
 lint[output] {
 	is_addon_version_greater_than_or_equal("rook", "1.8.0")
 	is_addon_version_lower_than("rook", "1.9.0")
-	installer.spec.ekco.version
+	installer.spec.ekco.version != ""
 	is_addon_version_lower_than("ekco", "0.22.0")
 	output := {
 		"type": "incompatibility",
@@ -388,7 +388,7 @@ lint[output] {
 # verifies rook 1.9.x is not compatible with EKCO versions < 0.23.0
 lint[output] {
 	is_addon_version_greater_than_or_equal("rook", "1.9.0")
-	installer.spec.ekco.version
+	installer.spec.ekco.version != ""
 	is_addon_version_lower_than("ekco", "0.23.0")
 	output := {
 		"type": "incompatibility",

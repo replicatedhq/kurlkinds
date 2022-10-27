@@ -17,41 +17,41 @@ package kurl.installer
 # or rke2). this is useful if we want to check how many got selected and return an error if more
 # than one has been selected.
 kube_distributions[distro] {
-	installer.spec.kubernetes.version
+	installer.spec.kubernetes.version != ""
 	distro := "kubernetes"
 }
 kube_distributions[distro] {
-	installer.spec.k3s.version
+	installer.spec.k3s.version != ""
 	distro := "k3s"
 }
 kube_distributions[distro] {
-	installer.spec.rke2.version
+	installer.spec.rke2.version != ""
 	distro := "rke2"
 }
 
 # container_runtime gather the selected container runtimes in an array. we use this to evaluate
 # how many of them got selected.
 container_runtimes[runtime] {
-	installer.spec.docker.version
+	installer.spec.docker.version != ""
 	runtime := "docker"
 }
 container_runtimes[runtime] {
-	installer.spec.containerd.version
+	installer.spec.containerd.version != ""
 	runtime := "containerd"
 }
 
 # cni_providers gather the selected cni providers in an array. we use this to evaluate
 # how many of them got selected.
 cni_providers[runtime] {
-	installer.spec.flannel.version
+	installer.spec.flannel.version != ""
 	runtime := "flannel"
 }
 cni_providers[runtime] {
-	installer.spec.weave.version
+	installer.spec.weave.version != ""
 	runtime := "weave"
 }
 cni_providers[runtime] {
-	installer.spec.antrea.version
+	installer.spec.antrea.version != ""
 	runtime := "antrea"
 }
 
@@ -170,10 +170,10 @@ valid_antrea_pod_cidr_override() {
 	valid_ipv6_cidr(installer.spec.antrea.podCIDR)
 }
 
-# valid_addon_version checks if the version for the addon exists (is valid). if the addon
+# valid_add_on_version checks if the version for the addon exists (is valid). if the addon
 # has not been selected (there is no version specified for it) then this evaluates to true.
 valid_add_on_version(addon) {
-	not installer.spec[addon].version
+	installer.spec[addon].version == ""
 }
 valid_add_on_version(addon) {
 	addon_version_exists(addon, installer.spec[addon].version)
