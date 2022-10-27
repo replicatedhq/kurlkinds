@@ -5,13 +5,13 @@ go 1.19
 require (
 	github.com/google/go-cmp v0.5.9
 	github.com/mitchellh/mapstructure v1.5.0
-	github.com/onsi/gomega v1.22.1
+	github.com/onsi/gomega v1.23.0
 	github.com/open-policy-agent/opa v0.45.0
 	github.com/pkg/errors v0.9.1
 	github.com/replicatedhq/troubleshoot v0.45.0
 	github.com/spf13/cobra v1.6.1
 	github.com/spf13/viper v1.13.0
-	golang.org/x/net v0.0.0-20221002022538-bcab6841153b
+	golang.org/x/net v0.1.0
 	gopkg.in/yaml.v2 v2.4.0
 	gopkg.in/yaml.v3 v3.0.1
 	k8s.io/apiextensions-apiserver v0.25.2
@@ -63,9 +63,9 @@ require (
 	github.com/xeipuuv/gojsonreference v0.0.0-20180127040603-bd5ef7bd5415 // indirect
 	github.com/yashtewari/glob-intersection v0.1.0 // indirect
 	golang.org/x/oauth2 v0.0.0-20220411215720-9780585627b5 // indirect
-	golang.org/x/sys v0.0.0-20220919091848-fb04ddd9f9c8 // indirect
-	golang.org/x/term v0.0.0-20220526004731-065cf7ba2467 // indirect
-	golang.org/x/text v0.3.8 // indirect
+	golang.org/x/sys v0.1.0 // indirect
+	golang.org/x/term v0.1.0 // indirect
+	golang.org/x/text v0.4.0 // indirect
 	golang.org/x/time v0.0.0-20220609170525-579cf78fd858 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/protobuf v1.28.1 // indirect
