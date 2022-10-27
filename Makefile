@@ -88,3 +88,6 @@ update-kubebuilder:
 
 	sudo rm -rf /usr/local/kubebuilder
 	sudo mv /tmp/kubebuilder_${KUBEBUILDER_VERSION}_${os}_${arch} /usr/local/kubebuilder
+
+pkg/lint/tests/versions.json:
+	curl -sSL https://k8s.kurl.sh/installer | jq '.' > pkg/lint/tests/versions.json

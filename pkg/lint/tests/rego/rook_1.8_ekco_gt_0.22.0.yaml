@@ -1,0 +1,16 @@
+installer:
+  spec: 
+    kubernetes: 
+      version: 1.24.x
+    containerd: 
+      version: latest
+    weave:
+      version: latest
+    rook: 
+      version: 1.8.10
+    ekco:
+      version: 0.20.0
+output:
+  - message: Rook versions >= 1.8.0 are not compatible with EKCO versions < 0.22.0
+    field: spec.ekco.version
+    type: incompatibility

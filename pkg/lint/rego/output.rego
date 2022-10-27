@@ -41,11 +41,20 @@ lint[output] {
 # been selected by the user.
 lint[output] {
 	installer.spec.kubernetes.version
-	not installer.spec.weave.version
-	not installer.spec.antrea.version
+	count(cni_providers) == 0
 	output :=  {
 		"type": "misconfiguration",
-		"message": "No CNI plugin (Weave or Antrea) selected",
+		"message": "No CNI plugin (Flannel, Weave or Antrea) selected",
+		"field": "spec"
+	}
+}
+
+# returns an error if the config has any two of flannel, weave or antrea selected at the same time.
+lint[output] {
+	count(cni_providers) > 1
+	output := {
+		"type": "misconfiguration",
+		"message": "Multiple CNI plugins selected (choose one of Flannel, Weave or Antrea)",
 		"field": "spec"
 	}
 }
@@ -105,7 +114,7 @@ lint[output] {
 
 # verifies if the weave pod cidr range override provided by the user is valid.
 lint[output] {
-	not valid_pod_cidr_range_override("weave")
+	not valid_pod_cidr_range_override(installer.spec.weave.podCidrRange)
 	output := {
 		"type": "misconfiguration",
 		"message": "Invalid Weave pod CIDR range",
@@ -124,9 +133,30 @@ lint[output] {
 	}
 }
 
+# verifies if the flannel pod cidr range override provided by the user is valid.
+lint[output] {
+	not valid_pod_cidr_range_override(installer.spec.flannel.podCIDRRange)
+	output := {
+		"type": "misconfiguration",
+		"message": "Invalid Flannel pod CIDR range",
+		"field": "spec.flannel.podCIDRRange"
+	}
+}
+
+# verifies if the flannel pod cidr override provided by the user is valid.
+lint[output] {
+	installer.spec.flannel.podCIDR
+	not valid_ipv4_cidr(installer.spec.flannel.podCIDR)
+	output := {
+		"type": "misconfiguration",
+		"message": "Invalid Flannel pod CIDR",
+		"field": "spec.flannel.podCIDR"
+	}
+}
+
 # verifies if the antrea pod cidr range override provided by the user is valid.
 lint[output] {
-	not valid_pod_cidr_range_override("antrea")
+	not valid_pod_cidr_range_override(installer.spec.antrea.podCidrRange)
 	output := {
 		"type": "misconfiguration",
 		"message": "Invalid Antrea pod CIDR range",
@@ -141,17 +171,6 @@ lint[output] {
 		"type": "misconfiguration",
 		"message": "Invalid Antrea pod CIDR",
 		"field": "spec.antrea.podCIDR"
-	}
-}
-
-# returns an error if the config has weave and antrea selected at the same time.
-lint[output] {
-	installer.spec.weave.version
-	installer.spec.antrea.version
-	output := {
-		"type": "misconfiguration",
-		"message": "Multiple CNI plugins selected, choose or Weave or Antrea",
-		"field": "spec"
 	}
 }
 
@@ -350,5 +369,30 @@ lint[output] {
 		"type": "misconfiguration",
 		"message": "NodePorts for RKE2 must use a NodePort between 30000-32767",
 		"field": "spec.kotsadm.uiBindPort"
+	}
+}
+
+# verifies rook 1.8.x is not compatible with EKCO versions < 0.22.0
+lint[output] {
+	is_addon_version_greater_than_or_equal("rook", "1.8.0")
+	is_addon_version_lower_than("rook", "1.9.0")
+	installer.spec.ekco.version
+	is_addon_version_lower_than("ekco", "0.22.0")
+	output := {
+		"type": "incompatibility",
+		"message": "Rook versions >= 1.8.0 are not compatible with EKCO versions < 0.22.0",
+		"field": "spec.ekco.version"
+	}
+}
+
+# verifies rook 1.9.x is not compatible with EKCO versions < 0.23.0
+lint[output] {
+	is_addon_version_greater_than_or_equal("rook", "1.9.0")
+	installer.spec.ekco.version
+	is_addon_version_lower_than("ekco", "0.23.0")
+	output := {
+		"type": "incompatibility",
+		"message": "Rook versions >= 1.9.0 are not compatible with EKCO versions < 0.23.0",
+		"field": "spec.ekco.version"
 	}
 }
