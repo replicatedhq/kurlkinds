@@ -37,30 +37,6 @@ import (
 //go:embed tests
 var staticTests embed.FS
 
-func TestStaticVersions(t *testing.T) {
-	static := map[string]AddOn{
-		"addon0": {
-			Latest: "1.0.0",
-			Versions: []string{
-				"1.0.0",
-				"2.0.0",
-				"3.0.0",
-			},
-		},
-	}
-
-	var empty v1beta1.Installer
-	linter := New(WithStaticVersions(static))
-	res, err := linter.Versions(context.Background(), empty)
-	if err != nil {
-		t.Fatalf("unexpected error: %s", err)
-	}
-
-	if !reflect.DeepEqual(res, static) {
-		t.Errorf("expecting %+v, received %+v", static, res)
-	}
-}
-
 func TestValidateWithWrongAPIEndpointReturn(t *testing.T) {
 	mocksrv := httptest.NewServer(
 		http.HandlerFunc(

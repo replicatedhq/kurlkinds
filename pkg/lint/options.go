@@ -29,11 +29,3 @@ func WithAPIBaseURL(u *url.URL) Option {
 		l.apiBaseURL = u
 	}
 }
-
-// WithStaticVersions set an static version of addon versions, avoids going to the the remote
-// api to fetch a new list from time to time.
-func WithStaticVersions(versions map[string]AddOn) Option {
-	return func(l *Linter) {
-		l.staticVersions = versions
-	}
-}

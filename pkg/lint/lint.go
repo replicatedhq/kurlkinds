@@ -52,8 +52,7 @@ type AddOn struct {
 }
 
 type Linter struct {
-	staticVersions map[string]AddOn
-	apiBaseURL     *url.URL
+	apiBaseURL *url.URL
 }
 
 // New returns a new v1beta1.Installer linter. this linter is capable of evaluating if a
@@ -69,10 +68,6 @@ func New(opts ...Option) *Linter {
 // Versions return a map containing all supported versions indexed by add-on name. it
 // goes and fetch the versions from a remote endpoint.
 func (l *Linter) Versions(ctx context.Context, inst v1beta1.Installer) (map[string]AddOn, error) {
-	if l.staticVersions != nil {
-		return l.staticVersions, nil
-	}
-
 	content, err := l.replaceAPIBaseURL(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("error preparing for api requests: %w", err)
