@@ -1,0 +1,12 @@
+installer:
+  spec:
+    kubernetes:
+      version: latest
+    containerd:
+      version: latest
+    weave:
+      version: xxx
+output:
+  - message: Unknown weave add-on version xxx
+    field: spec.weave.version
+    type: unknown-addon

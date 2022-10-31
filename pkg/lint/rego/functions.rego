@@ -103,6 +103,7 @@ addon_version_exists(addon, version) {
 addon_version_exists(addon, version) {
 	endswith(version, "x")
 	x_version_removed := replace(version, "x", "")
+	x_version_removed != ""
 	startswith(known_versions[addon].versions[_], x_version_removed)
 }
 
