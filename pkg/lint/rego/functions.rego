@@ -13,20 +13,12 @@
 # limitations under the License.
 package kurl.installer
 
-# kube_distributions holds an array of all selected kubernetes "distributions" (kubernetes, k3s,
-# or rke2). this is useful if we want to check how many got selected and return an error if more
-# than one has been selected.
+# kube_distributions holds an array of all selected kubernetes "distributions" (kubernetes).
+# this is useful if we want to check how many got selected and return an error if more than one
+# has been selected.
 kube_distributions[distro] {
 	installer.spec.kubernetes.version != ""
 	distro := "kubernetes"
-}
-kube_distributions[distro] {
-	installer.spec.k3s.version != ""
-	distro := "k3s"
-}
-kube_distributions[distro] {
-	installer.spec.rke2.version != ""
-	distro := "rke2"
 }
 
 # container_runtime gather the selected container runtimes in an array. we use this to evaluate
@@ -178,37 +170,6 @@ valid_add_on_version(addon) {
 }
 valid_add_on_version(addon) {
 	addon_version_exists(addon, installer.spec[addon].version)
-}
-
-# add_on_compatible_with_k3s evaluates to true if the provided addon is compatible with
-# k3s distribution.
-add_on_compatible_with_k3s(addon) {
-	compatible := [
-		"k3s",
-		"kotsadm",
-		"minio",
-		"openebs",
-		"registry",
-		"rook",
-		"sonobuoy"
-	]
-	compatible[_] == addon
-}
-
-# add_on_compatible_with_rke2 evaluates to true if the provided addon is compatible with
-# rke2 distribution.
-add_on_compatible_with_rke2(addon) {
-	compatible := [
-		"rke2",
-		"kotsadm",
-		"minio",
-		"openebs",
-		"velero",
-		"registry",
-		"rook",
-		"sonobuoy"
-	]
-	compatible[_] == addon
 }
 
 # port_out_of_range evaluates to true if provided port is out of provided range. 

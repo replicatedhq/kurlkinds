@@ -24,8 +24,8 @@ import (
 
 type InstallerSpec struct {
 	Kubernetes      *Kubernetes      `json:"kubernetes,omitempty" yaml:"kubernetes,omitempty"`
-	RKE2            *RKE2            `json:"rke2,omitempty" yaml:"rke2,omitempty"`
-	K3S             *K3S             `json:"k3s,omitempty" yaml:"k3s,omitempty"`
+	RKE2            *RKE2            `json:"rke2,omitempty" yaml:"rke2,omitempty"` // no longer supported (do not remove from spec for compatibility)
+	K3S             *K3S             `json:"k3s,omitempty" yaml:"k3s,omitempty"`   // no longer supported (do not remove from spec for compatibility)
 	Docker          *Docker          `json:"docker,omitempty" yaml:"docker,omitempty"`
 	Weave           *Weave           `json:"weave,omitempty" yaml:"weave,omitempty"`
 	Flannel         *Flannel         `json:"flannel,omitempty" yaml:"flannel,omitempty"`
@@ -170,10 +170,14 @@ type Registry struct {
 	Version     string `json:"version" yaml:"version"`
 }
 
+// RKE2 is no longer supported
+// (do not remove from spec for compatibility)
 type RKE2 struct {
 	Version string `json:"version" yaml:"version"`
 }
 
+// K3S is no longer supported
+// (do not remove from spec for compatibility)
 type K3S struct {
 	Version string `json:"version" yaml:"version"`
 }
