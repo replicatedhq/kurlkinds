@@ -59,22 +59,12 @@ lint[output] {
 	}
 }
 
-# checks if there is at least one selected kubernetes distro (kubernetes, k3s, or rke2).
+# checks if there is at least one selected kubernetes distro (kubernetes).
 lint[output] {
 	count(kube_distributions) == 0
 	output := {
 		"type": "misconfiguration",
-		"message": "No kubernetes distribution (Kubernetes, K3S, or RKE2) selected",
-		"field": "spec"
-	}
-}
-
-# returns an error if more than one kubernetes distro has been selected.
-lint[output] {
-	count(kube_distributions) > 1
-	output := {
-		"type": "misconfiguration",
-		"message": "Only one kubernetes distribution (Kubernetes, K3S, or RKE2) can be selected",
+		"message": "No kubernetes distribution selected",
 		"field": "spec"
 	}
 }
@@ -323,52 +313,6 @@ lint[output] {
 		"type": "misconfiguration",
 		"message": "Prometheus service types is supported only for versions 0.48.1-16.10.0+",
 		"field": "spec.prometheus.serviceType"
-	}
-}
-
-# this next rule evaluates if all selected add-ons are supported by k3s.
-lint[output] {
-	installer.spec.k3s.version != ""
-	installer.spec[addon]
-	not add_on_compatible_with_k3s(addon)
-	output := {
-		"type": "incompatibility",
-		"message": sprintf("K3S is not compatible with add-on %v", [addon]),
-		"field": sprintf("spec.%v", [addon])
-	}
-}
-
-# this next rule evaluates if all selected add-ons are supported by rke2.
-lint[output] {
-	installer.spec.rke2.version != ""
-	installer.spec[addon]
-	not add_on_compatible_with_rke2(addon)
-	output := {
-		"type": "incompatibility",
-		"message": sprintf("RKE2 is not compatible with add-on %v", [addon]),
-		"field": sprintf("spec.%v", [addon])
-	}
-}
-
-lint[output] {
-	installer.spec.k3s.version != ""
-	installer.spec.kotsadm.uiBindPort != ""
-	port_out_of_range(installer.spec.kotsadm.uiBindPort, 30000, 32767)
-	output := {
-		"type": "misconfiguration",
-		"message": "NodePorts for K3s must use a NodePort between 30000-32767",
-		"field": "spec.kotsadm.uiBindPort"
-	}
-}
-
-lint[output] {
-	installer.spec.rke2.version != ""
-	installer.spec.kotsadm.uiBindPort != ""
-	port_out_of_range(installer.spec.kotsadm.uiBindPort, 30000, 32767)
-	output := {
-		"type": "misconfiguration",
-		"message": "NodePorts for RKE2 must use a NodePort between 30000-32767",
-		"field": "spec.kotsadm.uiBindPort"
 	}
 }
 

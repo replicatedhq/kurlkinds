@@ -20,8 +20,6 @@ installer:
       version: ""
     helm:
       helmfileSpec: ""
-    k3s:
-      version: ""
     kotsadm:
       version: 1.87.0
     kubernetes:
@@ -40,8 +38,6 @@ installer:
     registry:
       publishPort: 5000
       version: 2.8.1
-    rke2:
-      version: ""
     rook:
       version: ""
     sonobuoy:

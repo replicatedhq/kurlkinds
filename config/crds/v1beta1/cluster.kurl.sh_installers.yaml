@@ -254,6 +254,8 @@ spec:
                     type: boolean
                 type: object
               k3s:
+                description: K3S is no longer supported (do not remove from spec for
+                  compatibility)
                 properties:
                   version:
                     type: string
@@ -1979,6 +1981,8 @@ spec:
                 - version
                 type: object
               rke2:
+                description: RKE2 is no longer supported (do not remove from spec
+                  for compatibility)
                 properties:
                   version:
                     type: string

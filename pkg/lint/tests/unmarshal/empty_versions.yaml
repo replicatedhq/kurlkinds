@@ -27,8 +27,6 @@ data: |
     helm:
       helmfileSpec: ""
     iptablesConfig: {}
-    k3s:
-      version: ""
     kotsadm:
       version: 1.78.0
     kubernetes:
@@ -46,8 +44,6 @@ data: |
       version: 0.58.0-39.4.0
     registry:
       version: 2.8.1
-    rke2:
-      version: ""
     rook:
       version: ""
     selinuxConfig: {}

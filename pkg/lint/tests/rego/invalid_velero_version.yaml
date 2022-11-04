@@ -1,6 +1,10 @@
 installer:
   spec:
-    rke2:
+    kubernetes:
+      version: latest
+    containerd:
+      version: latest
+    flannel:
       version: latest
     velero:
       version: 0.1.0

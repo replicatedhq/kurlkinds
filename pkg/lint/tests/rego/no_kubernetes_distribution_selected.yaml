@@ -3,6 +3,6 @@ installer:
     docker:
       version: latest
 output:
-  - message: No kubernetes distribution (Kubernetes, K3S, or RKE2) selected
+  - message: No kubernetes distribution selected
     field: spec
     type: misconfiguration

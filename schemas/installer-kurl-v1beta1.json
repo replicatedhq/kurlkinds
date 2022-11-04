@@ -353,6 +353,7 @@
           }
         },
         "k3s": {
+          "description": "K3S is no longer supported (do not remove from spec for compatibility)",
           "type": "object",
           "required": [
             "version"
@@ -2868,6 +2869,7 @@
           }
         },
         "rke2": {
+          "description": "RKE2 is no longer supported (do not remove from spec for compatibility)",
           "type": "object",
           "required": [
             "version"
