@@ -6,7 +6,7 @@ require (
 	github.com/google/go-cmp v0.5.9
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/onsi/gomega v1.24.0
-	github.com/open-policy-agent/opa v0.45.0
+	github.com/open-policy-agent/opa v0.46.1
 	github.com/pkg/errors v0.9.1
 	github.com/replicatedhq/troubleshoot v0.45.0
 	github.com/spf13/cobra v1.6.1
