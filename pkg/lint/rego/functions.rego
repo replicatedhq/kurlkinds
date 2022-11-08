@@ -105,12 +105,6 @@ valid_ipv4_cidr(cidr) {
 	regex.match(`^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(3[0-2]|[1-2][0-9]|[0-9]))$`, cidr)
 }
 
-# valid_ipv6_cidr evaluates to true if cidr is a valid ipv6 network cidr (address + netmask).
-valid_ipv6_cidr(cidr) {
-	# this regex evaluates for valid ipv6 network cidrs. here be dragons. 
-	regex.match(`^s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4]d|1dd|[1-9]?d)(.(25[0-5]|2[0-4]d|1dd|[1-9]?d)){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4]d|1dd|[1-9]?d)(.(25[0-5]|2[0-4]d|1dd|[1-9]?d)){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]d|1dd|[1-9]?d)(.(25[0-5]|2[0-4]d|1dd|[1-9]?d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]d|1dd|[1-9]?d)(.(25[0-5]|2[0-4]d|1dd|[1-9]?d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]d|1dd|[1-9]?d)(.(25[0-5]|2[0-4]d|1dd|[1-9]?d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]d|1dd|[1-9]?d)(.(25[0-5]|2[0-4]d|1dd|[1-9]?d)){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]d|1dd|[1-9]?d)(.(25[0-5]|2[0-4]d|1dd|[1-9]?d)){3}))|:)))(%.+)?s*(\/(12[0-8]|1[0-1][0-9]|[1-9][0-9]|[0-9]))$`, cidr)
-}
-
 # valid_cidr_range verifies if the provided cidr range is valid. the range may be provided in
 # 2 distinct ways, for example: '/16' or only '16'.
 valid_cidr_range(range) {
@@ -137,10 +131,7 @@ valid_kubernetes_service_cidr_override {
 	not installer.spec.kubernetes.serviceCIDR
 }
 valid_kubernetes_service_cidr_override {
-	valid_ipv4_cidr(installer.spec.kubernetes.serviceCIDR)
-}
-valid_kubernetes_service_cidr_override {
-	valid_ipv6_cidr(installer.spec.kubernetes.serviceCIDR)
+	net.cidr_is_valid(installer.spec.kubernetes.serviceCIDR)
 }
 
 # valid_pod_cidr_range_override checks if the provided podCidrRange property is valid.
@@ -157,10 +148,7 @@ valid_antrea_pod_cidr_override() {
 	not installer.spec.antrea.podCIDR
 }
 valid_antrea_pod_cidr_override() {
-	valid_ipv4_cidr(installer.spec.antrea.podCIDR)
-}
-valid_antrea_pod_cidr_override() {
-	valid_ipv6_cidr(installer.spec.antrea.podCIDR)
+	net.cidr_is_valid(installer.spec.antrea.podCIDR)
 }
 
 # valid_add_on_version checks if the version for the addon exists (is valid). if the addon
