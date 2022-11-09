@@ -20,6 +20,7 @@ import (
 	"context"
 	"embed"
 	"fmt"
+	"log"
 	"net/url"
 	"path"
 	"strings"
@@ -53,6 +54,7 @@ type AddOn struct {
 
 type Linter struct {
 	apiBaseURL *url.URL
+	verbose    bool
 }
 
 // New returns a new v1beta1.Installer linter. this linter is capable of evaluating if a
@@ -100,6 +102,15 @@ func (l *Linter) Versions(ctx context.Context, inst v1beta1.Installer) (map[stri
 	return result, nil
 }
 
+// debug is a helper functions that prior to logging something checks if verbose has been
+// enabled in the linter.
+func (l Linter) debug(format string, v ...any) {
+	if l.verbose {
+		format = fmt.Sprintf("installer.linter: %s", format)
+		log.Printf(format, v...)
+	}
+}
+
 // ValidateMarshaledYAML verifies if the provided data blob is an installer and applies the
 // lint rules. If you have an already unmarshaled Installer instruct use Validate() instead.
 func (l *Linter) ValidateMarshaledYAML(ctx context.Context, data string) ([]Output, error) {
@@ -109,6 +120,7 @@ func (l *Linter) ValidateMarshaledYAML(ctx context.Context, data string) ([]Outp
 	}
 
 	if !strings.EqualFold(meta.Kind, "Installer") {
+		l.debug("object kind is %s, not an installer", meta.Kind)
 		return nil, ErrNotInstaller
 	}
 
@@ -137,7 +149,13 @@ func (l *Linter) validate(ctx context.Context, blob interface{}) ([]Output, erro
 		rego.Input(blob),
 	}
 
-	for _, fname := range []string{"functions.rego", "output.rego"} {
+	regofiles := []string{"functions.rego", "output.rego"}
+	if l.verbose {
+		regofiles = append(regofiles, "debug.rego")
+	}
+
+	l.debug("using rego files: %+v", regofiles)
+	for _, fname := range regofiles {
 		fpath := path.Join("rego", fname)
 		content, err := static.ReadFile(fpath)
 		if err != nil {
@@ -152,6 +170,11 @@ func (l *Linter) validate(ctx context.Context, blob interface{}) ([]Output, erro
 	}
 
 	if len(rs) == 0 || len(rs[0].Expressions) == 0 {
+		if len(rs) == 0 {
+			l.debug("rego result set is empty")
+		} else {
+			l.debug("rego result set expressions are empty")
+		}
 		return []Output{}, nil
 	}
 
@@ -160,14 +183,28 @@ func (l *Linter) validate(ctx context.Context, blob interface{}) ([]Output, erro
 		return nil, fmt.Errorf("error decoding result: %w", err)
 	}
 
+	var filtered = []Output{}
+	var ppfailure error
+	l.debug("total of results returned by rego: %d", len(result))
 	for _, res := range result {
-		if res.Type == "preprocess" {
-			err := fmt.Errorf(res.Message)
-			return nil, fmt.Errorf("error processing rules: %w", err)
+		l.debug("%s: %s", res.Type, res.Message)
+		if res.Type == "debug" {
+			continue
 		}
-	}
 
-	return result, nil
+		if res.Type == "preprocess" {
+			ppfailure = fmt.Errorf(res.Message)
+			continue
+		}
+
+		filtered = append(filtered, res)
+	}
+	l.debug("results returned after filtering: %d", len(filtered))
+
+	if ppfailure != nil {
+		return nil, ppfailure
+	}
+	return filtered, nil
 }
 
 // replaceAPIBaseURL replaces the api base url used for querying add-on versions. this is
@@ -180,11 +217,14 @@ func (l *Linter) replaceAPIBaseURL(ctx context.Context) ([]byte, error) {
 	}
 
 	if l.apiBaseURL == nil {
+		l.debug("api base url has not been replaced")
 		return content, nil
 	}
+
 	// if the version url has been set by the user we replace it here.
 	oldurl := []byte("https://kurl.sh")
 	newurl := []byte(l.apiBaseURL.String())
 	content = bytes.ReplaceAll(content, oldurl, newurl)
+	l.debug("api base url been replaced by %q", l.apiBaseURL.String())
 	return content, nil
 }
