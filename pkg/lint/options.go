@@ -29,3 +29,10 @@ func WithAPIBaseURL(u *url.URL) Option {
 		l.apiBaseURL = u
 	}
 }
+
+// WithDebug enables debug logging for the linter. debug logs are written to stdout.
+func WithDebug() Option {
+	return func(l *Linter) {
+		l.verbose = true
+	}
+}
