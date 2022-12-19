@@ -5,10 +5,10 @@ go 1.19
 require (
 	github.com/google/go-cmp v0.5.9
 	github.com/mitchellh/mapstructure v1.5.0
-	github.com/onsi/gomega v1.24.1
+	github.com/onsi/gomega v1.24.2
 	github.com/open-policy-agent/opa v0.47.3
 	github.com/pkg/errors v0.9.1
-	github.com/replicatedhq/troubleshoot v0.49.1
+	github.com/replicatedhq/troubleshoot v0.50.0
 	github.com/spf13/cobra v1.6.1
 	github.com/spf13/viper v1.14.0
 	golang.org/x/net v0.4.0
@@ -48,7 +48,6 @@ require (
 	github.com/klauspost/compress v1.15.13 // indirect
 	github.com/magiconair/properties v1.8.6 // indirect
 	github.com/mailru/easyjson v0.7.6 // indirect
-	github.com/matttproud/golang_protobuf_extensions v1.0.4 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
