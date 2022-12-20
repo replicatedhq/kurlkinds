@@ -1,0 +1,12 @@
+installer:
+  spec:
+    kubernetes:
+      version: 1.26.x
+    weave:
+      version: latest
+    containerd:
+      version: 1.5.11
+output:
+  - message: Kubernetes 1.26+ is not compatible with Containerd versions < 1.6.0
+    field: spec.containerd
+    type: incompatibility

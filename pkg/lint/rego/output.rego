@@ -340,3 +340,16 @@ lint[output] {
 		"field": "spec.ekco.version"
 	}
 }
+
+# verifies if the selected kubernetes version is compatible with the selected containerd
+# version. the only thing verified here is that we are not trying to run kubernetes 1.26+
+# with containerd >= 1.6.0.
+lint[output] {
+	is_addon_version_greater_than_or_equal("kubernetes", "1.26.0")
+	is_addon_version_lower_than("containerd", "1.6.0")
+	output := {
+		"type": "incompatibility",
+		"message": "Kubernetes 1.26+ is not compatible with Containerd versions < 1.6.0",
+		"field": "spec.containerd"
+	}
+}
