@@ -249,8 +249,8 @@ github.com/prometheus/common v0.38.0/go.mod h1:MBXfmBQZrK5XpbCkjofnXs96LD2QQ7fEq
 github.com/prometheus/procfs v0.8.0 h1:ODq8ZFEaYeCaZOJlZZdJA2AbQR98dSHSM1KW/You5mo=
 github.com/rcrowley/go-metrics v0.0.0-20201227073835-cf1acfcdf475 h1:N/ElC8H3+5XpJzTSTfLsJV/mx9Q9g7kxmchpfZyxgzM=
 github.com/rcrowley/go-metrics v0.0.0-20201227073835-cf1acfcdf475/go.mod h1:bCqnVzQkZxMG4s8nGwiZ5l3QUCyqpo9Y+/ZMZ9VjZe4=
-github.com/replicatedhq/troubleshoot v0.53.0 h1:OQkck+UrvpyuUUAb/3AKvwpubZmqXqoqCqAnElMJMqQ=
-github.com/replicatedhq/troubleshoot v0.53.0/go.mod h1:3ISTzN3+KmssFBOZYJU+oeOnxP3vc+H5X+limlS0l7o=
+github.com/replicatedhq/troubleshoot v0.54.0 h1:X4pYKYHexxsjR7YDHvlQNcidvBz/PN6qzhy7LaLAnZM=
+github.com/replicatedhq/troubleshoot v0.54.0/go.mod h1:00L90p76UGi8OMG7Um8r+lPtBzbC1Vt7912dp6ZxX2U=
 github.com/rogpeppe/go-internal v1.3.0/go.mod h1:M8bDsm7K2OlrFYOpmOWEs/qY81heoFRclV5y23lUDJ4=
 github.com/rogpeppe/go-internal v1.6.1 h1:/FiVV8dS/e+YqF2JvO3yXRFbBLTIuSDkuC7aBOAvL+k=
 github.com/russross/blackfriday/v2 v2.1.0/go.mod h1:+Rmxgy9KzJVeS9/2gXHxylqXiyQDYRxCVz55jmeOWTM=
