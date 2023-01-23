@@ -5,7 +5,7 @@ go 1.19
 require (
 	github.com/google/go-cmp v0.5.9
 	github.com/mitchellh/mapstructure v1.5.0
-	github.com/onsi/gomega v1.24.2
+	github.com/onsi/gomega v1.25.0
 	github.com/open-policy-agent/opa v0.48.0
 	github.com/pkg/errors v0.9.1
 	github.com/replicatedhq/troubleshoot v0.54.0
