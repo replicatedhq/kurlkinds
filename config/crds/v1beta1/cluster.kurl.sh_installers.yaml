@@ -2069,6 +2069,10 @@ spec:
                     type: string
                   s3Override:
                     type: string
+                  serverFlags:
+                    items:
+                      type: string
+                    type: array
                   version:
                     type: string
                 required:

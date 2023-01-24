@@ -3005,6 +3005,12 @@
             "s3Override": {
               "type": "string"
             },
+            "serverFlags": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
             "version": {
               "type": "string"
             }
