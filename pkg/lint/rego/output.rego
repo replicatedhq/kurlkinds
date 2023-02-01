@@ -353,3 +353,15 @@ lint[output] {
 		"field": "spec.containerd"
 	}
 }
+
+# verifies if flannel is compatible with the selected container runtime. flannel and docker are
+# incompatible. containerd is required.
+lint[output] {
+	installer.spec.docker.version != ""
+	installer.spec.flannel.version != ""
+	output := {
+		"type": "incompatibility",
+		"message": "Flannel is not compatible with the Docker runtime, Containerd is required",
+		"field": "spec.docker"
+	}
+}
