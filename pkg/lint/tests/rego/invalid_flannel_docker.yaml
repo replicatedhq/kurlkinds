@@ -1,0 +1,12 @@
+installer:
+  spec:
+    kubernetes:
+      version: latest
+    docker:
+      version: latest
+    flannel:
+      version: latest
+output:
+  - message: Flannel is not compatible with the Docker runtime, Containerd is required
+    field: spec.docker
+    type: incompatibility
