@@ -7,7 +7,7 @@ installer:
     weave:
       version: latest
     rook: 
-      version: 1.4.9
+      version: 1.4.3
 output:
   - message: Rook versions <= 1.4.9 are not compatible with Kubernetes versions 1.22+
     field: spec.rook.version

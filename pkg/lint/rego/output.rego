@@ -164,7 +164,7 @@ lint[output] {
 	}
 }
 
-# returns an error if selected kubernetes is >= 1.22 and rook is less than 1.1.0.
+# returns an error if selected kubernetes is >= 1.20 and rook is less than 1.1.0.
 lint[output] {
 	is_addon_version_greater_than_or_equal("kubernetes", "1.20.0")
 	is_addon_version_lower_than("rook", "1.1.0")
@@ -178,7 +178,8 @@ lint[output] {
 # returns an error if selected kubernetes is >= 1.22 and rook is less than 1.4.9.
 lint[output] {
 	is_addon_version_greater_than_or_equal("kubernetes", "1.22.0")
-	is_addon_version_lower_than("rook", "1.4.9")
+	is_addon_version_greater_than_or_equal("rook", "1.1.1")
+	is_addon_version_lower_than("rook", "1.5.0")
 	output := {
 		"type": "incompatibility",
 		"message": "Rook versions <= 1.4.9 are not compatible with Kubernetes versions 1.22+",
