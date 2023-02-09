@@ -341,6 +341,17 @@ lint[output] {
 	}
 }
 
+# verifies Contour 1.7.0 is not compatible with kubernetes versions >= 1.22+
+lint[output] {
+	is_addon_version_greater_than_or_equal("kubernetes", "1.22.0")
+	is_addon_version_lower_than("contour", "1.7.1")
+	output := {
+		"type": "incompatibility",
+		"message": "Contour versions <= 1.7.0 are not compatible with Kubernetes 1.22+",
+		"field": "spec.contour.version"
+	}
+}
+
 # verifies if the selected kubernetes version is compatible with the selected containerd
 # version. the only thing verified here is that we are not trying to run kubernetes 1.26+
 # with containerd >= 1.6.0.
