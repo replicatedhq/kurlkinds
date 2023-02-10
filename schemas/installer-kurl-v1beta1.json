@@ -1815,6 +1815,82 @@
                                 "type": "string"
                               }
                             }
+                          },
+                          "udpPortStatus": {
+                            "type": "object",
+                            "required": [
+                              "outcomes"
+                            ],
+                            "properties": {
+                              "annotations": {
+                                "type": "object",
+                                "additionalProperties": {
+                                  "type": "string"
+                                }
+                              },
+                              "checkName": {
+                                "type": "string"
+                              },
+                              "collectorName": {
+                                "type": "string"
+                              },
+                              "exclude": {
+                                "type": "string"
+                              },
+                              "outcomes": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "fail": {
+                                      "type": "object",
+                                      "properties": {
+                                        "message": {
+                                          "type": "string"
+                                        },
+                                        "uri": {
+                                          "type": "string"
+                                        },
+                                        "when": {
+                                          "type": "string"
+                                        }
+                                      }
+                                    },
+                                    "pass": {
+                                      "type": "object",
+                                      "properties": {
+                                        "message": {
+                                          "type": "string"
+                                        },
+                                        "uri": {
+                                          "type": "string"
+                                        },
+                                        "when": {
+                                          "type": "string"
+                                        }
+                                      }
+                                    },
+                                    "warn": {
+                                      "type": "object",
+                                      "properties": {
+                                        "message": {
+                                          "type": "string"
+                                        },
+                                        "uri": {
+                                          "type": "string"
+                                        },
+                                        "when": {
+                                          "type": "string"
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "strict": {
+                                "type": "string"
+                              }
+                            }
                           }
                         }
                       }
@@ -2323,6 +2399,26 @@
                                 "type": "string"
                               }
                             }
+                          },
+                          "udpPortStatus": {
+                            "type": "object",
+                            "required": [
+                              "port"
+                            ],
+                            "properties": {
+                              "collectorName": {
+                                "type": "string"
+                              },
+                              "exclude": {
+                                "type": "string"
+                              },
+                              "interface": {
+                                "type": "string"
+                              },
+                              "port": {
+                                "type": "integer"
+                              }
+                            }
                           }
                         }
                       }
@@ -2693,6 +2789,26 @@
                               },
                               "exclude": {
                                 "type": "string"
+                              }
+                            }
+                          },
+                          "udpPortStatus": {
+                            "type": "object",
+                            "required": [
+                              "port"
+                            ],
+                            "properties": {
+                              "collectorName": {
+                                "type": "string"
+                              },
+                              "exclude": {
+                                "type": "string"
+                              },
+                              "interface": {
+                                "type": "string"
+                              },
+                              "port": {
+                                "type": "integer"
                               }
                             }
                           }
