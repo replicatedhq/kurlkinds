@@ -164,6 +164,17 @@ lint[output] {
 	}
 }
 
+# reports an error if calico is <= 3.9.1 and kubernetes >= 1.22 as this pair is incompatible.
+lint[output] {
+	is_addon_version_greater_than_or_equal("kubernetes", "1.22.0")
+	is_addon_version_lower_than("calico", "3.9.2")
+	output := {
+		"type": "incompatibility",
+		"message": "Calico versions <= 3.9.1 are not compatible with Kubernetes 1.22+",
+		"field": "spec.calico.version"
+	}
+}
+
 # returns an error if selected kubernetes is >= 1.20 and rook is less than 1.1.0.
 lint[output] {
 	is_addon_version_greater_than_or_equal("kubernetes", "1.20.0")

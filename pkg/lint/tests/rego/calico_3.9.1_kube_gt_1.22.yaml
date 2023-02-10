@@ -1,0 +1,14 @@
+installer:
+  spec: 
+    kubernetes: 
+      version: 1.22.x
+    containerd:
+      version: latest
+    weave:
+      version: latest
+    calico:
+      version: 3.9.1
+output:
+  - message: "Calico versions <= 3.9.1 are not compatible with Kubernetes 1.22+"
+    field: spec.calico.version
+    type: incompatibility
