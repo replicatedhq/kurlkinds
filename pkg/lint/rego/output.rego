@@ -340,6 +340,16 @@ lint[output] {
 	}
 }
 
+# verifies velero 1.6.2 is not compatible with kubernetes versions >= 1.22+
+lint[output] {
+	is_addon_version_greater_than_or_equal("kubernetes", "1.22.0")
+	is_addon_version_lower_than("velero", "1.6.3")
+	output := {
+		"type": "incompatibility",
+		"message": "Velero versions <= 1.6.2 are not compatible with Kubernetes versions 1.22+",
+		"field": "spec.velero.version"
+	}
+}
 # verifies rook 1.9.x is not compatible with EKCO versions < 0.23.0
 lint[output] {
 	is_addon_version_greater_than_or_equal("rook", "1.9.0")
