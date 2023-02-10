@@ -329,7 +329,7 @@ lint[output] {
 	}
 }
 
-# verifies velero 1.7.0 is not compatible with kubernetes versions >= 1.22+
+# verifies velero 1.6.2 is not compatible with kubernetes versions >= 1.22+
 lint[output] {
 	is_addon_version_greater_than_or_equal("kubernetes", "1.22.0")
 	is_addon_version_lower_than("velero", "1.6.3")
