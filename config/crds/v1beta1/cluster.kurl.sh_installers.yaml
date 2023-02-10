@@ -1211,6 +1211,55 @@ spec:
                                   required:
                                   - outcomes
                                   type: object
+                                udpPortStatus:
+                                  properties:
+                                    annotations:
+                                      additionalProperties:
+                                        type: string
+                                      type: object
+                                    checkName:
+                                      type: string
+                                    collectorName:
+                                      type: string
+                                    exclude:
+                                      type: string
+                                    outcomes:
+                                      items:
+                                        properties:
+                                          fail:
+                                            properties:
+                                              message:
+                                                type: string
+                                              uri:
+                                                type: string
+                                              when:
+                                                type: string
+                                            type: object
+                                          pass:
+                                            properties:
+                                              message:
+                                                type: string
+                                              uri:
+                                                type: string
+                                              when:
+                                                type: string
+                                            type: object
+                                          warn:
+                                            properties:
+                                              message:
+                                                type: string
+                                              uri:
+                                                type: string
+                                              when:
+                                                type: string
+                                            type: object
+                                        type: object
+                                      type: array
+                                    strict:
+                                      type: string
+                                  required:
+                                  - outcomes
+                                  type: object
                               type: object
                             type: array
                           collectors:
@@ -1584,6 +1633,19 @@ spec:
                                     exclude:
                                       type: string
                                   type: object
+                                udpPortStatus:
+                                  properties:
+                                    collectorName:
+                                      type: string
+                                    exclude:
+                                      type: string
+                                    interface:
+                                      type: string
+                                    port:
+                                      type: integer
+                                  required:
+                                  - port
+                                  type: object
                               type: object
                             type: array
                           remoteCollectors:
@@ -1866,6 +1928,19 @@ spec:
                                       type: string
                                     exclude:
                                       type: string
+                                  type: object
+                                udpPortStatus:
+                                  properties:
+                                    collectorName:
+                                      type: string
+                                    exclude:
+                                      type: string
+                                    interface:
+                                      type: string
+                                    port:
+                                      type: integer
+                                  required:
+                                  - port
                                   type: object
                               type: object
                             type: array
