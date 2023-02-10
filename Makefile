@@ -77,17 +77,5 @@ update-client-gen:
 update-deepcopy-gen:
 	go install k8s.io/code-generator/cmd/deepcopy-gen@latest
 
-.PHONY: update-kubebuilder
-update-kubebuilder: os = $(shell go env GOOS)
-update-kubebuilder: arch = $(shell go env GOARCH)
-update-kubebuilder: KUBEBUILDER_VERSION = 2.3.1
-update-kubebuilder:
-	# download kubebuilder and extract it to tmp
-	# curl -fsSL https://go.kubebuilder.io/dl/${KUBEBUILDER_VERSION}/${os}/${arch} | tar -xz -C /tmp/
-	curl -fsSL https://github.com/kubernetes-sigs/kubebuilder/releases/download/v${KUBEBUILDER_VERSION}/kubebuilder_${KUBEBUILDER_VERSION}_${os}_${arch}.tar.gz | tar -xz -C /tmp/
-
-	sudo rm -rf /usr/local/kubebuilder
-	sudo mv /tmp/kubebuilder_${KUBEBUILDER_VERSION}_${os}_${arch} /usr/local/kubebuilder
-
 pkg/lint/tests/versions.json:
 	curl -sSL https://k8s.kurl.sh/installer | jq '.' > pkg/lint/tests/versions.json
