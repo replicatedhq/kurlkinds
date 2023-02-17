@@ -19,16 +19,19 @@ import (
 	"bytes"
 	"context"
 	"embed"
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/url"
 	"path"
 	"strings"
 
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+
+	jsonpatch "github.com/evanphx/json-patch/v5"
 	"github.com/mitchellh/mapstructure"
 	"github.com/open-policy-agent/opa/rego"
 	"gopkg.in/yaml.v2"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 	"github.com/replicatedhq/kurlkinds/pkg/apis/cluster/v1beta1"
 )
@@ -41,9 +44,25 @@ var (
 
 // Output holds the outcome of a lint pass on top of a Installer struct.
 type Output struct {
-	Field   string `json:"field,omitempty"`
-	Type    string `json:"type,omitempty"`
-	Message string `json:"message,omitempty"`
+	Field      string          `json:"field,omitempty"`
+	Type       string          `json:"type,omitempty"`
+	Message    string          `json:"message,omitempty"`
+	Suggestion jsonpatch.Patch `json:"suggestion,omitempty"`
+}
+
+// UnmarshalYAML is a helper function that unmarshals a yaml blob into an Output struct.
+// As the Output struct contains a jsonpatch.Patch field and that field contains a property
+// of type json.RawMessage, the default yaml unmarshaller is not able to do the job.
+func (o *Output) UnmarshalYAML(unmarshal func(interface{}) error) error {
+	var raw map[string]interface{}
+	if err := unmarshal(&raw); err != nil {
+		return err
+	}
+	data, err := json.Marshal(raw)
+	if err != nil {
+		return err
+	}
+	return json.Unmarshal(data, o)
 }
 
 // AddOn holds an add-on and its respective supported versions.
@@ -178,9 +197,14 @@ func (l *Linter) validate(ctx context.Context, blob interface{}) ([]Output, erro
 		return []Output{}, nil
 	}
 
+	data, err := json.Marshal(rs[0].Expressions[0].Value)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling rego eval return: %w", err)
+	}
+
 	result := []Output{}
-	if err := mapstructure.Decode(rs[0].Expressions[0].Value, &result); err != nil {
-		return nil, fmt.Errorf("error decoding result: %w", err)
+	if err := json.Unmarshal(data, &result); err != nil {
+		return nil, fmt.Errorf("error unmarshaling rego eval return: %w", err)
 	}
 
 	var filtered = []Output{}

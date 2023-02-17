@@ -8,3 +8,7 @@ output:
   - message: No CNI plugin (Flannel, Weave or Antrea) selected
     field: spec
     type: misconfiguration
+    suggestion:
+      - op: add
+        path: /spec/flannel/version
+        value: latest

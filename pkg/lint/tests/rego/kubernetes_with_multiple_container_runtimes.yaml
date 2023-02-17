@@ -12,3 +12,6 @@ output:
   - message: Multiple container runtimes selected
     field: spec
     type: misconfiguration
+    suggestion:
+      - op: remove
+        path: /spec/docker

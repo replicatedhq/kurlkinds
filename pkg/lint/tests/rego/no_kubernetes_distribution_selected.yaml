@@ -6,3 +6,7 @@ output:
   - message: No kubernetes distribution selected
     field: spec
     type: misconfiguration
+    suggestion:
+      - op: add
+        path: /spec/kubernetes/version
+        value: latest

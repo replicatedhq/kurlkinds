@@ -12,6 +12,10 @@ output:
 - field: spec
   type: misconfiguration
   message: No CNI plugin (Flannel, Weave or Antrea) selected
+  suggestion:
+  - op: add
+    path: /spec/flannel/version
+    value: latest
 - field: spec
   type: misconfiguration
   message: No container runtime (Docker or Containerd) selected

@@ -33,7 +33,10 @@ lint[output] {
 	output := {
 		"type": "misconfiguration",
 		"message": "Multiple container runtimes selected",
-		"field": "spec"
+		"field": "spec",
+		"suggestion": [
+			{ "op": "remove", "path": "/spec/docker" }
+		]
 	}
 }
 
@@ -45,7 +48,10 @@ lint[output] {
 	output :=  {
 		"type": "misconfiguration",
 		"message": "No CNI plugin (Flannel, Weave or Antrea) selected",
-		"field": "spec"
+		"field": "spec",
+		"suggestion": [
+			{ "op": "add", "path": "/spec/flannel/version", "value": "latest" }
+		]
 	}
 }
 
@@ -55,7 +61,12 @@ lint[output] {
 	output := {
 		"type": "misconfiguration",
 		"message": "Multiple CNI plugins selected (choose one of Flannel, Weave or Antrea)",
-		"field": "spec"
+		"field": "spec",
+		"suggestion": [
+			{ "op": "remove", "path": "/spec/weave" },
+			{ "op": "remove", "path": "/spec/antrea" },
+			{ "op": "add", "path": "/spec/flannel/version", "value": "latest" }
+		]
 	}
 }
 
@@ -65,7 +76,10 @@ lint[output] {
 	output := {
 		"type": "misconfiguration",
 		"message": "No kubernetes distribution selected",
-		"field": "spec"
+		"field": "spec",
+		"suggestion": [
+			{ "op": "add", "path": "/spec/kubernetes/version", "value": "latest" }
+		]
 	}
 }
 
@@ -78,7 +92,11 @@ lint[output] {
 	output := {
 		"type": "incompatibility",
 		"message": "Kubernetes 1.24+ does not support Docker runtime, Containerd is recommended",
-		"field": "spec.docker"
+		"field": "spec.docker",
+		"suggestion": [
+			{ "op": "remove", "path": "/spec/docker" },
+			{ "op": "add", "path": "/spec/containerd/version", "value": "latest" }
+		]
 	}
 }
 

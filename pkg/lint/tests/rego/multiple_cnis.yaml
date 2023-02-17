@@ -12,3 +12,11 @@ output:
   - message: Multiple CNI plugins selected (choose one of Flannel, Weave or Antrea)
     field: spec
     type: misconfiguration
+    suggestion:
+      - op: remove
+        path: /spec/weave
+      - op: remove
+        path: /spec/antrea
+      - op: add
+        path: /spec/flannel/version
+        value: latest
