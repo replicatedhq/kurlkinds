@@ -16,18 +16,21 @@ data: |
 output:
   - message: Unknown weave add-on version 0.0.1
     type: unknown-addon
+    severity: error
     patch:
       - op: replace
         path: /spec/weave/version
         value: 2.8.1
   - message: Unknown containerd add-on version 0.0.1
     type: unknown-addon
+    severity: error
     patch:
       - op: replace
         path: /spec/containerd/version
         value: 1.6.8
   - message: Unknown ekco add-on version 0.0.1
     type: unknown-addon
+    severity: error
     patch:
       - op: replace
         path: /spec/ekco/version

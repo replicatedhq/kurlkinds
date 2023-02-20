@@ -11,6 +11,7 @@ installer:
 output:
   - message: Unknown contour add-on version 0.1.0
     type: unknown-addon
+    severity: error
     patch:
       - op: replace
         path: /spec/contour/version

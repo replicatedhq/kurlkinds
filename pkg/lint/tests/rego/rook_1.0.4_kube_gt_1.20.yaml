@@ -11,12 +11,14 @@ installer:
 output:
   - message: Rook versions <= 1.1.0 are not compatible with Kubernetes versions 1.20+
     type: incompatibility
+    severity: error
     patch:
       - op: replace
         path: /spec/rook/version
         value: 1.9.12
   - message: Rook versions <= 1.4.9 are not compatible with Kubernetes versions 1.22+
     type: incompatibility
+    severity: error
     patch:
       - op: replace
         path: /spec/rook/version

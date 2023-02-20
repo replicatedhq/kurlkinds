@@ -7,6 +7,7 @@ installer:
 output:
   - message: No container runtime (Docker or Containerd) selected
     type: misconfiguration
+    severity: error
     patch:
       - op: add
         path: /spec/containerd/version

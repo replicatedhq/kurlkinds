@@ -11,6 +11,7 @@ installer:
 output:
   - message: Unknown aws add-on version 0.0.0
     type: unknown-addon
+    severity: error
     patch:
       - op: replace
         path: /spec/aws/version

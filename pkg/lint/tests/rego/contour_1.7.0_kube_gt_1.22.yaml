@@ -11,6 +11,7 @@ installer:
 output:
   - message: "Contour versions <= 1.7.0 are not compatible with Kubernetes 1.22+"
     type: incompatibility
+    severity: error
     patch:
       - op: replace
         path: /spec/contour/version

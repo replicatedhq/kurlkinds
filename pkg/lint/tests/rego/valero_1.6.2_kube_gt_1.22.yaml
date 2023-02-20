@@ -11,6 +11,7 @@ installer:
 output:
   - message: "Velero versions <= 1.6.2 are not compatible with Kubernetes versions 1.22+"
     type: incompatibility
+    severity: error
     patch:
       - op: replace
         path: /spec/velero/version

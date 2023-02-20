@@ -12,6 +12,7 @@ installer:
 output:
   - message: Prometheus service types is supported only for versions 0.48.1-16.10.0+
     type: misconfiguration
+    severity: error
     patch:
       - op: replace
         path: /spec/prometheus/version

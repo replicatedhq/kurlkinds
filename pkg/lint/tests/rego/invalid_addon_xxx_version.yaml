@@ -9,6 +9,7 @@ installer:
 output:
   - message: Unknown weave add-on version xxx
     type: unknown-addon
+    severity: error
     patch:
       - op: replace
         path: /spec/weave/version

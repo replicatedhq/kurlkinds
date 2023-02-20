@@ -9,6 +9,7 @@ installer:
 output:
   - message: Unknown docker add-on version 1.0.0
     type: unknown-addon
+    severity: error
     patch:
       - op: replace
         path: /spec/docker/version

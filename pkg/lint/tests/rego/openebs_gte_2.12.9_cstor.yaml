@@ -12,6 +12,7 @@ installer:
 output: 
   - message: OpenEBS add-on versions >= 2.12.9 do not support cStor
     type: incompatibility
+    severity: error
     patch:
       - op: remove
         path: /spec/openebs/isCstorEnabled

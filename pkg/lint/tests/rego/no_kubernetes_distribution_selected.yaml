@@ -5,6 +5,7 @@ installer:
 output:
   - message: No kubernetes distribution selected
     type: misconfiguration
+    severity: error
     patch:
       - op: remove
         path: /spec/docker

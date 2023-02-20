@@ -9,6 +9,7 @@ installer:
 output:
   - message: Unknown containerd add-on version 0.0.1
     type: unknown-addon
+    severity: error
     patch:
       - op: replace
         path: /spec/containerd/version

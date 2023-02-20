@@ -11,6 +11,7 @@ installer:
 output:
   - message: Unknown ekco add-on version 0.0.1
     type: unknown-addon
+    severity: error
     patch:
       - op: replace
         path: /spec/ekco/version

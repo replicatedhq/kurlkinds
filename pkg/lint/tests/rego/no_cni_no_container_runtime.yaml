@@ -10,12 +10,14 @@ installer:
       version: latest
 output:
 - type: misconfiguration
+  severity: error
   message: No CNI plugin (Flannel, Weave or Antrea) selected
   patch:
   - op: add
     path: /spec/flannel/version
     value: 0.20.0
 - type: misconfiguration
+  severity: error
   message: No container runtime (Docker or Containerd) selected
   patch:
   - op: add

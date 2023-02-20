@@ -9,6 +9,7 @@ installer:
 output:
   - message: Kubernetes 1.26+ is not compatible with Containerd versions < 1.6.0
     type: incompatibility
+    severity: error
     patch:
       - op: replace
         path: /spec/containerd/version

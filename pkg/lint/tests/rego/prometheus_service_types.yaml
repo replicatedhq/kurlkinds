@@ -12,6 +12,7 @@ installer:
 output:
   - message: Prometheus service types are NodePort and ClusterIP, not LoadBalancer
     type: misconfiguration
+    severity: error
     patch:
       - op: replace
         path: /spec/prometheus/serviceType

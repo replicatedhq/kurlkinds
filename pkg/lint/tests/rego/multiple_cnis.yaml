@@ -11,6 +11,7 @@ installer:
 output:
   - message: Multiple CNI plugins selected (choose one of Flannel, Weave or Antrea)
     type: misconfiguration
+    severity: error
     patch:
       - op: remove
         path: /spec/weave
