@@ -1,0 +1,69 @@
+installer:
+  spec: 
+    kubernetes: 
+      version: 1.25.x
+    weave: 
+      version: 2.6.x
+    contour: 
+      version: 1.22.x
+    prometheus: 
+      version: 0.59.x
+    registry: 
+      version: 2.8.x
+    containerd: 
+      version: 1.6.x
+    velero: 
+      version: latest
+    kotsadm: 
+      version: 1.87.0
+    ekco: 
+      version: latest
+    fluentd: 
+      version: latest
+    minio: 
+      version: 2022-10-05T14-58-27Z
+    openebs: 
+      version: 3.3.x
+      isLocalPVEnabled: true
+      localPVStorageClassName: default
+    collectd: 
+      version: latest
+    metricsServer: 
+      version: latest
+    certManager: 
+      version: latest
+    sonobuoy: 
+      version: latest
+    goldpinger: 
+      version: latest
+    aws: 
+      version: latest
+output:
+  - message: "Add-on contour has a more recent version: 1.23.0"
+    type: upgrade-available
+    severity: info
+    patch:
+      - op: replace
+        path: /spec/contour/version
+        value: 1.23.0
+  - message: "Add-on kubernetes has a more recent version: 1.26.0"
+    type: upgrade-available
+    severity: info
+    patch:
+      - op: replace
+        path: /spec/kubernetes/version
+        value: 1.26.0
+  - message: "Add-on weave has a more recent version: 2.8.1"
+    type: upgrade-available
+    severity: info
+    patch:
+      - op: replace
+        path: /spec/weave/version
+        value: 2.8.1
+  - message: "Add-on kotsadm has a more recent version: 1.88.0"
+    type: upgrade-available
+    severity: info
+    patch:
+      - op: replace
+        path: /spec/kotsadm/version
+        value: 1.88.0

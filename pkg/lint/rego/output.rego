@@ -223,7 +223,7 @@ lint[output] {
 		"severity": "error",
 		"message": "Calico versions <= 3.9.1 are not compatible with Kubernetes 1.22+",
 		"patch": [
-			{ "op": "replace", "path": "/spec/kubernetes/version", "value": "latest" }
+			{ "op": "replace", "path": "/spec/kubernetes/version", "value":  preceding_version("kubernetes", "1.22.0") }
 		]
 	}
 }
@@ -282,6 +282,24 @@ lint[output] {
 		"message": sprintf("Unknown %v add-on version %v", [name, installer.spec[name].version]),
 		"patch": [
 			{ "op": "replace", "path": sprintf("/spec/%v/version", [name]), "value": newest_add_on_version(name) }
+		]
+	}
+}
+
+# reports an info linting message if there is a newer version of an add-on available.
+lint[output] {
+	info_severity_enabled
+	some name
+	ignored := known_versions[name]
+	valid_add_on_version(name)
+	newest_version := newest_add_on_version(name)
+	is_addon_version_lower_than(name, newest_version)
+	output := {
+		"type": "upgrade-available",
+		"severity": "info",
+		"message": sprintf("Add-on %v has a more recent version: %v", [name, newest_version]),
+		"patch": [
+			{ "op": "replace", "path": sprintf("/spec/%v/version", [name]), "value": newest_version }
 		]
 	}
 }

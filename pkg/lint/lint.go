@@ -81,8 +81,9 @@ type AddOn struct {
 }
 
 type Linter struct {
-	apiBaseURL *url.URL
-	verbose    bool
+	apiBaseURL       *url.URL
+	verbose          bool
+	showInfoSeverity bool
 }
 
 // New returns a new v1beta1.Installer linter. this linter is capable of evaluating if a
@@ -171,6 +172,10 @@ func (l *Linter) validate(ctx context.Context, blob interface{}) ([]Output, erro
 		return nil, fmt.Errorf("error preparing for api requests: %w", err)
 	}
 
+	if l.showInfoSeverity {
+		content = l.enableInfoSeverity(content)
+	}
+
 	options := []func(*rego.Rego){
 		rego.Query("data.kurl.installer.lint"),
 		rego.Module("rego/variables.rego", string(content)),
@@ -238,6 +243,14 @@ func (l *Linter) validate(ctx context.Context, blob interface{}) ([]Output, erro
 		return nil, ppfailure
 	}
 	return filtered, nil
+}
+
+// enableInfoSeverity patches the provided content to enable info severity. the content passed
+// in here is the content of the `rego/variables.rego` file.
+func (l *Linter) enableInfoSeverity(content []byte) []byte {
+	oldVar := []byte("info_severity_enabled = false")
+	newVar := []byte("info_severity_enabled = true")
+	return bytes.ReplaceAll(content, oldVar, newVar)
 }
 
 // replaceAPIBaseURL replaces the api base url used for querying add-on versions. this is
