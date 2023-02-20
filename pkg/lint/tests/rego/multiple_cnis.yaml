@@ -10,7 +10,6 @@ installer:
       version: latest
 output:
   - message: Multiple CNI plugins selected (choose one of Flannel, Weave or Antrea)
-    field: spec
     type: misconfiguration
     patch:
       - op: remove

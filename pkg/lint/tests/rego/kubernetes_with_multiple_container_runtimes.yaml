@@ -10,7 +10,6 @@ installer:
       version: latest
 output:
   - message: Multiple container runtimes selected
-    field: spec
     type: misconfiguration
     patch:
       - op: remove

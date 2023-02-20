@@ -6,7 +6,6 @@ installer:
       version: latest
 output:
   - message: No container runtime (Docker or Containerd) selected
-    field: spec
     type: misconfiguration
     patch:
       - op: add

@@ -10,7 +10,6 @@ installer:
       version: 1.8.10
 output:
   - message: Rook versions <= 1.9.10 are not compatible with Kubernetes 1.25+
-    field: spec.rook.version
     type: incompatibility
     patch:
       - op: replace

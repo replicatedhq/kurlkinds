@@ -10,7 +10,6 @@ installer:
       version: latest
 output:
   - message: Invalid Weave pod CIDR range
-    field: spec.weave.podCidrRange
     type: misconfiguration
     patch:
       - op: remove

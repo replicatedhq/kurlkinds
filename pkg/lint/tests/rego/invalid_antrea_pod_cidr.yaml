@@ -9,7 +9,6 @@ installer:
       version: latest
 output:
   - message: Invalid Antrea pod CIDR
-    field: spec.antrea.podCIDR
     type: misconfiguration
     patch:
       - op: remove

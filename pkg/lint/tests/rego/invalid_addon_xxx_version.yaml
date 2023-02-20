@@ -8,7 +8,6 @@ installer:
       version: xxx
 output:
   - message: Unknown weave add-on version xxx
-    field: spec.weave.version
     type: unknown-addon
     patch:
       - op: replace

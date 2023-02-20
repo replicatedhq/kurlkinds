@@ -4,7 +4,6 @@ installer:
       version: latest
 output:
   - message: No kubernetes distribution selected
-    field: spec
     type: misconfiguration
     patch:
       - op: remove

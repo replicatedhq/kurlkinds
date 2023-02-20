@@ -15,21 +15,18 @@ data: |
       version: 0.0.1
 output:
   - message: Unknown weave add-on version 0.0.1
-    field: spec.weave.version
     type: unknown-addon
     patch:
       - op: replace
         path: /spec/weave/version
         value: 2.8.1
   - message: Unknown containerd add-on version 0.0.1
-    field: spec.containerd.version
     type: unknown-addon
     patch:
       - op: replace
         path: /spec/containerd/version
         value: 1.6.8
   - message: Unknown ekco add-on version 0.0.1
-    field: spec.ekco.version
     type: unknown-addon
     patch:
       - op: replace

@@ -8,7 +8,6 @@ installer:
       version: latest
 output:
   - message: Flannel is not compatible with the Docker runtime, Containerd is required
-    field: spec.docker
     type: incompatibility
     patch:
       - op: remove

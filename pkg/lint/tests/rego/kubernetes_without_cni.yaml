@@ -6,7 +6,6 @@ installer:
       version: latest
 output:
   - message: No CNI plugin (Flannel, Weave or Antrea) selected
-    field: spec
     type: misconfiguration
     patch:
       - op: add

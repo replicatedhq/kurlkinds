@@ -8,7 +8,6 @@ installer:
       version: 1.0.0
 output:
   - message: Unknown docker add-on version 1.0.0
-    field: spec.docker.version
     type: unknown-addon
     patch:
       - op: replace

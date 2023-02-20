@@ -25,7 +25,6 @@ installer:
       version: 0.4.1
 output:
   - message: Invalid Weave pod CIDR
-    field: spec.weave.podCIDR
     type: misconfiguration
     patch:
       - op: remove

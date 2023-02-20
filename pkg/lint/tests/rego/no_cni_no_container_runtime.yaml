@@ -9,15 +9,13 @@ installer:
     fluentd:
       version: latest
 output:
-- field: spec
-  type: misconfiguration
+- type: misconfiguration
   message: No CNI plugin (Flannel, Weave or Antrea) selected
   patch:
   - op: add
     path: /spec/flannel/version
     value: 0.20.0
-- field: spec
-  type: misconfiguration
+- type: misconfiguration
   message: No container runtime (Docker or Containerd) selected
   patch:
   - op: add
