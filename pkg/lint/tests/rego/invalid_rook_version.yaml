@@ -12,3 +12,7 @@ output:
   - message: Unknown rook add-on version 0.1.0
     field: spec.rook.version
     type: unknown-addon
+    patch:
+      - op: replace
+        path: /spec/rook/version
+        value: 1.9.12

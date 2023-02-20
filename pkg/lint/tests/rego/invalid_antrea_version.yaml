@@ -10,3 +10,7 @@ output:
   - message: Unknown antrea add-on version 0.0.1
     field: spec.antrea.version
     type: unknown-addon
+    patch:
+      - op: replace
+        path: /spec/antrea/version
+        value: 1.4.0

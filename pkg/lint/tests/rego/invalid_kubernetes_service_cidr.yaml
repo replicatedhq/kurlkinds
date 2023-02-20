@@ -11,3 +11,6 @@ output:
   - message: Invalid Kubernetes services CIDR
     field: spec.kubernetes.serviceCIDR
     type: misconfiguration
+    patch:
+      - op: remove
+        path: /spec/kubernetes/serviceCIDR

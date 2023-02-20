@@ -27,3 +27,6 @@ output:
   - message: Invalid Weave pod CIDR
     field: spec.weave.podCIDR
     type: misconfiguration
+    patch:
+      - op: remove
+        path: /spec/weave/podCIDR

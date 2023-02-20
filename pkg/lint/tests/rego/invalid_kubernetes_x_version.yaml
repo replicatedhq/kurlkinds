@@ -10,3 +10,7 @@ output:
   - message: Unknown kubernetes add-on version 99.99.x
     field: spec.kubernetes.version
     type: unknown-addon
+    patch:
+      - op: replace
+        path: /spec/kubernetes/version
+        value: 1.26.0

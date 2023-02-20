@@ -12,3 +12,7 @@ output:
   - message: Unknown minio add-on version 0.1.0
     field: spec.minio.version
     type: unknown-addon
+    patch:
+      - op: replace
+        path: /spec/minio/version
+        value: 2022-10-20T00-55-09Z

@@ -27,6 +27,7 @@ import (
 	"strings"
 	"testing"
 
+	jsonpatch "github.com/evanphx/json-patch/v5"
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
 	"gopkg.in/yaml.v3"
@@ -168,6 +169,43 @@ func TestValidate(t *testing.T) {
 			diff := cmp.Diff(result, tt.Output, cmpopts.SortSlices(less))
 			if diff != "" {
 				t.Errorf("unexpected return: %s", diff)
+			}
+
+			if len(result) == 0 {
+				return
+			}
+
+			// apply all the proposed changes (patch) and verify it does not return any other
+			// issue after the changes. patches must solve the linting problems.
+			installerData, err := json.Marshal(tt.Installer)
+			if err != nil {
+				t.Fatalf("unable to marshal installer: %s", err)
+			}
+
+			for _, out := range result {
+				options := &jsonpatch.ApplyOptions{
+					AllowMissingPathOnRemove: true,
+					EnsurePathExistsOnAdd:    true,
+				}
+				installerData, err = out.Patch.ApplyWithOptions(installerData, options)
+				if err != nil {
+					t.Fatalf("error applying patch: %s", err)
+				}
+			}
+
+			var newInstaller v1beta1.Installer
+			if err := json.Unmarshal(installerData, &newInstaller); err != nil {
+				t.Fatalf("unable to unmarshal patched installer: %s", err)
+			}
+
+			result, err = linter.Validate(context.Background(), newInstaller)
+			if err != nil {
+				t.Errorf("unexpected error returned: %s", err)
+				return
+			}
+
+			if len(result) > 0 {
+				t.Errorf("patched installer still has errors: %+v", result)
 			}
 		})
 	}

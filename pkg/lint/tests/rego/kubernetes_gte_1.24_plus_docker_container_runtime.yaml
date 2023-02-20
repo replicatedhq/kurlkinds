@@ -10,9 +10,9 @@ output:
   - message: Kubernetes 1.24+ does not support Docker runtime, Containerd is recommended
     field: spec.docker
     type: incompatibility
-    suggestion:
+    patch:
       - op: remove
         path: /spec/docker
       - op: add
         path: /spec/containerd/version
-        value: latest
+        value: 1.6.8

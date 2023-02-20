@@ -6,7 +6,19 @@ output:
   - message: No kubernetes distribution selected
     field: spec
     type: misconfiguration
-    suggestion:
+    patch:
+      - op: remove
+        path: /spec/docker
+      - op: remove
+        path: /spec/antrea
+      - op: remove
+        path: /spec/weave
       - op: add
         path: /spec/kubernetes/version
-        value: latest
+        value: 1.26.0
+      - op: add
+        path: /spec/flannel/version
+        value: 0.20.0
+      - op: add
+        path: /spec/containerd/version
+        value: 1.6.8

@@ -11,3 +11,6 @@ output:
   - message: Invalid Kubernetes services CIDR range
     field: spec.kubernetes.serviceCidrRange
     type: misconfiguration
+    patch:
+      - op: remove
+        path: /spec/kubernetes/serviceCidrRange

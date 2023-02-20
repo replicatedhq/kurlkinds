@@ -12,3 +12,7 @@ output:
   - message: Unknown ekco add-on version 0.0.1
     field: spec.ekco.version
     type: unknown-addon
+    patch:
+      - op: replace
+        path: /spec/ekco/version
+        value: 0.23.2

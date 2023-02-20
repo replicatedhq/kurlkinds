@@ -12,3 +12,7 @@ output:
   - message: Unknown fluentd add-on version 0.0.1
     field: spec.fluentd.version
     type: unknown-addon
+    patch:
+      - op: replace
+        path: /spec/fluentd/version
+        value: 1.7.4

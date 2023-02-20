@@ -12,3 +12,6 @@ output:
   - message: Invalid Antrea pod CIDR range
     field: spec.antrea.podCidrRange
     type: misconfiguration
+    patch:
+      - op: remove
+        path: /spec/antrea/podCidrRange

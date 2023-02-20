@@ -12,3 +12,7 @@ output:
   - message: Unknown collectd add-on version 0.1.0
     field: spec.collectd.version
     type: unknown-addon
+    patch:
+      - op: replace
+        path: /spec/collectd/version
+        value: v5

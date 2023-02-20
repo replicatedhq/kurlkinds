@@ -12,3 +12,7 @@ output:
   - message: Unknown contour add-on version 0.1.0
     field: spec.contour.version
     type: unknown-addon
+    patch:
+      - op: replace
+        path: /spec/contour/version
+        value: 1.23.0

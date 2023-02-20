@@ -167,3 +167,44 @@ port_out_of_range(port, floor, ceil) {
 port_out_of_range(port, floor, ceil) {
 	port > ceil
 }
+
+# count_versions_less_than returns a counter indicating how many versions in the versions array are
+# less than the requested version (uses sematic versioning to compare).
+count_versions_less_than(version, versions) = vcount {
+	semver.is_valid(version)
+	vcount := count({v | v := versions[_]; semver.compare(version, v) == 1})
+} else = vcount {
+	vcount := count({v | v := versions[_]; version > v})
+}
+
+# sort_versions sorts the provided versions array using sematic versioning, if all elements in the
+# are are not valid sematic versions then the array is returned sorted as strings. return is sorted
+# in ascending order.
+sort_versions(versions) = sorted {
+	some i
+	sorted := { count_versions_less_than(versions[i], versions): x | x := versions[i] }
+}
+
+# newest_add_on_version returns the newest version of the add-on.
+newest_add_on_version(add_on) = newest {
+	known_versions[add_on]
+	sorted := sort_versions(known_versions[add_on].fixed_versions)
+	newest := sorted[count(sorted)-1]
+} else = newest {
+	newest := "latest"
+}
+
+# preceding_version returns the version preceding the provided version.
+preceding_version(add_on, version) = preceding {
+	known_versions[add_on]
+	sorted := sort_versions(known_versions[add_on].fixed_versions)
+	pos := count_versions_less_than(version, sorted)
+	pos > 0
+	preceding := sorted[pos - 1]
+} else = preceding {
+	known_versions[add_on]
+	sorted := sort_versions(known_versions[add_on].fixed_versions)
+	preceding := sorted[0]
+} else = preceding {
+	preceding := "latest"
+}

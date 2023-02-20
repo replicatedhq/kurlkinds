@@ -13,3 +13,6 @@ output:
   - message: OpenEBS add-on versions >= 2.12.9 do not support cStor
     field: spec.openebs.isCstorEnabled
     type: incompatibility
+    patch:
+      - op: remove
+        path: /spec/openebs/isCstorEnabled

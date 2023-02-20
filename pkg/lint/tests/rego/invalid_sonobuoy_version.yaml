@@ -12,3 +12,7 @@ output:
   - message: Unknown sonobuoy add-on version 0.0.1
     field: spec.sonobuoy.version
     type: unknown-addon
+    patch:
+      - op: replace
+        path: /spec/sonobuoy/version
+        value: 0.56.10

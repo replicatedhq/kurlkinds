@@ -12,3 +12,7 @@ output:
   - message: Unknown kotsadm add-on version 6.6.6
     field: spec.kotsadm.version
     type: unknown-addon
+    patch:
+      - op: replace
+        path: /spec/kotsadm/version
+        value: 1.88.0

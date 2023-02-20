@@ -12,3 +12,7 @@ output:
   - message: Unknown calico add-on version 0.1.0
     field: spec.calico.version
     type: unknown-addon
+    patch:
+      - op: replace
+        path: /spec/calico/version
+        value: 3.9.1

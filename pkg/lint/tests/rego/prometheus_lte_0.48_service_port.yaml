@@ -13,3 +13,7 @@ output:
   - message: Prometheus service types is supported only for versions 0.48.1-16.10.0+
     field: spec.prometheus.serviceType
     type: misconfiguration
+    patch:
+      - op: replace
+        path: /spec/prometheus/version
+        value: 0.59.1-40.1.0

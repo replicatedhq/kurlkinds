@@ -13,3 +13,7 @@ output:
   - message: Prometheus service types are NodePort and ClusterIP, not LoadBalancer
     field: spec.prometheus.serviceType
     type: misconfiguration
+    patch:
+      - op: replace
+        path: /spec/prometheus/serviceType
+        value: ClusterIP

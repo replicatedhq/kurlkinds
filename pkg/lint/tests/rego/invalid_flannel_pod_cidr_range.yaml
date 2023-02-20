@@ -12,3 +12,6 @@ output:
   - message: Invalid Flannel pod CIDR range
     field: spec.flannel.podCIDRRange
     type: misconfiguration
+    patch:
+      - op: remove
+        path: /spec/flannel/podCIDRRange

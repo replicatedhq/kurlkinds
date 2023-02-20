@@ -75,9 +75,10 @@ find_latest_version(allversions) = version {
 #	},
 #	...
 # }
-default known_versions = { addon_name: { "versions": versions, "latest": latest } |
+default known_versions = { addon_name: { "versions": versions, "latest": latest, "fixed_versions": fixed_versions } |
 	some addon_name
 	allversions := remote_versions.body[addon_name]
 	versions := [ version | version := allversions[_]; version != "latest" ]
+	fixed_versions := { version | version := versions[_] }
 	latest = find_latest_version(allversions)
 }

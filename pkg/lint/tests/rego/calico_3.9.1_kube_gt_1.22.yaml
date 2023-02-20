@@ -12,3 +12,7 @@ output:
   - message: "Calico versions <= 3.9.1 are not compatible with Kubernetes 1.22+"
     field: spec.calico.version
     type: incompatibility
+    patch:
+      - op: replace
+        path: /spec/kubernetes/version
+        value: latest

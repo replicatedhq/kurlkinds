@@ -12,3 +12,7 @@ output:
   - message: Unknown prometheus add-on version 0.1.0
     field: spec.prometheus.version
     type: unknown-addon
+    patch:
+      - op: replace
+        path: /spec/prometheus/version
+        value: 0.59.1-40.1.0

@@ -44,10 +44,10 @@ var (
 
 // Output holds the outcome of a lint pass on top of a Installer struct.
 type Output struct {
-	Field      string          `json:"field,omitempty"`
-	Type       string          `json:"type,omitempty"`
-	Message    string          `json:"message,omitempty"`
-	Suggestion jsonpatch.Patch `json:"suggestion,omitempty"`
+	Field   string          `json:"field,omitempty"`
+	Type    string          `json:"type,omitempty"`
+	Message string          `json:"message,omitempty"`
+	Patch   jsonpatch.Patch `json:"patch,omitempty"`
 }
 
 // UnmarshalYAML is a helper function that unmarshals a yaml blob into an Output struct.

@@ -12,3 +12,7 @@ output:
   - message: Prometheus versions <= 0.59.0 are not compatible with Kubernetes 1.25+
     field: spec.prometheus.version
     type: incompatibility
+    patch:
+      - op: replace
+        path: /spec/prometheus/version
+        value: 0.59.1-40.1.0

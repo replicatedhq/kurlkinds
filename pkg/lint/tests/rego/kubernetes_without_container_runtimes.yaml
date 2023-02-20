@@ -8,3 +8,7 @@ output:
   - message: No container runtime (Docker or Containerd) selected
     field: spec
     type: misconfiguration
+    patch:
+      - op: add
+        path: /spec/containerd/version
+        value: 1.6.8
