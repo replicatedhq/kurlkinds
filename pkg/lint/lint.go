@@ -99,7 +99,7 @@ func New(opts ...Option) *Linter {
 // Versions return a map containing all supported versions indexed by add-on name. it
 // goes and fetch the versions from a remote endpoint.
 func (l *Linter) Versions(ctx context.Context, inst v1beta1.Installer) (map[string]AddOn, error) {
-	content, err := l.replaceAPIBaseURL(ctx)
+	content, err := l.prepareVariablesRegoFile(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("error preparing for api requests: %w", err)
 	}
@@ -167,13 +167,9 @@ func (l *Linter) Validate(ctx context.Context, inst v1beta1.Installer) ([]Output
 // Validate checks the provided blob for errors. This function receives an interface{} as it
 // is used in different contexts, keeping this "private" is by design.
 func (l *Linter) validate(ctx context.Context, blob interface{}) ([]Output, error) {
-	content, err := l.replaceAPIBaseURL(ctx)
+	content, err := l.prepareVariablesRegoFile(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("error preparing for api requests: %w", err)
-	}
-
-	if l.showInfoSeverity {
-		content = l.enableInfoSeverity(content)
 	}
 
 	options := []func(*rego.Rego){
@@ -245,32 +241,27 @@ func (l *Linter) validate(ctx context.Context, blob interface{}) ([]Output, erro
 	return filtered, nil
 }
 
-// enableInfoSeverity patches the provided content to enable info severity. the content passed
-// in here is the content of the `rego/variables.rego` file.
-func (l *Linter) enableInfoSeverity(content []byte) []byte {
-	oldVar := []byte("info_severity_enabled = false")
-	newVar := []byte("info_severity_enabled = true")
-	return bytes.ReplaceAll(content, oldVar, newVar)
-}
-
-// replaceAPIBaseURL replaces the api base url used for querying add-on versions. this is
-// https://kurl.sh by default but can be replaced (for sake of testing or running against
-// our staging environment).
-func (l *Linter) replaceAPIBaseURL(ctx context.Context) ([]byte, error) {
+// prepareVariablesRegoFile reads and parses the `rego/variables.rego` file. two things can
+// be changed in the original file: 1) the api base url can be replaced by one provided by
+// the user and 2) the info severity can be enabled.
+func (l *Linter) prepareVariablesRegoFile(ctx context.Context) ([]byte, error) {
 	content, err := static.ReadFile("rego/variables.rego")
 	if err != nil {
 		return nil, fmt.Errorf("error reading rego variables file: %w", err)
 	}
-
-	if l.apiBaseURL == nil {
-		l.debug("api base url has not been replaced")
-		return content, nil
+	if l.apiBaseURL != nil {
+		// if the version url has been set by the user we replace it here.
+		oldurl := []byte("https://kurl.sh")
+		newurl := []byte(l.apiBaseURL.String())
+		content = bytes.ReplaceAll(content, oldurl, newurl)
+		l.debug("api base url been replaced by %q", l.apiBaseURL.String())
 	}
-
-	// if the version url has been set by the user we replace it here.
-	oldurl := []byte("https://kurl.sh")
-	newurl := []byte(l.apiBaseURL.String())
-	content = bytes.ReplaceAll(content, oldurl, newurl)
-	l.debug("api base url been replaced by %q", l.apiBaseURL.String())
+	if l.showInfoSeverity {
+		// if info severity is enabled we update the variable here.
+		oldvar := []byte("info_severity_enabled = false")
+		newvar := []byte("info_severity_enabled = true")
+		content = bytes.ReplaceAll(content, oldvar, newvar)
+		l.debug("info severity enable state changed")
+	}
 	return content, nil
 }
