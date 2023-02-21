@@ -52,7 +52,6 @@ const (
 
 // Output holds the outcome of a lint pass on top of a Installer struct.
 type Output struct {
-	Field    string          `json:"field,omitempty"`
 	Type     string          `json:"type,omitempty"`
 	Message  string          `json:"message,omitempty"`
 	Severity Severity        `json:"severity,omitempty"`
