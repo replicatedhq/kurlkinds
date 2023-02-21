@@ -30,6 +30,9 @@ api_base_url = "https://kurl.sh"
 # info is the only one that can be disabled (in fact, disabled is its default value).
 info_severity_enabled = false
 
+# debug_enabled indicates if the linter should return debug messages.
+debug_enabled = false
+
 # this rule determines what endpoint we need to reach when fetching add-on versions remotely
 # if there is a pre-determined version in installer.spec.kurl.installerVersion we go for add-ons
 # specific to the informed version.
@@ -80,10 +83,9 @@ find_latest_version(allversions) = version {
 #	},
 #	...
 # }
-default known_versions = { addon_name: { "versions": versions, "latest": latest, "fixed_versions": fixed_versions } |
+default known_versions = { addon_name: { "versions": versions, "latest": latest } |
 	some addon_name
 	allversions := remote_versions.body[addon_name]
-	versions := [ version | version := allversions[_]; version != "latest" ]
-	fixed_versions := { version | version := versions[_] }
+	versions := { version | version := allversions[_]; version != "latest" }
 	latest = find_latest_version(allversions)
 }

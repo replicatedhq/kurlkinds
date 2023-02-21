@@ -188,7 +188,7 @@ sort_versions(versions) = sorted {
 # newest_add_on_version returns the newest version of the add-on.
 newest_add_on_version(add_on) = newest {
 	known_versions[add_on]
-	sorted := sort_versions(known_versions[add_on].fixed_versions)
+	sorted := sort_versions(known_versions[add_on].versions)
 	newest := sorted[count(sorted)-1]
 } else = newest {
 	newest := "latest"
@@ -197,13 +197,13 @@ newest_add_on_version(add_on) = newest {
 # preceding_version returns the version preceding the provided version.
 preceding_version(add_on, version) = preceding {
 	known_versions[add_on]
-	sorted := sort_versions(known_versions[add_on].fixed_versions)
+	sorted := sort_versions(known_versions[add_on].versions)
 	pos := count_versions_less_than(version, sorted)
 	pos > 0
 	preceding := sorted[pos - 1]
 } else = preceding {
 	known_versions[add_on]
-	sorted := sort_versions(known_versions[add_on].fixed_versions)
+	sorted := sort_versions(known_versions[add_on].versions)
 	preceding := sorted[0]
 } else = preceding {
 	preceding := "latest"

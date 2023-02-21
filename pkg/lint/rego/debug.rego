@@ -15,6 +15,7 @@ package kurl.installer
 
 # informs that we are linting a marshaled installer.
 lint[output] {
+	debug_enabled
 	input.content
 	output :=  {
 		"type": "debug",
@@ -24,6 +25,7 @@ lint[output] {
 
 # informs that we are linting an unmarshaled installer.
 lint[output] {
+	debug_enabled
 	not input.content
 	output :=  {
 		"type": "debug",
@@ -33,6 +35,7 @@ lint[output] {
 
 # informs the object being analyzed.
 lint[output] {
+	debug_enabled
 	output :=  {
 		"type": "debug",
 		"message": sprintf("installer: %v", [json.marshal(installer)])
@@ -41,6 +44,7 @@ lint[output] {
 
 # informs the base url we are using to fetch add-on versions.
 lint[output] {
+	debug_enabled
 	output :=  {
 		"type": "debug",
 		"message": sprintf("api_base_url: %v", [api_base_url])
@@ -49,6 +53,7 @@ lint[output] {
 
 # informs the ful url we are using to fetch add-on versions.
 lint[output] {
+	debug_enabled
 	output :=  {
 		"type": "debug",
 		"message": sprintf("add_ons_versions_endpoint: %v", [add_ons_versions_endpoint])
@@ -57,6 +62,7 @@ lint[output] {
 
 # returns the full body of the remote_versions request.
 lint[output] {
+	debug_enabled
 	output :=  {
 		"type": "debug",
 		"message": sprintf("remote_versions body: %v", [remote_versions.raw_body])
@@ -65,6 +71,7 @@ lint[output] {
 
 # returns the remote_versions request status.
 lint[output] {
+	debug_enabled
 	output :=  {
 		"type": "debug",
 		"message": sprintf("remote_versions status: %v", [remote_versions.status])

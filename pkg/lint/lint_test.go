@@ -337,11 +337,11 @@ func TestCustomAPIEndpoint(t *testing.T) {
 	expected := map[string]AddOn{
 		"addon0": {
 			Latest:   "3.0.0",
-			Versions: []string{"3.0.0", "2.0.0", "1.0.0"},
+			Versions: []string{"1.0.0", "2.0.0", "3.0.0"},
 		},
 		"addon1": {
 			Latest:   "6.0.0",
-			Versions: []string{"8.0.0", "7.0.0", "6.0.0"},
+			Versions: []string{"6.0.0", "7.0.0", "8.0.0"},
 		},
 	}
 

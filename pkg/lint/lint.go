@@ -241,27 +241,31 @@ func (l *Linter) validate(ctx context.Context, blob interface{}) ([]Output, erro
 	return filtered, nil
 }
 
-// prepareVariablesRegoFile reads and parses the `rego/variables.rego` file. two things can
+// prepareVariablesRegoFile reads and parses the `rego/variables.rego` file. three things can
 // be changed in the original file: 1) the api base url can be replaced by one provided by
-// the user and 2) the info severity can be enabled.
+// the user, 2) the info severity can be enabled and 3) the debug messages can be enabled.
 func (l *Linter) prepareVariablesRegoFile(ctx context.Context) ([]byte, error) {
 	content, err := static.ReadFile("rego/variables.rego")
 	if err != nil {
 		return nil, fmt.Errorf("error reading rego variables file: %w", err)
 	}
 	if l.apiBaseURL != nil {
-		// if the version url has been set by the user we replace it here.
 		oldurl := []byte("https://kurl.sh")
 		newurl := []byte(l.apiBaseURL.String())
 		content = bytes.ReplaceAll(content, oldurl, newurl)
 		l.debug("api base url been replaced by %q", l.apiBaseURL.String())
 	}
 	if l.showInfoSeverity {
-		// if info severity is enabled we update the variable here.
 		oldvar := []byte("info_severity_enabled = false")
 		newvar := []byte("info_severity_enabled = true")
 		content = bytes.ReplaceAll(content, oldvar, newvar)
-		l.debug("info severity enable state changed")
+		l.debug("info severity enabled")
+	}
+	if l.verbose {
+		oldvar := []byte("debug_enabled = false")
+		newvar := []byte("debug_enabled = true")
+		content = bytes.ReplaceAll(content, oldvar, newvar)
+		l.debug("rego debug enabled")
 	}
 	return content, nil
 }
