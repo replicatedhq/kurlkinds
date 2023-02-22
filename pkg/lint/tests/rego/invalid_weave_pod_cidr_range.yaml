@@ -12,6 +12,3 @@ output:
   - message: Invalid Weave pod CIDR range
     type: misconfiguration
     severity: error
-    patch:
-      - op: remove
-        path: /spec/weave/podCidrRange

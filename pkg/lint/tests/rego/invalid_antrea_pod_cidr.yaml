@@ -11,6 +11,3 @@ output:
   - message: Invalid Antrea pod CIDR
     type: misconfiguration
     severity: error
-    patch:
-      - op: remove
-        path: /spec/antrea/podCIDR

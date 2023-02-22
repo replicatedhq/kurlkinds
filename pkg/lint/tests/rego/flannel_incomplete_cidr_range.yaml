@@ -15,6 +15,3 @@ output:
   - message: Invalid Flannel pod CIDR
     type: misconfiguration
     severity: error
-    patch:
-      - op: remove
-        path: /spec/flannel/podCIDR

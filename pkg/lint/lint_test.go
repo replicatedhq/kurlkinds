@@ -181,6 +181,7 @@ func TestValidateWithInfoSeverity(t *testing.T) {
 			if err != nil {
 				t.Fatalf("unable to marshal installer: %s", err)
 			}
+			installerData = removeCIDRConfig(t, installerData)
 
 			for _, out := range result {
 				options := &jsonpatch.ApplyOptions{
@@ -285,6 +286,7 @@ func TestValidate(t *testing.T) {
 			if err != nil {
 				t.Fatalf("unable to marshal installer: %s", err)
 			}
+			installerData = removeCIDRConfig(t, installerData)
 
 			for _, out := range result {
 				options := &jsonpatch.ApplyOptions{
@@ -539,4 +541,24 @@ func TestValidateMarshaledYAML(t *testing.T) {
 			}
 		})
 	}
+}
+
+// removeCIDRConfig remove any reference to CIDR configuration from the provided installer. This is
+// useful to test the linter without having to provide a valid CIDR configuration as the linter does
+// not provide any patch regarding CIDR configuration.
+func removeCIDRConfig(t *testing.T, installer []byte) []byte {
+	patchData, err := staticTests.ReadFile("tests/remove_cidr_config.json")
+	if err != nil {
+		t.Fatalf("unable to read cidr removal patch: %s", err)
+	}
+	patch, err := jsonpatch.DecodePatch(patchData)
+	if err != nil {
+		t.Fatalf("invalid patch found at tests/remove_cidr_config.json: %s", err)
+	}
+	options := &jsonpatch.ApplyOptions{AllowMissingPathOnRemove: true, EnsurePathExistsOnAdd: true}
+	newInstaller, err := patch.ApplyWithOptions(installer, options)
+	if err != nil {
+		t.Fatalf("unable to apply patch to the installer: %s", err)
+	}
+	return newInstaller
 }

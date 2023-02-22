@@ -114,10 +114,7 @@ lint[output] {
 	output := {
 		"type": "misconfiguration",
 		"severity": "error",
-		"message": "Invalid Kubernetes services CIDR",
-		"patch": [
-			{ "op": "remove", "path": "/spec/kubernetes/serviceCIDR" }
-		]
+		"message": "Invalid Kubernetes services CIDR"
 	}
 }
 
@@ -127,10 +124,7 @@ lint[output] {
 	output := {
 		"type": "misconfiguration",
 		"severity": "error",
-		"message": "Invalid Kubernetes services CIDR range",
-		"patch": [
-			{ "op": "remove", "path": "/spec/kubernetes/serviceCidrRange" }
-		]
+		"message": "Invalid Kubernetes services CIDR range"
 	}
 }
 
@@ -140,10 +134,7 @@ lint[output] {
 	output := {
 		"type": "misconfiguration",
 		"severity": "error",
-		"message": "Invalid Weave pod CIDR range",
-		"patch": [
-			{ "op": "remove", "path": "/spec/weave/podCidrRange" }
-		]
+		"message": "Invalid Weave pod CIDR range"
 	}
 }
 
@@ -154,10 +145,7 @@ lint[output] {
 	output := {
 		"type": "misconfiguration",
 		"severity": "error",
-		"message": "Invalid Weave pod CIDR",
-		"patch": [
-			{ "op": "remove", "path": "/spec/weave/podCIDR" }
-		]
+		"message": "Invalid Weave pod CIDR"
 	}
 }
 
@@ -167,10 +155,7 @@ lint[output] {
 	output := {
 		"type": "misconfiguration",
 		"severity": "error",
-		"message": "Invalid Flannel pod CIDR range",
-		"patch": [
-			{ "op": "remove", "path": "/spec/flannel/podCIDRRange" }
-		]
+		"message": "Invalid Flannel pod CIDR range"
 	}
 }
 
@@ -181,10 +166,7 @@ lint[output] {
 	output := {
 		"type": "misconfiguration",
 		"severity": "error",
-		"message": "Invalid Flannel pod CIDR",
-		"patch": [
-			{ "op": "remove", "path": "/spec/flannel/podCIDR" }
-		]
+		"message": "Invalid Flannel pod CIDR"
 	}
 }
 
@@ -194,10 +176,7 @@ lint[output] {
 	output := {
 		"type": "misconfiguration",
 		"severity": "error",
-		"message": "Invalid Antrea pod CIDR range",
-		"patch": [
-			{ "op": "remove", "path": "/spec/antrea/podCidrRange" }
-		]
+		"message": "Invalid Antrea pod CIDR range"
 	}
 }
 
@@ -207,10 +186,7 @@ lint[output] {
 	output := {
 		"type": "misconfiguration",
 		"severity": "error",
-		"message": "Invalid Antrea pod CIDR",
-		"patch": [
-			{ "op": "remove", "path": "/spec/antrea/podCIDR" }
-		]
+		"message": "Invalid Antrea pod CIDR"
 	}
 }
 
