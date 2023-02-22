@@ -8,8 +8,6 @@ installer:
       version: latest
     openebs: 
       version: 2.12.9
-# customPatch is applied after applying all proposed lint patches. this is useful
-# as not all issues reported by linting have patches to fix them.
 customPatch:
     - op: replace
       path: /spec/openebs/version
