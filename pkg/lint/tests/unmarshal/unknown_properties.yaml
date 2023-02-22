@@ -4,7 +4,6 @@ data: |
   kind: "Installer"
   metadata:
     name: "latest"
-  spec:
   spec: 
     kubernetes: 
       version: 1.22.x
