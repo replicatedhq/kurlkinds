@@ -19,4 +19,4 @@ output:
         path: /spec/antrea
       - op: add
         path: /spec/flannel/version
-        value: 0.20.0
+        value: 0.21.1

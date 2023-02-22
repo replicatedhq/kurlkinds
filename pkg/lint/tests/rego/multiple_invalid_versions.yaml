@@ -22,11 +22,11 @@ output:
     patch:
       - op: replace
         path: /spec/containerd/version
-        value: 1.6.8
+        value: 1.6.18
   - message: Unknown ekco add-on version 0.0.1
     type: unknown-addon
     severity: error
     patch:
       - op: replace
         path: /spec/ekco/version
-        value: 0.23.2
+        value: 0.26.3

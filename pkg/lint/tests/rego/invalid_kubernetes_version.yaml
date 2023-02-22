@@ -13,5 +13,4 @@ output:
     patch:
       - op: replace
         path: /spec/kubernetes/version
-        value: 1.26.0
-
+        value: 1.26.1

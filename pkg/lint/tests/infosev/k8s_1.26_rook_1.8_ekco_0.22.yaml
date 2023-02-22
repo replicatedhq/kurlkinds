@@ -1,0 +1,34 @@
+installer:
+  spec: 
+    kubernetes: 
+      version: 1.26.1
+    flannel:
+      version: 0.21.1
+    containerd:
+      version: 1.6.18
+    ekco: 
+      version: 0.22.0
+    rook: 
+      version: 1.8.10
+output:
+  - message: "Add-on rook has a more recent version: 1.10.8"
+    type: upgrade-available
+    severity: info
+    patch:
+      - op: replace
+        path: /spec/rook/version
+        value: 1.10.8
+  - message: "Add-on ekco has a more recent version: 0.26.3"
+    type: upgrade-available
+    severity: info
+    patch:
+      - op: replace
+        path: /spec/ekco/version
+        value: 0.26.3
+  - message: "Rook versions <= 1.9.10 are not compatible with Kubernetes 1.25+"
+    type: incompatibility
+    severity: error
+    patch:
+      - op: replace
+        path: /spec/rook/version
+        value: 1.10.8

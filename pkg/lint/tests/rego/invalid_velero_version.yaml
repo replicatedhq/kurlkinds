@@ -15,4 +15,4 @@ output:
     patch:
       - op: replace
         path: /spec/velero/version
-        value: 1.9.2
+        value: 1.10.1

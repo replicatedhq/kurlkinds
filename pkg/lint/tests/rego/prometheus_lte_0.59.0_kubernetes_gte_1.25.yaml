@@ -15,4 +15,4 @@ output:
     patch:
       - op: replace
         path: /spec/prometheus/version
-        value: 0.59.1-40.1.0
+        value: 0.63.0-45.1.1

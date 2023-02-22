@@ -15,4 +15,4 @@ output:
     patch:
       - op: replace
         path: /spec/minio/version
-        value: 2022-10-20T00-55-09Z
+        value: 2023-02-17T17-52-43Z

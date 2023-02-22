@@ -15,4 +15,4 @@ output:
     patch:
       - op: replace
         path: /spec/sonobuoy/version
-        value: 0.56.10
+        value: 0.56.15

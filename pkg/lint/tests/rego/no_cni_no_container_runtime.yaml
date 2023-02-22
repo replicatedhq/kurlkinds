@@ -15,11 +15,11 @@ output:
   patch:
   - op: add
     path: /spec/flannel/version
-    value: 0.20.0
+    value: 0.21.1
 - type: misconfiguration
   severity: error
   message: No container runtime (Docker or Containerd) selected
   patch:
   - op: add
     path: /spec/containerd/version
-    value: 1.6.8
+    value: 1.6.18
