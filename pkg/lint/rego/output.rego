@@ -426,8 +426,7 @@ lint[output] {
 		"severity": "error",
 		"message": "Rook versions >= 1.8.0 are not compatible with EKCO versions < 0.22.0",
 		"patch": [
-			{ "op": "replace", "path": "/spec/ekco/version", "value": newest_add_on_version("ekco") },
-			{ "op": "replace", "path": "/spec/rook/version", "value": newest_add_on_version("rook") }
+			{ "op": "replace", "path": "/spec/ekco/version", "value": newest_add_on_version("ekco") }
 		]
 	}
 }

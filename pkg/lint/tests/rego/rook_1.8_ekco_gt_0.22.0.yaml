@@ -18,6 +18,3 @@ output:
       - op: replace
         path: /spec/ekco/version
         value: 0.26.3
-      - op: replace
-        path: /spec/rook/version
-        value: 1.10.8
