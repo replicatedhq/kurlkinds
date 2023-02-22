@@ -23,6 +23,9 @@ installer:
       version: 1.4.6
     metricsServer:
       version: 0.4.1
+customPatch:
+  - op: remove
+    path: /spec/weave/podCIDR
 output:
   - message: Invalid Weave pod CIDR
     type: misconfiguration

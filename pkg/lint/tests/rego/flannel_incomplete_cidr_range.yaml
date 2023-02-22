@@ -11,6 +11,9 @@ installer:
       version: 0.11.0
     containerd:
       version: 1.4.6
+customPatch:
+  - op: remove
+    path: /spec/flannel/podCIDR
 output:
   - message: Invalid Flannel pod CIDR
     type: misconfiguration

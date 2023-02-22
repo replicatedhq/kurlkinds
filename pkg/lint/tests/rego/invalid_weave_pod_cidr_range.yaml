@@ -8,6 +8,9 @@ installer:
       version: latest
     containerd:
       version: latest
+customPatch:
+  - op: remove
+    path: /spec/weave/podCidrRange
 output:
   - message: Invalid Weave pod CIDR range
     type: misconfiguration

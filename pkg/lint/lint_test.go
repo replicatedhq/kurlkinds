@@ -109,9 +109,10 @@ func TestValidateWithInvalidURL(t *testing.T) {
 
 func TestValidateWithInfoSeverity(t *testing.T) {
 	type test struct {
-		Name      string
-		Installer v1beta1.Installer `yaml:"installer"`
-		Output    []Output          `yaml:"output"`
+		Name        string
+		Installer   v1beta1.Installer   `yaml:"installer"`
+		CustomPatch []map[string]string `yaml:"customPatch"`
+		Output      []Output            `yaml:"output"`
 	}
 
 	entries, err := staticTests.ReadDir("tests/infosev")
@@ -181,7 +182,7 @@ func TestValidateWithInfoSeverity(t *testing.T) {
 			if err != nil {
 				t.Fatalf("unable to marshal installer: %s", err)
 			}
-			installerData = removeCIDRConfig(t, installerData)
+			installerData = applyCustomPatch(t, tt.CustomPatch, installerData)
 
 			for _, out := range result {
 				options := &jsonpatch.ApplyOptions{
@@ -214,9 +215,10 @@ func TestValidateWithInfoSeverity(t *testing.T) {
 
 func TestValidate(t *testing.T) {
 	type test struct {
-		Name      string
-		Installer v1beta1.Installer `yaml:"installer"`
-		Output    []Output          `yaml:"output"`
+		Name        string
+		Installer   v1beta1.Installer   `yaml:"installer"`
+		CustomPatch []map[string]string `yaml:"customPatch"`
+		Output      []Output            `yaml:"output"`
 	}
 
 	entries, err := staticTests.ReadDir("tests/rego")
@@ -286,7 +288,7 @@ func TestValidate(t *testing.T) {
 			if err != nil {
 				t.Fatalf("unable to marshal installer: %s", err)
 			}
-			installerData = removeCIDRConfig(t, installerData)
+			installerData = applyCustomPatch(t, tt.CustomPatch, installerData)
 
 			for _, out := range result {
 				options := &jsonpatch.ApplyOptions{
@@ -469,10 +471,11 @@ func TestVersions(t *testing.T) {
 
 func TestValidateMarshaledYAML(t *testing.T) {
 	type test struct {
-		Name   string    `yaml:"name"`
-		Err    string    `yaml:"err"`
-		Data   yaml.Node `yaml:"data"`
-		Output []Output  `yaml:"output"`
+		Name        string              `yaml:"name"`
+		Err         string              `yaml:"err"`
+		Data        yaml.Node           `yaml:"data"`
+		CustomPatch []map[string]string `yaml:"customPatch"`
+		Output      []Output            `yaml:"output"`
 	}
 
 	entries, err := staticTests.ReadDir("tests/unmarshal")
@@ -543,14 +546,14 @@ func TestValidateMarshaledYAML(t *testing.T) {
 	}
 }
 
-// removeCIDRConfig remove any reference to CIDR configuration from the provided installer. This is
-// useful to test the linter without having to provide a valid CIDR configuration as the linter does
-// not provide any patch regarding CIDR configuration.
-func removeCIDRConfig(t *testing.T, installer []byte) []byte {
-	patchData, err := staticTests.ReadFile("tests/remove_cidr_config.json")
+// applyCustomPatch applies a custom patch to the installer object. Custom patch is provided here as a
+// slice of map[string]string.
+func applyCustomPatch(t *testing.T, patchMap []map[string]string, installer []byte) []byte {
+	patchData, err := json.Marshal(patchMap)
 	if err != nil {
-		t.Fatalf("unable to read cidr removal patch: %s", err)
+		t.Fatalf("error marshaling custom patch: %s", err)
 	}
+
 	patch, err := jsonpatch.DecodePatch(patchData)
 	if err != nil {
 		t.Fatalf("invalid patch found at tests/remove_cidr_config.json: %s", err)

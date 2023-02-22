@@ -303,10 +303,7 @@ lint[output] {
 	output := {
 		"type": "incompatibility",
 		"severity": "error",
-		"message": "OpenEBS versions <= 2.12.9 are not compatible with Kubernetes 1.22+",
-		"patch": [
-			{ "op": "replace", "path": "/spec/openebs/version", "value": newest_add_on_version("openebs") }
-		]
+		"message": "OpenEBS versions <= 2.12.9 are not compatible with Kubernetes 1.22+"
 	}
 }
 

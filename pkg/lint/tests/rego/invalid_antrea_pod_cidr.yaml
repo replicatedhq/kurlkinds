@@ -7,6 +7,9 @@ installer:
       version: latest
     containerd:
       version: latest
+customPatch:
+  - op: remove
+    path: /spec/antrea/podCIDR
 output:
   - message: Invalid Antrea pod CIDR
     type: misconfiguration
