@@ -256,6 +256,20 @@ lint[output] {
 	}
 }
 
+lint[output] {
+	some prop
+	installer.spec[prop]
+	not is_spec_property_valid(prop)
+	output := {
+		"type": "unknown-property",
+		"severity": "error",
+		"message": sprintf("Unknown installer property %v", [prop]),
+		"patch": [
+			{ "op": "remove", "path": sprintf("/spec/%v", [prop]) }
+		]
+	}
+}
+
 # reports an info linting message if there is a newer version of an add-on available.
 lint[output] {
 	info_severity_enabled

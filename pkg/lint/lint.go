@@ -24,6 +24,7 @@ import (
 	"log"
 	"net/url"
 	"path"
+	"reflect"
 	"strings"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -266,5 +267,27 @@ func (l *Linter) prepareVariablesRegoFile(ctx context.Context) ([]byte, error) {
 		content = bytes.ReplaceAll(content, oldvar, newvar)
 		l.debug("rego debug enabled")
 	}
+	props := ValidInstallerSpecProperties()
+	if len(props) == 0 {
+		return content, nil
+	}
+	propsStr := strings.Join(props, `,`)
+	oldvar := []byte("valid_spec_properties = []")
+	newvar := fmt.Sprintf(`valid_spec_properties = [%s]`, propsStr)
+	content = bytes.ReplaceAll(content, oldvar, []byte(newvar))
 	return content, nil
+}
+
+// ValidInstallerSpecProperties returns a list of properties known by the installer spec
+// type. Eseentially everything that is marshalable to json.
+func ValidInstallerSpecProperties() []string {
+	valid := []string{}
+	specType := reflect.TypeOf(v1beta1.InstallerSpec{})
+	for i := 0; i < specType.NumField(); i++ {
+		if tag := specType.Field(i).Tag.Get("json"); len(tag) > 0 {
+			name := strings.SplitN(tag, ",", 2)
+			valid = append(valid, fmt.Sprintf("%q", name[0]))
+		}
+	}
+	return valid
 }

@@ -79,6 +79,11 @@ is_addon_version_greater_than(addon, version) {
 	semver.compare(no_version_x, version) > 0
 }
 
+# is_spec_property_valid checks if the provided property is valid inside the installer spec.
+is_spec_property_valid(prop) {
+	valid_spec_properties[_] == prop
+}
+
 # addon_version_exists checks if provided addon supports the provided version. if version
 # is "latest" then this evaluates to true, if it is an static version it checks if the version
 # exists and if it is a "x" version it makes sure at least one version exists in the x range.

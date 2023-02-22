@@ -33,6 +33,10 @@ info_severity_enabled = false
 # debug_enabled indicates if the linter should return debug messages.
 debug_enabled = false
 
+# valid_spec_properties holds a list of all valid installer spec properties. this is empty by
+# default, and is populated by the `prepareVariablesRegoFile()` go function.
+valid_spec_properties = []
+
 # this rule determines what endpoint we need to reach when fetching add-on versions remotely
 # if there is a pre-determined version in installer.spec.kurl.installerVersion we go for add-ons
 # specific to the informed version.

@@ -1,0 +1,31 @@
+err: ""
+data: |
+  apiVersion: "cluster.kurl.sh/v1beta1"
+  kind: "Installer"
+  metadata:
+    name: "latest"
+  spec:
+  spec: 
+    kubernetes: 
+      version: 1.22.x
+    containerd:
+      version: latest
+    weave:
+      version: latest
+    doesNotExist:
+      something: yes
+    anotherThing:
+      yetSomethingElse: no
+output:
+- type: unknown-property
+  message: Unknown installer property anotherThing
+  severity: error
+  patch:
+  - op: remove
+    path: /spec/anotherThing
+- type: unknown-property
+  message: Unknown installer property doesNotExist
+  severity: error
+  patch:
+  - op: remove
+    path: /spec/doesNotExist
