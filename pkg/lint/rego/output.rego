@@ -211,10 +211,7 @@ lint[output] {
 	output := {
 		"type": "incompatibility",
 		"severity": "error",
-		"message": "Rook versions <= 1.1.0 are not compatible with Kubernetes versions 1.20+",
-		"patch": [
-			{ "op": "replace", "path": "/spec/rook/version", "value": newest_add_on_version("rook") }
-		]
+		"message": "Rook versions <= 1.1.0 are not compatible with Kubernetes versions 1.20+"
 	}
 }
 
@@ -225,10 +222,7 @@ lint[output] {
 	output := {
 		"type": "incompatibility",
 		"severity": "error",
-		"message": "Rook versions <= 1.4.9 are not compatible with Kubernetes versions 1.22+",
-		"patch": [
-			{ "op": "replace", "path": "/spec/rook/version", "value": newest_add_on_version("rook") }
-		]
+		"message": "Rook versions <= 1.4.9 are not compatible with Kubernetes versions 1.22+"
 	}
 }
 
