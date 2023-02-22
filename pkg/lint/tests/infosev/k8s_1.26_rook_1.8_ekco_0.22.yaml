@@ -7,9 +7,9 @@ installer:
     containerd:
       version: 1.6.18
     ekco: 
-      version: 0.22.0
+      version: 0.22.x
     rook: 
-      version: 1.8.10
+      version: 1.8.x
 output:
   - message: "Add-on rook has a more recent version: 1.10.8"
     type: upgrade-available
