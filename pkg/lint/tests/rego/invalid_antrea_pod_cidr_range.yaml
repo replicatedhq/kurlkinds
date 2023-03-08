@@ -8,7 +8,10 @@ installer:
       version: latest
     containerd:
       version: latest
+customPatch:
+  - op: remove
+    path: /spec/antrea/podCidrRange
 output:
   - message: Invalid Antrea pod CIDR range
-    field: spec.antrea.podCidrRange
     type: misconfiguration
+    severity: error

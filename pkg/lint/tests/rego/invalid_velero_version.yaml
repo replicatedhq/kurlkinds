@@ -10,5 +10,9 @@ installer:
       version: 0.1.0
 output:
   - message: Unknown velero add-on version 0.1.0
-    field: spec.velero.version
     type: unknown-addon
+    severity: error
+    patch:
+      - op: replace
+        path: /spec/velero/version
+        value: 1.10.1

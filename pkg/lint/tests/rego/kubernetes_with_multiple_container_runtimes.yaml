@@ -10,5 +10,8 @@ installer:
       version: latest
 output:
   - message: Multiple container runtimes selected
-    field: spec
     type: misconfiguration
+    severity: error
+    patch:
+      - op: remove
+        path: /spec/docker

@@ -10,5 +10,9 @@ installer:
       version: 0.1.0
 output:
   - message: Unknown openebs add-on version 0.1.0
-    field: spec.openebs.version
     type: unknown-addon
+    severity: error
+    patch:
+      - op: replace
+        path: /spec/openebs/version
+        value: 3.4.0

@@ -10,5 +10,9 @@ installer:
       version: 1.3.1
 output:
   - message: Longhorn versions <= 1.4.0 are not compatible with Kubernetes versions 1.25+
-    field: spec.longhorn.version
     type: incompatibility
+    severity: error
+    patch:
+      - op: "replace"
+        path: "/spec/kubernetes/version"
+        value: 1.24.10

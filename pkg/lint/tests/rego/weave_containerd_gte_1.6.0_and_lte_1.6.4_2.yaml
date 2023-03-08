@@ -8,5 +8,9 @@ installer:
       version: latest
 output:
   - message: Containerd versions 1.6.0 - 1.6.4 are not compatible with Weave
-    field: spec.containerd.version
     type: incompatibility
+    severity: error
+    patch:
+      - op: replace
+        path: /spec/containerd/version
+        value: 1.6.18

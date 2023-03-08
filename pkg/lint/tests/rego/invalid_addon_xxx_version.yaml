@@ -8,5 +8,9 @@ installer:
       version: xxx
 output:
   - message: Unknown weave add-on version xxx
-    field: spec.weave.version
     type: unknown-addon
+    severity: error
+    patch:
+      - op: replace
+        path: /spec/weave/version
+        value: 2.8.1

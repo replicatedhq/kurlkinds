@@ -10,5 +10,9 @@ installer:
       version: 3.9.1
 output:
   - message: "Calico versions <= 3.9.1 are not compatible with Kubernetes 1.22+"
-    field: spec.calico.version
     type: incompatibility
+    severity: error
+    patch:
+      - op: replace
+        path: /spec/kubernetes/version
+        value: 1.21.14

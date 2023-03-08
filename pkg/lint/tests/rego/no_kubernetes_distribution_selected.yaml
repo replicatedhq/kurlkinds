@@ -4,5 +4,21 @@ installer:
       version: latest
 output:
   - message: No kubernetes distribution selected
-    field: spec
     type: misconfiguration
+    severity: error
+    patch:
+      - op: remove
+        path: /spec/docker
+      - op: remove
+        path: /spec/antrea
+      - op: remove
+        path: /spec/weave
+      - op: add
+        path: /spec/kubernetes/version
+        value: 1.26.1
+      - op: add
+        path: /spec/flannel/version
+        value: 0.21.1
+      - op: add
+        path: /spec/containerd/version
+        value: 1.6.18

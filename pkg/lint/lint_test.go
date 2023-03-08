@@ -27,6 +27,7 @@ import (
 	"strings"
 	"testing"
 
+	jsonpatch "github.com/evanphx/json-patch/v5"
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
 	"gopkg.in/yaml.v3"
@@ -106,11 +107,118 @@ func TestValidateWithInvalidURL(t *testing.T) {
 	}
 }
 
+func TestValidateWithInfoSeverity(t *testing.T) {
+	type test struct {
+		Name        string
+		Installer   v1beta1.Installer   `yaml:"installer"`
+		CustomPatch []map[string]string `yaml:"customPatch"`
+		Output      []Output            `yaml:"output"`
+	}
+
+	entries, err := staticTests.ReadDir("tests/infosev")
+	if err != nil {
+		t.Fatalf("unable to read test files: %s", err)
+	}
+
+	var tests []test
+	for _, entry := range entries {
+		fpath := path.Join("tests", "infosev", entry.Name())
+		data, err := staticTests.ReadFile(fpath)
+		if err != nil {
+			t.Fatalf("unable to read test file %q: %s", fpath, err)
+		}
+
+		var onetest test
+		if err := yaml.Unmarshal(data, &onetest); err != nil {
+			t.Fatalf("invalid yaml on file %q: %s", fpath, err)
+		}
+
+		onetest.Name = fpath
+		tests = append(tests, onetest)
+	}
+
+	apires, err := staticTests.ReadFile("tests/versions.json")
+	if err != nil {
+		t.Fatalf("unable to read mock webserver result: %s", err)
+	}
+
+	mocksrv := httptest.NewServer(
+		http.HandlerFunc(
+			func(w http.ResponseWriter, r *http.Request) {
+				w.Header().Set("content-type", "application/json")
+				w.Write(apires)
+			},
+		),
+	)
+	defer mocksrv.Close()
+
+	mockurl, err := url.Parse(mocksrv.URL)
+	if err != nil {
+		t.Fatalf("unable to parse mock server url: %s", err)
+	}
+
+	linter := New(WithAPIBaseURL(mockurl), WithInfoSeverity())
+	for _, tt := range tests {
+		t.Run(tt.Name, func(t *testing.T) {
+			result, err := linter.Validate(context.Background(), tt.Installer)
+			if err != nil {
+				t.Errorf("unexpected error returned: %s", err)
+				return
+			}
+
+			less := func(a, b Output) bool { return a.Message < b.Message }
+			diff := cmp.Diff(result, tt.Output, cmpopts.SortSlices(less))
+			if diff != "" {
+				t.Errorf("unexpected return: %s", diff)
+			}
+
+			if len(result) == 0 {
+				return
+			}
+
+			// apply all the proposed changes (patch) and verify it does not return any other
+			// issue after the changes. patches must solve the linting problems.
+			installerData, err := json.Marshal(tt.Installer)
+			if err != nil {
+				t.Fatalf("unable to marshal installer: %s", err)
+			}
+			installerData = applyCustomPatch(t, tt.CustomPatch, installerData)
+
+			for _, out := range result {
+				options := &jsonpatch.ApplyOptions{
+					AllowMissingPathOnRemove: true,
+					EnsurePathExistsOnAdd:    true,
+				}
+				installerData, err = out.Patch.ApplyWithOptions(installerData, options)
+				if err != nil {
+					t.Fatalf("error applying patch: %s", err)
+				}
+			}
+
+			var newInstaller v1beta1.Installer
+			if err := json.Unmarshal(installerData, &newInstaller); err != nil {
+				t.Fatalf("unable to unmarshal patched installer: %s", err)
+			}
+
+			result, err = linter.Validate(context.Background(), newInstaller)
+			if err != nil {
+				t.Errorf("unexpected error returned: %s", err)
+				return
+			}
+
+			if len(result) > 0 {
+				t.Errorf("patched installer still has errors: %+v", result)
+			}
+		})
+	}
+}
+
 func TestValidate(t *testing.T) {
 	type test struct {
-		Name      string
-		Installer v1beta1.Installer `yaml:"installer"`
-		Output    []Output          `yaml:"output"`
+		Name        string
+		Installer   v1beta1.Installer   `yaml:"installer"`
+		CustomPatch []map[string]string `yaml:"customPatch"`
+		Output      []Output            `yaml:"output"`
 	}
 
 	entries, err := staticTests.ReadDir("tests/rego")
@@ -169,6 +277,44 @@ func TestValidate(t *testing.T) {
 			if diff != "" {
 				t.Errorf("unexpected return: %s", diff)
 			}
+
+			if len(result) == 0 {
+				return
+			}
+
+			// apply all the proposed changes (patch) and verify it does not return any other
+			// issue after the changes. patches must solve the linting problems.
+			installerData, err := json.Marshal(tt.Installer)
+			if err != nil {
+				t.Fatalf("unable to marshal installer: %s", err)
+			}
+			installerData = applyCustomPatch(t, tt.CustomPatch, installerData)
+
+			for _, out := range result {
+				options := &jsonpatch.ApplyOptions{
+					AllowMissingPathOnRemove: true,
+					EnsurePathExistsOnAdd:    true,
+				}
+				installerData, err = out.Patch.ApplyWithOptions(installerData, options)
+				if err != nil {
+					t.Fatalf("error applying patch: %s", err)
+				}
+			}
+
+			var newInstaller v1beta1.Installer
+			if err := json.Unmarshal(installerData, &newInstaller); err != nil {
+				t.Fatalf("unable to unmarshal patched installer: %s", err)
+			}
+
+			result, err = linter.Validate(context.Background(), newInstaller)
+			if err != nil {
+				t.Errorf("unexpected error returned: %s", err)
+				return
+			}
+
+			if len(result) > 0 {
+				t.Errorf("patched installer still has errors: %+v", result)
+			}
 		})
 	}
 }
@@ -195,11 +341,11 @@ func TestCustomAPIEndpoint(t *testing.T) {
 	expected := map[string]AddOn{
 		"addon0": {
 			Latest:   "3.0.0",
-			Versions: []string{"3.0.0", "2.0.0", "1.0.0"},
+			Versions: []string{"1.0.0", "2.0.0", "3.0.0"},
 		},
 		"addon1": {
 			Latest:   "6.0.0",
-			Versions: []string{"8.0.0", "7.0.0", "6.0.0"},
+			Versions: []string{"6.0.0", "7.0.0", "8.0.0"},
 		},
 	}
 
@@ -325,10 +471,11 @@ func TestVersions(t *testing.T) {
 
 func TestValidateMarshaledYAML(t *testing.T) {
 	type test struct {
-		Name   string    `yaml:"name"`
-		Err    string    `yaml:"err"`
-		Data   yaml.Node `yaml:"data"`
-		Output []Output  `yaml:"output"`
+		Name        string              `yaml:"name"`
+		Err         string              `yaml:"err"`
+		Data        yaml.Node           `yaml:"data"`
+		CustomPatch []map[string]string `yaml:"customPatch"`
+		Output      []Output            `yaml:"output"`
 	}
 
 	entries, err := staticTests.ReadDir("tests/unmarshal")
@@ -397,4 +544,24 @@ func TestValidateMarshaledYAML(t *testing.T) {
 			}
 		})
 	}
+}
+
+// applyCustomPatch applies a custom patch to the installer object. Custom patch is provided here as a
+// slice of map[string]string.
+func applyCustomPatch(t *testing.T, patchMap []map[string]string, installer []byte) []byte {
+	patchData, err := json.Marshal(patchMap)
+	if err != nil {
+		t.Fatalf("error marshaling custom patch: %s", err)
+	}
+
+	patch, err := jsonpatch.DecodePatch(patchData)
+	if err != nil {
+		t.Fatalf("invalid patch found at tests/remove_cidr_config.json: %s", err)
+	}
+	options := &jsonpatch.ApplyOptions{AllowMissingPathOnRemove: true, EnsurePathExistsOnAdd: true}
+	newInstaller, err := patch.ApplyWithOptions(installer, options)
+	if err != nil {
+		t.Fatalf("unable to apply patch to the installer: %s", err)
+	}
+	return newInstaller
 }

@@ -10,5 +10,9 @@ installer:
       version: 8.1.0
 output:
   - message: Unknown goldpinger add-on version 8.1.0
-    field: spec.goldpinger.version
     type: unknown-addon
+    severity: error
+    patch:
+      - op: replace
+        path: /spec/goldpinger/version
+        value: 3.7.0-5.5.0

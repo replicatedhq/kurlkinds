@@ -10,5 +10,9 @@ installer:
       version: 0.1.0
 output:
   - message: Unknown prometheus add-on version 0.1.0
-    field: spec.prometheus.version
     type: unknown-addon
+    severity: error
+    patch:
+      - op: replace
+        path: /spec/prometheus/version
+        value: 0.63.0-45.1.1

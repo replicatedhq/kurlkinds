@@ -19,16 +19,20 @@ import (
 	"bytes"
 	"context"
 	"embed"
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/url"
 	"path"
+	"reflect"
 	"strings"
 
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+
+	jsonpatch "github.com/evanphx/json-patch/v5"
 	"github.com/mitchellh/mapstructure"
 	"github.com/open-policy-agent/opa/rego"
 	"gopkg.in/yaml.v2"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 	"github.com/replicatedhq/kurlkinds/pkg/apis/cluster/v1beta1"
 )
@@ -39,11 +43,35 @@ var (
 	ErrNotInstaller = fmt.Errorf("object is not an installer")
 )
 
+type Severity string
+
+const (
+	SeverityError   Severity = "error"
+	SeverityWarning Severity = "warning"
+	SeverityInfo    Severity = "info"
+)
+
 // Output holds the outcome of a lint pass on top of a Installer struct.
 type Output struct {
-	Field   string `json:"field,omitempty"`
-	Type    string `json:"type,omitempty"`
-	Message string `json:"message,omitempty"`
+	Type     string          `json:"type"`
+	Message  string          `json:"message"`
+	Severity Severity        `json:"severity"`
+	Patch    jsonpatch.Patch `json:"patch,omitempty"`
+}
+
+// UnmarshalYAML is a helper function that unmarshals a yaml blob into an Output struct.
+// As the Output struct contains a jsonpatch.Patch field and that field contains a property
+// of type json.RawMessage, the default yaml unmarshaller is not able to do the job.
+func (o *Output) UnmarshalYAML(unmarshal func(interface{}) error) error {
+	var raw map[string]interface{}
+	if err := unmarshal(&raw); err != nil {
+		return err
+	}
+	data, err := json.Marshal(raw)
+	if err != nil {
+		return err
+	}
+	return json.Unmarshal(data, o)
 }
 
 // AddOn holds an add-on and its respective supported versions.
@@ -53,8 +81,9 @@ type AddOn struct {
 }
 
 type Linter struct {
-	apiBaseURL *url.URL
-	verbose    bool
+	apiBaseURL       *url.URL
+	verbose          bool
+	showInfoSeverity bool
 }
 
 // New returns a new v1beta1.Installer linter. this linter is capable of evaluating if a
@@ -70,7 +99,7 @@ func New(opts ...Option) *Linter {
 // Versions return a map containing all supported versions indexed by add-on name. it
 // goes and fetch the versions from a remote endpoint.
 func (l *Linter) Versions(ctx context.Context, inst v1beta1.Installer) (map[string]AddOn, error) {
-	content, err := l.replaceAPIBaseURL(ctx)
+	content, err := l.prepareVariablesRegoFile(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("error preparing for api requests: %w", err)
 	}
@@ -138,7 +167,7 @@ func (l *Linter) Validate(ctx context.Context, inst v1beta1.Installer) ([]Output
 // Validate checks the provided blob for errors. This function receives an interface{} as it
 // is used in different contexts, keeping this "private" is by design.
 func (l *Linter) validate(ctx context.Context, blob interface{}) ([]Output, error) {
-	content, err := l.replaceAPIBaseURL(ctx)
+	content, err := l.prepareVariablesRegoFile(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("error preparing for api requests: %w", err)
 	}
@@ -178,9 +207,14 @@ func (l *Linter) validate(ctx context.Context, blob interface{}) ([]Output, erro
 		return []Output{}, nil
 	}
 
+	data, err := json.Marshal(rs[0].Expressions[0].Value)
+	if err != nil {
+		return nil, fmt.Errorf("error marshaling rego eval return: %w", err)
+	}
+
 	result := []Output{}
-	if err := mapstructure.Decode(rs[0].Expressions[0].Value, &result); err != nil {
-		return nil, fmt.Errorf("error decoding result: %w", err)
+	if err := json.Unmarshal(data, &result); err != nil {
+		return nil, fmt.Errorf("error unmarshaling rego eval return: %w", err)
 	}
 
 	var filtered = []Output{}
@@ -207,24 +241,53 @@ func (l *Linter) validate(ctx context.Context, blob interface{}) ([]Output, erro
 	return filtered, nil
 }
 
-// replaceAPIBaseURL replaces the api base url used for querying add-on versions. this is
-// https://kurl.sh by default but can be replaced (for sake of testing or running against
-// our staging environment).
-func (l *Linter) replaceAPIBaseURL(ctx context.Context) ([]byte, error) {
+// prepareVariablesRegoFile reads and parses the `rego/variables.rego` file. three things can
+// be changed in the original file: 1) the api base url can be replaced by one provided by
+// the user, 2) the info severity can be enabled and 3) the debug messages can be enabled.
+func (l *Linter) prepareVariablesRegoFile(ctx context.Context) ([]byte, error) {
 	content, err := static.ReadFile("rego/variables.rego")
 	if err != nil {
 		return nil, fmt.Errorf("error reading rego variables file: %w", err)
 	}
-
-	if l.apiBaseURL == nil {
-		l.debug("api base url has not been replaced")
+	if l.apiBaseURL != nil {
+		oldurl := []byte("https://kurl.sh")
+		newurl := []byte(l.apiBaseURL.String())
+		content = bytes.ReplaceAll(content, oldurl, newurl)
+		l.debug("api base url been replaced by %q", l.apiBaseURL.String())
+	}
+	if l.showInfoSeverity {
+		oldvar := []byte("info_severity_enabled = false")
+		newvar := []byte("info_severity_enabled = true")
+		content = bytes.ReplaceAll(content, oldvar, newvar)
+		l.debug("info severity enabled")
+	}
+	if l.verbose {
+		oldvar := []byte("debug_enabled = false")
+		newvar := []byte("debug_enabled = true")
+		content = bytes.ReplaceAll(content, oldvar, newvar)
+		l.debug("rego debug enabled")
+	}
+	props := ValidInstallerSpecProperties()
+	if len(props) == 0 {
 		return content, nil
 	}
-
-	// if the version url has been set by the user we replace it here.
-	oldurl := []byte("https://kurl.sh")
-	newurl := []byte(l.apiBaseURL.String())
-	content = bytes.ReplaceAll(content, oldurl, newurl)
-	l.debug("api base url been replaced by %q", l.apiBaseURL.String())
+	propsStr := strings.Join(props, `,`)
+	oldvar := []byte("valid_spec_properties = []")
+	newvar := fmt.Sprintf(`valid_spec_properties = [%s]`, propsStr)
+	content = bytes.ReplaceAll(content, oldvar, []byte(newvar))
 	return content, nil
+}
+
+// ValidInstallerSpecProperties returns a list of properties known by the installer spec
+// type. Eseentially everything that is marshalable to json.
+func ValidInstallerSpecProperties() []string {
+	valid := []string{}
+	specType := reflect.TypeOf(v1beta1.InstallerSpec{})
+	for i := 0; i < specType.NumField(); i++ {
+		if tag := specType.Field(i).Tag.Get("json"); len(tag) > 0 {
+			name := strings.SplitN(tag, ",", 2)
+			valid = append(valid, fmt.Sprintf("%q", name[0]))
+		}
+	}
+	return valid
 }

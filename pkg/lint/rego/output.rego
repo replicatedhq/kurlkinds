@@ -21,8 +21,11 @@ lint[output] {
 	count(container_runtimes) == 0
 	output :=  {
 		"type": "misconfiguration",
+		"severity": "error",
 		"message": "No container runtime (Docker or Containerd) selected",
-		"field": "spec"
+		"patch": [
+			{ "op": "add", "path": "/spec/containerd/version", "value": newest_add_on_version("containerd") }
+		]
 	}
 }
 
@@ -32,8 +35,11 @@ lint[output] {
 	count(container_runtimes) > 1
 	output := {
 		"type": "misconfiguration",
+		"severity": "error",
 		"message": "Multiple container runtimes selected",
-		"field": "spec"
+		"patch": [
+			{ "op": "remove", "path": "/spec/docker" }
+		]
 	}
 }
 
@@ -44,8 +50,11 @@ lint[output] {
 	count(cni_providers) == 0
 	output :=  {
 		"type": "misconfiguration",
+		"severity": "error",
 		"message": "No CNI plugin (Flannel, Weave or Antrea) selected",
-		"field": "spec"
+		"patch": [
+			{ "op": "add", "path": "/spec/flannel/version", "value": newest_add_on_version("flannel") }
+		]
 	}
 }
 
@@ -54,8 +63,13 @@ lint[output] {
 	count(cni_providers) > 1
 	output := {
 		"type": "misconfiguration",
+		"severity": "error",
 		"message": "Multiple CNI plugins selected (choose one of Flannel, Weave or Antrea)",
-		"field": "spec"
+		"patch": [
+			{ "op": "remove", "path": "/spec/weave" },
+			{ "op": "remove", "path": "/spec/antrea" },
+			{ "op": "add", "path": "/spec/flannel/version", "value": newest_add_on_version("flannel") }
+		]
 	}
 }
 
@@ -64,8 +78,16 @@ lint[output] {
 	count(kube_distributions) == 0
 	output := {
 		"type": "misconfiguration",
+		"severity": "error",
 		"message": "No kubernetes distribution selected",
-		"field": "spec"
+		"patch": [
+			{ "op": "remove", "path": "/spec/docker" },
+			{ "op": "remove", "path": "/spec/antrea" },
+			{ "op": "remove", "path": "/spec/weave" },
+			{ "op": "add", "path": "/spec/kubernetes/version", "value": newest_add_on_version("kubernetes") },
+			{ "op": "add", "path": "/spec/flannel/version", "value": newest_add_on_version("flannel") },
+			{ "op": "add", "path": "/spec/containerd/version", "value": newest_add_on_version("containerd") }
+		]
 	}
 }
 
@@ -77,8 +99,12 @@ lint[output] {
 	installer.spec.docker.version
 	output := {
 		"type": "incompatibility",
+		"severity": "error",
 		"message": "Kubernetes 1.24+ does not support Docker runtime, Containerd is recommended",
-		"field": "spec.docker"
+		"patch": [
+			{ "op": "remove", "path": "/spec/docker" },
+			{ "op": "add", "path": "/spec/containerd/version", "value": newest_add_on_version("containerd") }
+		]
 	}
 }
 
@@ -87,8 +113,8 @@ lint[output] {
 	not valid_kubernetes_service_cidr_override
 	output := {
 		"type": "misconfiguration",
-		"message": "Invalid Kubernetes services CIDR",
-		"field": "spec.kubernetes.serviceCIDR"
+		"severity": "error",
+		"message": "Invalid Kubernetes services CIDR"
 	}
 }
 
@@ -97,8 +123,8 @@ lint[output] {
 	not valid_kubernetes_service_cidr_range_override
 	output := {
 		"type": "misconfiguration",
-		"message": "Invalid Kubernetes services CIDR range",
-		"field": "spec.kubernetes.serviceCidrRange"
+		"severity": "error",
+		"message": "Invalid Kubernetes services CIDR range"
 	}
 }
 
@@ -107,8 +133,8 @@ lint[output] {
 	not valid_pod_cidr_range_override(installer.spec.weave.podCidrRange)
 	output := {
 		"type": "misconfiguration",
-		"message": "Invalid Weave pod CIDR range",
-		"field": "spec.weave.podCidrRange"
+		"severity": "error",
+		"message": "Invalid Weave pod CIDR range"
 	}
 }
 
@@ -118,8 +144,8 @@ lint[output] {
 	not valid_ipv4_cidr(installer.spec.weave.podCIDR)
 	output := {
 		"type": "misconfiguration",
-		"message": "Invalid Weave pod CIDR",
-		"field": "spec.weave.podCIDR"
+		"severity": "error",
+		"message": "Invalid Weave pod CIDR"
 	}
 }
 
@@ -128,8 +154,8 @@ lint[output] {
 	not valid_pod_cidr_range_override(installer.spec.flannel.podCIDRRange)
 	output := {
 		"type": "misconfiguration",
-		"message": "Invalid Flannel pod CIDR range",
-		"field": "spec.flannel.podCIDRRange"
+		"severity": "error",
+		"message": "Invalid Flannel pod CIDR range"
 	}
 }
 
@@ -139,8 +165,8 @@ lint[output] {
 	not valid_ipv4_cidr(installer.spec.flannel.podCIDR)
 	output := {
 		"type": "misconfiguration",
-		"message": "Invalid Flannel pod CIDR",
-		"field": "spec.flannel.podCIDR"
+		"severity": "error",
+		"message": "Invalid Flannel pod CIDR"
 	}
 }
 
@@ -149,8 +175,8 @@ lint[output] {
 	not valid_pod_cidr_range_override(installer.spec.antrea.podCidrRange)
 	output := {
 		"type": "misconfiguration",
-		"message": "Invalid Antrea pod CIDR range",
-		"field": "spec.antrea.podCidrRange"
+		"severity": "error",
+		"message": "Invalid Antrea pod CIDR range"
 	}
 }
 
@@ -159,8 +185,8 @@ lint[output] {
 	not valid_antrea_pod_cidr_override
 	output := {
 		"type": "misconfiguration",
-		"message": "Invalid Antrea pod CIDR",
-		"field": "spec.antrea.podCIDR"
+		"severity": "error",
+		"message": "Invalid Antrea pod CIDR"
 	}
 }
 
@@ -170,8 +196,11 @@ lint[output] {
 	is_addon_version_lower_than("calico", "3.9.2")
 	output := {
 		"type": "incompatibility",
+		"severity": "error",
 		"message": "Calico versions <= 3.9.1 are not compatible with Kubernetes 1.22+",
-		"field": "spec.calico.version"
+		"patch": [
+			{ "op": "replace", "path": "/spec/kubernetes/version", "value":  preceding_version("kubernetes", "1.22.0") }
+		]
 	}
 }
 
@@ -181,8 +210,8 @@ lint[output] {
 	is_addon_version_lower_than("rook", "1.1.0")
 	output := {
 		"type": "incompatibility",
-		"message": "Rook versions <= 1.1.0 are not compatible with Kubernetes versions 1.20+",
-		"field": "spec.rook.version"
+		"severity": "error",
+		"message": "Rook versions <= 1.1.0 are not compatible with Kubernetes versions 1.20+"
 	}
 }
 
@@ -192,8 +221,8 @@ lint[output] {
 	is_addon_version_lower_than("rook", "1.5.0")
 	output := {
 		"type": "incompatibility",
-		"message": "Rook versions <= 1.4.9 are not compatible with Kubernetes versions 1.22+",
-		"field": "spec.rook.version"
+		"severity": "error",
+		"message": "Rook versions <= 1.4.9 are not compatible with Kubernetes versions 1.22+"
 	}
 }
 
@@ -204,8 +233,11 @@ lint[output] {
 	is_addon_version_lower_than("longhorn", "1.4.0")
 	output := {
 		"type": "incompatibility",
+		"severity": "error",
 		"message": "Longhorn versions <= 1.4.0 are not compatible with Kubernetes versions 1.25+",
-		"field": "spec.longhorn.version"
+		"patch": [
+			{ "op": "replace", "path": "/spec/kubernetes/version", "value": preceding_version("kubernetes", "1.25.0") }
+		]
 	}
 }
 
@@ -216,20 +248,59 @@ lint[output] {
 	not valid_add_on_version(name)
 	output := {
 		"type": "unknown-addon",
+		"severity": "error",
 		"message": sprintf("Unknown %v add-on version %v", [name, installer.spec[name].version]),
-		"field": sprintf("spec.%v.version", [name])
+		"patch": [
+			{ "op": "replace", "path": sprintf("/spec/%v/version", [name]), "value": newest_add_on_version(name) }
+		]
+	}
+}
+
+lint[output] {
+	some prop
+	installer.spec[prop]
+	not is_spec_property_valid(prop)
+	output := {
+		"type": "unknown-property",
+		"severity": "error",
+		"message": sprintf("Unknown installer property %v", [prop]),
+		"patch": [
+			{ "op": "remove", "path": sprintf("/spec/%v", [prop]) }
+		]
+	}
+}
+
+# reports an info linting message if there is a newer version of an add-on available.
+lint[output] {
+	info_severity_enabled
+	some name
+	ignored := known_versions[name]
+	valid_add_on_version(name)
+	newest_version := newest_add_on_version(name)
+	is_addon_version_lower_than(name, newest_version)
+	output := {
+		"type": "upgrade-available",
+		"severity": "info",
+		"message": sprintf("Add-on %v has a more recent version: %v", [name, newest_version]),
+		"patch": [
+			{ "op": "replace", "path": sprintf("/spec/%v/version", [name]), "value": newest_version }
+		]
 	}
 }
 
 # returns an error if weave has been selected with containerd in versions between 1.6.0 and
 # 1.6.4 as this pair is incompatible.
 lint[output] {
+	installer.spec.weave.version
 	is_addon_version_greater_than_or_equal("containerd", "1.6.0")
 	is_addon_version_lower_than_or_equal("containerd", "1.6.4")
 	output := {
 		"type": "incompatibility",
+		"severity": "error",
 		"message": "Containerd versions 1.6.0 - 1.6.4 are not compatible with Weave",
-		"field": "spec.containerd.version"
+		"patch": [
+			{ "op": "replace", "path": "/spec/containerd/version", "value": newest_add_on_version("containerd") }
+		]
 	}
 }
 
@@ -239,8 +310,8 @@ lint[output] {
 	is_addon_version_lower_than_or_equal("openebs", "2.12.9")
 	output := {
 		"type": "incompatibility",
-		"message": "OpenEBS versions <= 2.12.9 are not compatible with Kubernetes 1.22+",
-		"field": "spec.openebs.version"
+		"severity": "error",
+		"message": "OpenEBS versions <= 2.12.9 are not compatible with Kubernetes 1.22+"
 	}
 }
 
@@ -250,6 +321,7 @@ lint[output] {
 	remote_versions.error.message
 	output :=  {
 		"type": "preprocess",
+		"severity": "error",
 		"message": remote_versions.error.message
 	}
 }
@@ -264,6 +336,7 @@ lint[output] {
 	message := sprintf("error reading add-ons, server returned %v: %v", [remote_versions.status, body])
 	output :=  {
 		"type": "preprocess",
+		"severity": "error",
 		"message": message,
 	}
 }
@@ -275,8 +348,11 @@ lint[output] {
 	is_addon_version_greater_than_or_equal("openebs", "2.12.9")
 	output := {
 		"type": "incompatibility",
+		"severity": "error",
 		"message": "OpenEBS add-on versions >= 2.12.9 do not support cStor",
-		"field": "spec.openebs.isCstorEnabled"
+		"patch": [
+			{ "op": "remove", "path": "/spec/openebs/isCstorEnabled" }
+		]
 	}
 }
 
@@ -286,8 +362,11 @@ lint[output] {
 	is_addon_version_lower_than_or_equal("rook", "1.9.10")
 	output := {
 		"type": "incompatibility",
+		"severity": "error",
 		"message": "Rook versions <= 1.9.10 are not compatible with Kubernetes 1.25+",
-		"field": "spec.rook.version"
+		"patch": [
+			{ "op": "replace", "path": "/spec/rook/version", "value": newest_add_on_version("rook") }
+		]
 	}
 }
 
@@ -297,8 +376,11 @@ lint[output] {
 	is_addon_version_lower_than_or_equal("prometheus", "0.49.0")
 	output := {
 		"type": "incompatibility",
+		"severity": "error",
 		"message": "Prometheus versions <= 0.49.0-17.1.3 are not compatible with Kubernetes 1.22+",
-		"field": "spec.prometheus.version"
+		"patch": [
+			{ "op": "replace", "path": "/spec/prometheus/version", "value": newest_add_on_version("prometheus") }
+		]
 	}
 }
 
@@ -308,8 +390,11 @@ lint[output] {
 	is_addon_version_lower_than_or_equal("prometheus", "0.59.0")
 	output := {
 		"type": "incompatibility",
+		"severity": "error",
 		"message": "Prometheus versions <= 0.59.0 are not compatible with Kubernetes 1.25+",
-		"field": "spec.prometheus.version"
+		"patch": [
+			{ "op": "replace", "path": "/spec/prometheus/version", "value": newest_add_on_version("prometheus") }
+		]
 	}
 }
 
@@ -322,8 +407,11 @@ lint[output] {
 	msg := sprintf("Prometheus service types are NodePort and ClusterIP, not %v", [svc_type])
 	output := {
 		"type": "misconfiguration",
+		"severity": "error",
 		"message": msg,
-		"field": "spec.prometheus.serviceType"
+		"patch": [
+			{ "op": "replace", "path": "/spec/prometheus/serviceType", "value": "ClusterIP" }
+		]
 	}
 }
 
@@ -333,8 +421,11 @@ lint[output] {
 	is_addon_version_lower_than("prometheus", "0.48.1")
 	output := {
 		"type": "misconfiguration",
+		"severity": "error",
 		"message": "Prometheus service types is supported only for versions 0.48.1-16.10.0+",
-		"field": "spec.prometheus.serviceType"
+		"patch": [
+			{ "op": "replace", "path": "/spec/prometheus/version", "value": newest_add_on_version("prometheus") }
+		]
 	}
 }
 
@@ -346,8 +437,11 @@ lint[output] {
 	is_addon_version_lower_than("ekco", "0.22.0")
 	output := {
 		"type": "incompatibility",
+		"severity": "error",
 		"message": "Rook versions >= 1.8.0 are not compatible with EKCO versions < 0.22.0",
-		"field": "spec.ekco.version"
+		"patch": [
+			{ "op": "replace", "path": "/spec/ekco/version", "value": newest_add_on_version("ekco") }
+		]
 	}
 }
 
@@ -357,8 +451,11 @@ lint[output] {
 	is_addon_version_lower_than("velero", "1.6.3")
 	output := {
 		"type": "incompatibility",
+		"severity": "error",
 		"message": "Velero versions <= 1.6.2 are not compatible with Kubernetes versions 1.22+",
-		"field": "spec.velero.version"
+		"patch": [
+			{ "op": "replace", "path": "/spec/velero/version", "value": newest_add_on_version("velero") }
+		]
 	}
 }
 # verifies rook 1.9.x is not compatible with EKCO versions < 0.23.0
@@ -368,8 +465,11 @@ lint[output] {
 	is_addon_version_lower_than("ekco", "0.23.0")
 	output := {
 		"type": "incompatibility",
+		"severity": "error",
 		"message": "Rook versions >= 1.9.0 are not compatible with EKCO versions < 0.23.0",
-		"field": "spec.ekco.version"
+		"patch": [
+			{ "op": "replace", "path": "/spec/ekco/version", "value": newest_add_on_version("ekco") }
+		]
 	}
 }
 
@@ -379,21 +479,27 @@ lint[output] {
 	is_addon_version_lower_than("contour", "1.7.1")
 	output := {
 		"type": "incompatibility",
+		"severity": "error",
 		"message": "Contour versions <= 1.7.0 are not compatible with Kubernetes 1.22+",
-		"field": "spec.contour.version"
+		"patch": [
+			{ "op": "replace", "path": "/spec/contour/version", "value": newest_add_on_version("contour") }
+		]
 	}
 }
 
 # verifies if the selected kubernetes version is compatible with the selected containerd
 # version. the only thing verified here is that we are not trying to run kubernetes 1.26+
-# with containerd >= 1.6.0.
+# with containerd < 1.6.0.
 lint[output] {
 	is_addon_version_greater_than_or_equal("kubernetes", "1.26.0")
 	is_addon_version_lower_than("containerd", "1.6.0")
 	output := {
 		"type": "incompatibility",
+		"severity": "error",
 		"message": "Kubernetes 1.26+ is not compatible with Containerd versions < 1.6.0",
-		"field": "spec.containerd"
+		"patch": [
+			{ "op": "replace", "path": "/spec/containerd/version", "value": newest_add_on_version("containerd") }
+		]
 	}
 }
 
@@ -404,7 +510,11 @@ lint[output] {
 	installer.spec.flannel.version != ""
 	output := {
 		"type": "incompatibility",
+		"severity": "error",
 		"message": "Flannel is not compatible with the Docker runtime, Containerd is required",
-		"field": "spec.docker"
+		"patch": [
+			{ "op": "remove", "path": "/spec/docker" },
+			{ "op": "add", "path": "/spec/containerd/version", "value": newest_add_on_version("containerd") }
+		]
 	}
 }

@@ -25,6 +25,18 @@ installer = content {
 # api_base_url allows for overriding the place where the kurl api is hosted.
 api_base_url = "https://kurl.sh"
 
+# info_severity_enabled indicates if the linter should return messages with `info` severity.
+# about severities: they are defined in the go code, so far we have 'error', 'warning', and 'info',
+# info is the only one that can be disabled (in fact, disabled is its default value).
+info_severity_enabled = false
+
+# debug_enabled indicates if the linter should return debug messages.
+debug_enabled = false
+
+# valid_spec_properties holds a list of all valid installer spec properties. this is empty by
+# default, and is populated by the `prepareVariablesRegoFile()` go function.
+valid_spec_properties = []
+
 # this rule determines what endpoint we need to reach when fetching add-on versions remotely
 # if there is a pre-determined version in installer.spec.kurl.installerVersion we go for add-ons
 # specific to the informed version.
@@ -78,6 +90,6 @@ find_latest_version(allversions) = version {
 default known_versions = { addon_name: { "versions": versions, "latest": latest } |
 	some addon_name
 	allversions := remote_versions.body[addon_name]
-	versions := [ version | version := allversions[_]; version != "latest" ]
+	versions := { version | version := allversions[_]; version != "latest" }
 	latest = find_latest_version(allversions)
 }

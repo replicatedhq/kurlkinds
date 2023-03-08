@@ -8,7 +8,10 @@ installer:
       version: latest
     containerd:
       version: latest
+customPatch:
+  - op: remove
+    path: /spec/flannel/podCIDRRange
 output:
   - message: Invalid Flannel pod CIDR range
-    field: spec.flannel.podCIDRRange
     type: misconfiguration
+    severity: error

@@ -36,3 +36,10 @@ func WithDebug() Option {
 		l.verbose = true
 	}
 }
+
+// WithInfoSeverity enables info severity in the linter. By default this is disabled.
+func WithInfoSeverity() Option {
+	return func(l *Linter) {
+		l.showInfoSeverity = true
+	}
+}

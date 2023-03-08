@@ -15,4 +15,4 @@ data: |
 output:
   - message: Invalid Kubernetes services CIDR
     type: misconfiguration
-    field: spec.kubernetes.serviceCIDR
+    severity: error

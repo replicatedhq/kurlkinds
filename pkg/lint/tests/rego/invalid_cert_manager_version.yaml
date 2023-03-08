@@ -10,5 +10,9 @@ installer:
       version: 8.1.0
 output:
   - message: Unknown certManager add-on version 8.1.0
-    field: spec.certManager.version
     type: unknown-addon
+    severity: error
+    patch:
+      - op: replace
+        path: /spec/certManager/version
+        value: 1.9.1

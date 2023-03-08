@@ -10,5 +10,9 @@ installer:
       version: nightly
 output:
   - message: Unknown kotsadm add-on version nightly
-    field: spec.kotsadm.version
     type: unknown-addon
+    severity: error
+    patch:
+      - op: replace
+        path: /spec/kotsadm/version
+        value: 1.94.2

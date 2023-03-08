@@ -12,5 +12,9 @@ installer:
       version: 0.20.0
 output:
   - message: Rook versions >= 1.8.0 are not compatible with EKCO versions < 0.22.0
-    field: spec.ekco.version
     type: incompatibility
+    severity: error
+    patch:
+      - op: replace
+        path: /spec/ekco/version
+        value: 0.26.3

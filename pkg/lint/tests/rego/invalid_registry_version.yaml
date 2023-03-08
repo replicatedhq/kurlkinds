@@ -10,5 +10,9 @@ installer:
       version: 0.1.0
 output:
   - message: Unknown registry add-on version 0.1.0
-    field: spec.registry.version
     type: unknown-addon
+    severity: error
+    patch:
+      - op: replace
+        path: /spec/registry/version
+        value: 2.8.1
