@@ -9,7 +9,7 @@ installer:
     collectd:
       version: ""
     containerd:
-      version: 1.5.11
+      version: 1.6.18
     contour:
       version: ""
     docker:

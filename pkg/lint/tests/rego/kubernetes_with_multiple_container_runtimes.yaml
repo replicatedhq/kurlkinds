@@ -15,3 +15,12 @@ output:
     patch:
       - op: remove
         path: /spec/docker
+  - message: Docker is not compatible with RHEL 9, Oracle Linux 9, or Rocky Linux 9
+    type: incompatibility
+    severity: info
+    patch:
+      - op: remove
+        path: /spec/docker
+      - op: add
+        path: /spec/containerd/version
+        value: 1.6.18

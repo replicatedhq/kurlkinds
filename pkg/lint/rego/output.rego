@@ -518,3 +518,31 @@ lint[output] {
 		]
 	}
 }
+
+# verifies docker is not compatible with rhel 9 compatible distributions
+lint[output] {
+	installer.spec.docker.version != ""
+	output := {
+		"type": "incompatibility",
+		"severity": "info",
+		"message": "Docker is not compatible with RHEL 9, Oracle Linux 9, or Rocky Linux 9",
+		"patch": [
+			{ "op": "remove", "path": "/spec/docker" },
+			{ "op": "add", "path": "/spec/containerd/version", "value": newest_add_on_version("containerd") }
+		]
+	}
+}
+
+# verifies containerd versions less than 1.6.0 are not compatible with rhel 9 compatible
+# distributions
+lint[output] {
+	is_addon_version_lower_than("containerd", "1.6.0")
+	output := {
+		"type": "incompatibility",
+		"severity": "info",
+		"message": "Containerd versions < 1.6.0 are not compatible with RHEL 9, Oracle Linux 9, or Rocky Linux 9",
+		"patch": [
+			{ "op": "replace", "path": "/spec/containerd/version", "value": newest_add_on_version("containerd") }
+		]
+	}
+}

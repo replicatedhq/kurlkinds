@@ -20,7 +20,7 @@ installer:
     ekco:
       version: 0.11.0
     containerd:
-      version: 1.4.6
+      version: 1.6.18
     metricsServer:
       version: 0.4.1
 output: []

@@ -24,7 +24,7 @@ data: |
     ekco:
       version: latest
     containerd:
-      version: 1.4.x
+      version: 1.6.x
     longhorn:
       version: 1.2.x
 output: []
