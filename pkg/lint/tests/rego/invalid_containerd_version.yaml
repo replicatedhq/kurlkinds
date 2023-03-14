@@ -14,3 +14,10 @@ output:
       - op: replace
         path: /spec/containerd/version
         value: 1.6.18
+  - message: Containerd versions < 1.6.0 are not compatible with RHEL 9, Oracle Linux 9, or Rocky Linux 9
+    type: incompatibility
+    severity: info
+    patch:
+      - op: replace
+        path: /spec/containerd/version
+        value: 1.6.18

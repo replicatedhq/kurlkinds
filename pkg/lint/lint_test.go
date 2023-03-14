@@ -24,6 +24,7 @@ import (
 	"net/url"
 	"path"
 	"reflect"
+	"sort"
 	"strings"
 	"testing"
 
@@ -184,15 +185,23 @@ func TestValidateWithInfoSeverity(t *testing.T) {
 			}
 			installerData = applyCustomPatch(t, tt.CustomPatch, installerData)
 
-			for _, out := range result {
-				options := &jsonpatch.ApplyOptions{
-					AllowMissingPathOnRemove: true,
-					EnsurePathExistsOnAdd:    true,
-				}
-				installerData, err = out.Patch.ApplyWithOptions(installerData, options)
-				if err != nil {
-					t.Fatalf("error applying patch: %s", err)
-				}
+			var operations jsonpatch.Patch
+			for _, suggest := range result {
+				operations = append(operations, suggest.Patch...)
+			}
+
+			// ensure replace operations are applied first
+			sort.Slice(operations, func(i, j int) bool {
+				return operations[i].Kind() == "replace"
+			})
+
+			options := &jsonpatch.ApplyOptions{
+				AllowMissingPathOnRemove: true,
+				EnsurePathExistsOnAdd:    true,
+			}
+			installerData, err = operations.ApplyWithOptions(installerData, options)
+			if err != nil {
+				t.Fatalf("error applying patch: %s", err)
 			}
 
 			var newInstaller v1beta1.Installer
@@ -290,15 +299,23 @@ func TestValidate(t *testing.T) {
 			}
 			installerData = applyCustomPatch(t, tt.CustomPatch, installerData)
 
-			for _, out := range result {
-				options := &jsonpatch.ApplyOptions{
-					AllowMissingPathOnRemove: true,
-					EnsurePathExistsOnAdd:    true,
-				}
-				installerData, err = out.Patch.ApplyWithOptions(installerData, options)
-				if err != nil {
-					t.Fatalf("error applying patch: %s", err)
-				}
+			var operations jsonpatch.Patch
+			for _, suggest := range result {
+				operations = append(operations, suggest.Patch...)
+			}
+
+			// ensure replace operations are applied first
+			sort.Slice(operations, func(i, j int) bool {
+				return operations[i].Kind() == "replace"
+			})
+
+			options := &jsonpatch.ApplyOptions{
+				AllowMissingPathOnRemove: true,
+				EnsurePathExistsOnAdd:    true,
+			}
+			installerData, err = operations.ApplyWithOptions(installerData, options)
+			if err != nil {
+				t.Fatalf("error applying patch: %s", err)
 			}
 
 			var newInstaller v1beta1.Installer
