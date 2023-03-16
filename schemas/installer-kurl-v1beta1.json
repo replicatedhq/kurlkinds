@@ -1436,6 +1436,82 @@
                               }
                             }
                           },
+                          "subnetAvailable": {
+                            "type": "object",
+                            "required": [
+                              "outcomes"
+                            ],
+                            "properties": {
+                              "annotations": {
+                                "type": "object",
+                                "additionalProperties": {
+                                  "type": "string"
+                                }
+                              },
+                              "checkName": {
+                                "type": "string"
+                              },
+                              "collectorName": {
+                                "type": "string"
+                              },
+                              "exclude": {
+                                "type": "string"
+                              },
+                              "outcomes": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "fail": {
+                                      "type": "object",
+                                      "properties": {
+                                        "message": {
+                                          "type": "string"
+                                        },
+                                        "uri": {
+                                          "type": "string"
+                                        },
+                                        "when": {
+                                          "type": "string"
+                                        }
+                                      }
+                                    },
+                                    "pass": {
+                                      "type": "object",
+                                      "properties": {
+                                        "message": {
+                                          "type": "string"
+                                        },
+                                        "uri": {
+                                          "type": "string"
+                                        },
+                                        "when": {
+                                          "type": "string"
+                                        }
+                                      }
+                                    },
+                                    "warn": {
+                                      "type": "object",
+                                      "properties": {
+                                        "message": {
+                                          "type": "string"
+                                        },
+                                        "uri": {
+                                          "type": "string"
+                                        },
+                                        "when": {
+                                          "type": "string"
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "strict": {
+                                "type": "string"
+                              }
+                            }
+                          },
                           "systemPackages": {
                             "type": "object",
                             "required": [
@@ -2224,6 +2300,27 @@
                               }
                             }
                           },
+                          "subnetAvailable": {
+                            "type": "object",
+                            "required": [
+                              "CIDRRangeAlloc",
+                              "desiredCIDR"
+                            ],
+                            "properties": {
+                              "CIDRRangeAlloc": {
+                                "type": "string"
+                              },
+                              "collectorName": {
+                                "type": "string"
+                              },
+                              "desiredCIDR": {
+                                "type": "integer"
+                              },
+                              "exclude": {
+                                "type": "string"
+                              }
+                            }
+                          },
                           "systemPackages": {
                             "type": "object",
                             "properties": {
@@ -2257,6 +2354,12 @@
                                   "type": "string"
                                 }
                               },
+                              "centos9": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              },
                               "collectorName": {
                                 "type": "string"
                               },
@@ -2281,6 +2384,12 @@
                                   "type": "string"
                                 }
                               },
+                              "ol9": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              },
                               "rhel": {
                                 "type": "array",
                                 "items": {
@@ -2294,6 +2403,30 @@
                                 }
                               },
                               "rhel8": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              },
+                              "rhel9": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              },
+                              "rocky": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              },
+                              "rocky8": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              },
+                              "rocky9": {
                                 "type": "array",
                                 "items": {
                                   "type": "string"
@@ -2700,6 +2833,27 @@
                             "properties": {
                               "collectorName": {
                                 "type": "string"
+                              },
+                              "exclude": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "subnetAvailable": {
+                            "type": "object",
+                            "required": [
+                              "CIDRRangeAlloc",
+                              "desiredCIDR"
+                            ],
+                            "properties": {
+                              "CIDRRangeAlloc": {
+                                "type": "string"
+                              },
+                              "collectorName": {
+                                "type": "string"
+                              },
+                              "desiredCIDR": {
+                                "type": "integer"
                               },
                               "exclude": {
                                 "type": "string"
