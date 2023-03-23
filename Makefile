@@ -4,10 +4,23 @@ PROJECT=github.com/replicatedhq/kurlkinds
 .PHONY: all
 all: test
 
+
+ENVTEST_K8S_VERSION = 1.26.1
+ENVTEST ?= $(LOCALBIN)/setup-envtest
 # Run tests
 .PHONY: test
-test: fmt vet
-	go test ./pkg/... -coverprofile cover.out
+test: fmt vet envtest
+	KUBEBUILDER_ASSETS="$(shell $(ENVTEST) use $(ENVTEST_K8S_VERSION) --bin-dir $(LOCALBIN) -p path)" go test ./pkg/... -coverprofile cover.out
+
+.PHONY: envtest
+envtest: $(ENVTEST) ## Download envtest-setup locally if necessary.
+$(ENVTEST): $(LOCALBIN)
+	test -s $(LOCALBIN)/setup-envtest || GOBIN=$(LOCALBIN) go install sigs.k8s.io/controller-runtime/tools/setup-envtest@latest
+
+## Location to install dependencies to
+LOCALBIN ?= $(shell pwd)/bin
+$(LOCALBIN):
+	mkdir -p $(LOCALBIN)
 
 # Run go fmt against code
 .PHONY: fmt
@@ -21,7 +34,7 @@ vet:
 
 # Get binaries
 .PHONY: deps
-deps: update-controller-gen update-client-gen update-deepcopy-gen update-kubebuilder
+deps: update-controller-gen update-client-gen update-deepcopy-gen envtest
 
 # Generate code
 .PHONY: generate
@@ -76,18 +89,6 @@ update-client-gen:
 .PHONY: update-deepcopy-gen
 update-deepcopy-gen:
 	go install k8s.io/code-generator/cmd/deepcopy-gen@latest
-
-.PHONY: update-kubebuilder
-update-kubebuilder: os = $(shell go env GOOS)
-update-kubebuilder: arch = $(shell go env GOARCH)
-update-kubebuilder: KUBEBUILDER_VERSION = 2.3.1
-update-kubebuilder:
-	# download kubebuilder and extract it to tmp
-	# curl -fsSL https://go.kubebuilder.io/dl/${KUBEBUILDER_VERSION}/${os}/${arch} | tar -xz -C /tmp/
-	curl -fsSL https://github.com/kubernetes-sigs/kubebuilder/releases/download/v${KUBEBUILDER_VERSION}/kubebuilder_${KUBEBUILDER_VERSION}_${os}_${arch}.tar.gz | tar -xz -C /tmp/
-
-	sudo rm -rf /usr/local/kubebuilder
-	sudo mv /tmp/kubebuilder_${KUBEBUILDER_VERSION}_${os}_${arch} /usr/local/kubebuilder
 
 pkg/lint/tests/versions.json:
 	curl -sSL https://k8s.kurl.sh/installer | jq '.' > pkg/lint/tests/versions.json
