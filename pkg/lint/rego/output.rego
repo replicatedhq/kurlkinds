@@ -519,6 +519,22 @@ lint[output] {
 	}
 }
 
+# verifies if object store is required
+lint[output] {
+	not installer.spec.minio.version
+	not installer.spec.rook.version
+	installer.spec.kotsadm.version != ""
+	not installer.spec.kotsadm.disableS3
+    output := {
+        "type": "misconfiguration",
+        "severity": "error",
+		"message": "KOTS with s3 enabled requires an object store. Please ensure that your installer also provides an object store with MinIO add-on.",
+        "patch": [
+            { "op": "add", "path": "/spec/kotsadm/disableS3", "value": true }
+        ]
+    }
+}
+
 # verifies docker is not compatible with rhel 9 compatible distributions
 lint[output] {
 	installer.spec.docker.version != ""

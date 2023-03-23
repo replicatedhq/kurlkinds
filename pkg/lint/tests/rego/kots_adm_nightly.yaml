@@ -8,6 +8,7 @@ installer:
       version: latest
     kotsadm:
       version: nightly
+      disableS3: true
 output:
   - message: Unknown kotsadm add-on version nightly
     type: unknown-addon
@@ -16,3 +17,4 @@ output:
       - op: replace
         path: /spec/kotsadm/version
         value: 1.94.2
+

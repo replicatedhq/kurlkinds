@@ -9,4 +9,6 @@ installer:
     kotsadm:
       version: 99999.99999.99999
       s3Override: "https://path.to.the/version.tar.gz"
+    minio:
+      version: 2022-08-02T23-59-16Z
 output: []
