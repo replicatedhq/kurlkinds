@@ -523,6 +523,7 @@ lint[output] {
 lint[output] {
 	not installer.spec.minio.version
 	not installer.spec.rook.version
+	not installer.spec.openebs.version
 	installer.spec.kotsadm.version != ""
 	not installer.spec.kotsadm.disableS3
 	output := {
@@ -542,7 +543,7 @@ lint[output] {
 	output := {
 		"type": "misconfiguration",
 		"severity": "error",
-		"message": "KOTS with s3 enabled requires an object store. Please ensure that your installer also provides an object store with MinIO or Rook add-on.",
+		"message": "KOTS with s3 enabled with OpenEBS requires MinIO as an object store.",
 		"patch": [
 			{ "op": "add", "path": "/spec/minio/version", "value": newest_add_on_version("minio") }
 		]
