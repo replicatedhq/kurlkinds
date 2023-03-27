@@ -111,9 +111,9 @@ func TestValidateWithInvalidURL(t *testing.T) {
 func TestValidateWithInfoSeverity(t *testing.T) {
 	type test struct {
 		Name        string
-		Installer   v1beta1.Installer   `yaml:"installer"`
-		CustomPatch []map[string]string `yaml:"customPatch"`
-		Output      []Output            `yaml:"output"`
+		Installer   v1beta1.Installer        `yaml:"installer"`
+		CustomPatch []map[string]interface{} `yaml:"customPatch"`
+		Output      []Output                 `yaml:"output"`
 	}
 
 	entries, err := staticTests.ReadDir("tests/infosev")
@@ -225,9 +225,9 @@ func TestValidateWithInfoSeverity(t *testing.T) {
 func TestValidate(t *testing.T) {
 	type test struct {
 		Name        string
-		Installer   v1beta1.Installer   `yaml:"installer"`
-		CustomPatch []map[string]string `yaml:"customPatch"`
-		Output      []Output            `yaml:"output"`
+		Installer   v1beta1.Installer        `yaml:"installer"`
+		CustomPatch []map[string]interface{} `yaml:"customPatch"`
+		Output      []Output                 `yaml:"output"`
 	}
 
 	entries, err := staticTests.ReadDir("tests/rego")
@@ -488,11 +488,11 @@ func TestVersions(t *testing.T) {
 
 func TestValidateMarshaledYAML(t *testing.T) {
 	type test struct {
-		Name        string              `yaml:"name"`
-		Err         string              `yaml:"err"`
-		Data        yaml.Node           `yaml:"data"`
-		CustomPatch []map[string]string `yaml:"customPatch"`
-		Output      []Output            `yaml:"output"`
+		Name        string                   `yaml:"name"`
+		Err         string                   `yaml:"err"`
+		Data        yaml.Node                `yaml:"data"`
+		CustomPatch []map[string]interface{} `yaml:"customPatch"`
+		Output      []Output                 `yaml:"output"`
 	}
 
 	entries, err := staticTests.ReadDir("tests/unmarshal")
@@ -565,7 +565,7 @@ func TestValidateMarshaledYAML(t *testing.T) {
 
 // applyCustomPatch applies a custom patch to the installer object. Custom patch is provided here as a
 // slice of map[string]string.
-func applyCustomPatch(t *testing.T, patchMap []map[string]string, installer []byte) []byte {
+func applyCustomPatch(t *testing.T, patchMap []map[string]interface{}, installer []byte) []byte {
 	patchData, err := json.Marshal(patchMap)
 	if err != nil {
 		t.Fatalf("error marshaling custom patch: %s", err)

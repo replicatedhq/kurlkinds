@@ -1,0 +1,23 @@
+installer:
+  spec:
+    kubernetes:
+      version: 1.19.2
+    weave:
+      version: latest
+    kotsadm:
+       version: 1.90.0
+    containerd:
+      version: 1.6.18
+    openebs:
+      version: 3.3.x
+      isLocalPVEnabled: true
+      localPVStorageClassName: default
+output:
+  - message: "KOTS with s3 enabled with OpenEBS requires MinIO as an object store."
+    type: misconfiguration
+    severity: error
+    patch:
+      - op: add
+        path: /spec/minio/version
+        value: 2023-02-17T17-52-43Z
+
