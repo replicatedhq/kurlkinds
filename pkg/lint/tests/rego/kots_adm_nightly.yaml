@@ -8,7 +8,8 @@ installer:
       version: latest
     kotsadm:
       version: nightly
-      disableS3: true
+    minio:
+      version: 2022-08-02T23-59-16Z
 output:
   - message: Unknown kotsadm add-on version nightly
     type: unknown-addon

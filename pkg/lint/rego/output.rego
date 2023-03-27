@@ -532,6 +532,23 @@ lint[output] {
 	}
 }
 
+# verifies if object store is required and if openebs is not nil then pacth minio
+lint[output] {
+	not installer.spec.minio.version
+	not installer.spec.rook.version
+	installer.spec.kotsadm.version != ""
+	installer.spec.openebs.version != ""
+	not installer.spec.kotsadm.disableS3
+	output := {
+		"type": "misconfiguration",
+		"severity": "error",
+		"message": "KOTS with s3 enabled requires an object store. Please ensure that your installer also provides an object store with MinIO or Rook add-on.",
+		"patch": [
+			{ "op": "add", "path": "/spec/minio/version", "value": newest_add_on_version("minio") }
+		]
+	}
+}
+
 # verifies docker is not compatible with rhel 9 compatible distributions
 lint[output] {
 	installer.spec.docker.version != ""
