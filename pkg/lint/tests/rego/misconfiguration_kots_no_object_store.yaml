@@ -12,11 +12,11 @@ installer:
       version: 3.3.x
       isLocalPVEnabled: true
       localPVStorageClassName: default
+    customPatch:
+      - op: add
+        path: /spec/kotsadm/disableS3
+        value: true
 output:
-  - message: KOTS with s3 enabled requires an object store. Please ensure that your installer also provides an object store with MinIO add-on.
+  - message: KOTS with s3 enabled requires an object store. Please ensure that your installer also provides an object store with MinIO or Rook add-on.
     type: misconfiguration
     severity: error
-    patch:
-      - op: "add"
-        path: "/spec/kotsadm/disableS3"
-        value: true

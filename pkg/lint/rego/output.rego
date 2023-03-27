@@ -525,14 +525,11 @@ lint[output] {
 	not installer.spec.rook.version
 	installer.spec.kotsadm.version != ""
 	not installer.spec.kotsadm.disableS3
-    output := {
-        "type": "misconfiguration",
-        "severity": "error",
-		"message": "KOTS with s3 enabled requires an object store. Please ensure that your installer also provides an object store with MinIO add-on.",
-        "patch": [
-            { "op": "add", "path": "/spec/kotsadm/disableS3", "value": true }
-        ]
-    }
+	output := {
+		"type": "misconfiguration",
+		"severity": "error",
+		"message": "KOTS with s3 enabled requires an object store. Please ensure that your installer also provides an object store with MinIO or Rook add-on.",
+	}
 }
 
 # verifies docker is not compatible with rhel 9 compatible distributions
