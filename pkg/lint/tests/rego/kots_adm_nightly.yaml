@@ -17,4 +17,3 @@ output:
       - op: replace
         path: /spec/kotsadm/version
         value: 1.94.2
-
