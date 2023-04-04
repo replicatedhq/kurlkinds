@@ -1,0 +1,30 @@
+installer:
+  spec:
+    kubernetes:
+      version: 1.26.1
+    weave:
+      version: 2.8.1
+    containerd:
+      version: 0.0.1
+output:
+  - message: Unknown containerd add-on version 0.0.1
+    type: unknown-addon
+    severity: error
+    patch:
+      - op: replace
+        path: /spec/containerd/version
+        value: 1.6.18
+  - message: Kubernetes 1.26+ is not compatible with Containerd versions < 1.6.0
+    type: incompatibility
+    severity: error
+    patch:
+      - op: replace
+        path: /spec/containerd/version
+        value: 1.6.18
+  - message: Containerd versions < 1.6.0 are not compatible with RHEL 9, Oracle Linux 9, or Rocky Linux 9
+    type: incompatibility
+    severity: info
+    patch:
+      - op: replace
+        path: /spec/containerd/version
+        value: 1.6.18

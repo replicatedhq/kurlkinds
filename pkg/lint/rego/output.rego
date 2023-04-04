@@ -552,6 +552,7 @@ lint[output] {
 
 # verifies docker is not compatible with rhel 9 compatible distributions
 lint[output] {
+	info_severity_enabled
 	installer.spec.docker.version != ""
 	output := {
 		"type": "incompatibility",
@@ -567,6 +568,7 @@ lint[output] {
 # verifies containerd versions less than 1.6.0 are not compatible with rhel 9 compatible
 # distributions
 lint[output] {
+	info_severity_enabled
 	is_addon_version_lower_than("containerd", "1.6.0")
 	output := {
 		"type": "incompatibility",
