@@ -1,0 +1,39 @@
+installer:
+  spec:
+    kubernetes:
+      version: latest
+    weave:
+      version: latest
+    docker:
+      version: 1.0.0
+output:
+  - message: Unknown docker add-on version 1.0.0
+    type: unknown-addon
+    severity: error
+    patch:
+      - op: replace
+        path: /spec/docker/version
+        value: 20.10.17
+  - message: "Add-on kubernetes has a more recent version: 1.26.1"
+    type: upgrade-available
+    severity: info
+    patch:
+      - op: replace
+        path: /spec/kubernetes/version
+        value: 1.26.1
+  - message: "Add-on weave has a more recent version: 2.8.1"
+    type: upgrade-available
+    severity: info
+    patch:
+      - op: replace
+        path: /spec/weave/version
+        value: 2.8.1
+  - message: Docker is not compatible with RHEL 9, Oracle Linux 9, or Rocky Linux 9
+    type: incompatibility
+    severity: info
+    patch:
+      - op: remove
+        path: /spec/docker
+      - op: add
+        path: /spec/containerd/version
+        value: 1.6.18
