@@ -28,3 +28,10 @@ output:
       - op: replace
         path: /spec/containerd/version
         value: 1.6.18
+  - message: All installers v2023.04.06-1 and later will include the latest version of Ekco, even if it is not present in the spec
+    type: misconfiguration
+    severity: info
+    patch:
+      - op: add
+        path: /spec/ekco/version
+        value: latest

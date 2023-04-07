@@ -278,6 +278,7 @@ lint[output] {
 	valid_add_on_version(name)
 	newest_version := newest_add_on_version(name)
 	is_addon_version_lower_than(name, newest_version)
+	name != "ekco"
 	output := {
 		"type": "upgrade-available",
 		"severity": "info",
@@ -576,6 +577,34 @@ lint[output] {
 		"message": "Containerd versions < 1.6.0 are not compatible with RHEL 9, Oracle Linux 9, or Rocky Linux 9",
 		"patch": [
 			{ "op": "replace", "path": "/spec/containerd/version", "value": newest_add_on_version("containerd") }
+		]
+	}
+}
+
+# prompts to add ekco if it is not present in the spec
+lint[output] {
+	info_severity_enabled
+	not installer.spec.ekco.version
+	output := {
+		"type": "misconfiguration",
+		"severity": "info",
+		"message": "All installers v2023.04.06-1 and later will include the latest version of Ekco, even if it is not present in the spec",
+		"patch": [
+			{ "op": "add", "path": "/spec/ekco/version", "value": "latest" }
+		]
+	}
+}
+
+# prompts to update ekco if it is not set to latest in the spec
+lint[output] {
+	info_severity_enabled
+	installer.spec.ekco.version != "latest"
+	output := {
+		"type": "misconfiguration",
+		"severity": "info",
+		"message": "All installers v2023.04.06-1 and later will include the latest version of Ekco, even if a different version is specified in the spec",
+		"patch": [
+			{ "op": "replace", "path": "/spec/ekco/version", "value": "latest" }
 		]
 	}
 }
