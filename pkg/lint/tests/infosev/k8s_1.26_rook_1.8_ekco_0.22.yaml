@@ -18,13 +18,6 @@ output:
       - op: replace
         path: /spec/rook/version
         value: 1.10.8
-  - message: "Add-on ekco has a more recent version: 0.26.3"
-    type: upgrade-available
-    severity: info
-    patch:
-      - op: replace
-        path: /spec/ekco/version
-        value: 0.26.3
   - message: "Rook versions <= 1.9.10 are not compatible with Kubernetes 1.25+"
     type: incompatibility
     severity: error
@@ -32,3 +25,10 @@ output:
       - op: replace
         path: /spec/rook/version
         value: 1.10.8
+  - message: All installers v2023.04.06-1 and later will include the latest version of Ekco, even if a different version is specified in the spec
+    type: misconfiguration
+    severity: info
+    patch:
+      - op: replace
+        path: /spec/ekco/version
+        value: latest
