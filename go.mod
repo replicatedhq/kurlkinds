@@ -10,7 +10,7 @@ require (
 	github.com/open-policy-agent/opa v0.51.0
 	github.com/pkg/errors v0.9.1
 	github.com/replicatedhq/troubleshoot v0.59.0
-	github.com/spf13/cobra v1.6.1
+	github.com/spf13/cobra v1.7.0
 	github.com/spf13/viper v1.15.0
 	golang.org/x/net v0.8.0
 	gopkg.in/yaml.v2 v2.4.0
