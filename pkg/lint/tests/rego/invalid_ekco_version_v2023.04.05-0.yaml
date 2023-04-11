@@ -1,0 +1,20 @@
+installer:
+  spec:
+    kurl:
+      installerVersion: v2023.04.05-0
+    kubernetes:
+      version: latest
+    containerd:
+      version: latest
+    weave:
+      version: latest
+    ekco:
+      version: 0.0.1
+output:
+  - message: Unknown ekco add-on version 0.0.1
+    type: unknown-addon
+    severity: error
+    patch:
+      - op: replace
+        path: /spec/ekco/version
+        value: 0.26.3

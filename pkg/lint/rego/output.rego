@@ -244,9 +244,27 @@ lint[output] {
 # this returns an error if an invalid or unknown version for an add-on has been selected.
 lint[output] {
 	some name 
+	name != "ekco"
 	ignored := known_versions[name]
 	not valid_add_on_version(name)
-	name != "ekco"
+	output := {
+		"type": "unknown-addon",
+		"severity": "error",
+		"message": sprintf("Unknown %v add-on version %v", [name, installer.spec[name].version]),
+		"patch": [
+			{ "op": "replace", "path": sprintf("/spec/%v/version", [name]), "value": newest_add_on_version(name) }
+		]
+	}
+}
+
+# this returns an error if an invalid or unknown version for ekco add-on and kurl installerVersion < v2023.04.06-1.
+lint[output] {
+	some name 
+	name == "ekco"
+	installer.spec.kurl.installerVersion
+	semver.compare(trim_left(installer.spec.kurl.installerVersion, "v"), "2023.04.06-1") < 0
+	ignored := known_versions[name]
+	not valid_add_on_version(name)
 	output := {
 		"type": "unknown-addon",
 		"severity": "error",
