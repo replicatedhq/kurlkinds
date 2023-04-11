@@ -1335,6 +1335,17 @@ spec:
                                   - certificatePath
                                   - keyPath
                                   type: object
+                                copy:
+                                  properties:
+                                    collectorName:
+                                      type: string
+                                    exclude:
+                                      type: string
+                                    path:
+                                      type: string
+                                  required:
+                                  - path
+                                  type: object
                                 cpu:
                                   properties:
                                     collectorName:
