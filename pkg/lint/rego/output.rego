@@ -246,6 +246,7 @@ lint[output] {
 	some name 
 	ignored := known_versions[name]
 	not valid_add_on_version(name)
+	name != "ekco"
 	output := {
 		"type": "unknown-addon",
 		"severity": "error",
