@@ -2179,6 +2179,8 @@ spec:
                     type: boolean
                   isSharedFilesystemDisabled:
                     type: boolean
+                  minimumNodeCount:
+                    type: integer
                   s3Override:
                     type: string
                   storageClassName:

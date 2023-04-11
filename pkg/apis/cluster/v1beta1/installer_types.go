@@ -191,6 +191,7 @@ type Rook struct {
 	S3Override                 string `json:"s3Override,omitempty" yaml:"s3Override,omitempty"`
 	StorageClassName           string `json:"storageClassName,omitempty" yaml:"storageClassName,omitempty"`
 	HostpathRequiresPrivileged bool   `json:"hostpathRequiresPrivileged,omitempty" yaml:"hostpathRequiresPrivileged,omitempty"`
+	MinimumNodeCount           int    `json:"minimumNodeCount,omitempty" yaml:"minimumNodeCount,omitempty"`
 	Version                    string `json:"version" yaml:"version"`
 }
 
