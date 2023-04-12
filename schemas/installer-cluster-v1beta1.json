@@ -2008,6 +2008,23 @@
                               }
                             }
                           },
+                          "copy": {
+                            "type": "object",
+                            "required": [
+                              "path"
+                            ],
+                            "properties": {
+                              "collectorName": {
+                                "type": "string"
+                              },
+                              "exclude": {
+                                "type": "string"
+                              },
+                              "path": {
+                                "type": "string"
+                              }
+                            }
+                          },
                           "cpu": {
                             "type": "object",
                             "properties": {
