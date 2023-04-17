@@ -3191,6 +3191,9 @@
             "isSharedFilesystemDisabled": {
               "type": "boolean"
             },
+            "minimumNodeCount": {
+              "type": "integer"
+            },
             "s3Override": {
               "type": "string"
             },
