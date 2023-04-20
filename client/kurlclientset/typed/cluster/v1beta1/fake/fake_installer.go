@@ -23,7 +23,6 @@ import (
 	v1beta1 "github.com/replicatedhq/kurlkinds/pkg/apis/cluster/v1beta1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
-	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
@@ -35,9 +34,9 @@ type FakeInstallers struct {
 	ns   string
 }
 
-var installersResource = schema.GroupVersionResource{Group: "cluster.kurl.sh", Version: "v1beta1", Resource: "installers"}
+var installersResource = v1beta1.SchemeGroupVersion.WithResource("installers")
 
-var installersKind = schema.GroupVersionKind{Group: "cluster.kurl.sh", Version: "v1beta1", Kind: "Installer"}
+var installersKind = v1beta1.SchemeGroupVersion.WithKind("Installer")
 
 // Get takes name of the installer, and returns the corresponding installer object, and an error if there is any.
 func (c *FakeInstallers) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1beta1.Installer, err error) {
