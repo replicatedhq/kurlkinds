@@ -432,6 +432,9 @@
             "evictionThresholdResources": {
               "type": "string"
             },
+            "initIgnorePreflightErrors": {
+              "type": "string"
+            },
             "kubeReserved": {
               "type": "boolean"
             },
@@ -460,6 +463,9 @@
               "type": "string"
             },
             "systemReservedResources": {
+              "type": "string"
+            },
+            "upgradeIgnorePreflightErrors": {
               "type": "string"
             },
             "useStandardNodePortRange": {

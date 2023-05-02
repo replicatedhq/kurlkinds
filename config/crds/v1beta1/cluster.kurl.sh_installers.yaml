@@ -3,8 +3,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.11.3
-  creationTimestamp: null
+    controller-gen.kubebuilder.io/version: v0.12.0
   name: installers.cluster.kurl.sh
 spec:
   group: cluster.kurl.sh
@@ -305,6 +304,8 @@ spec:
                     type: boolean
                   evictionThresholdResources:
                     type: string
+                  initIgnorePreflightErrors:
+                    type: string
                   kubeReserved:
                     type: boolean
                   kubeadmToken:
@@ -324,6 +325,8 @@ spec:
                   serviceCidrRange:
                     type: string
                   systemReservedResources:
+                    type: string
+                  upgradeIgnorePreflightErrors:
                     type: string
                   useStandardNodePortRange:
                     type: boolean
