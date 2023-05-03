@@ -102,6 +102,7 @@ type Kubernetes struct {
 	HACluster                    bool   `json:"HACluster,omitempty" yaml:"HACluster,omitempty"`
 	ContainerLogMaxSize          string `json:"containerLogMaxSize,omitempty" yaml:"containerLogMaxSize,omitempty"`
 	ContainerLogMaxFiles         int    `json:"containerLogMaxFiles,omitempty" yaml:"containerLogMaxFiles,omitempty"`
+	MaxPodsPerNode               int    `json:"maxPodsPerNode,omitempty" yaml:"maxPodsPerNode,omitempty"`
 	KubeadmToken                 string `json:"kubeadmToken,omitempty" yaml:"kubeadmToken,omitempty"`
 	KubeadmTokenCAHash           string `json:"kubeadmTokenCAHash,omitempty" yaml:"kubeadmTokenCAHash,omitempty"`
 	LoadBalancerAddress          string `json:"loadBalancerAddress,omitempty" yaml:"loadBalancerAddress,omitempty"`
