@@ -318,6 +318,8 @@ spec:
                     type: boolean
                   masterAddress:
                     type: string
+                  maxPodsPerNode:
+                    type: integer
                   s3Override:
                     type: string
                   serviceCIDR:
