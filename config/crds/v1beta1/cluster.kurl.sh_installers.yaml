@@ -2197,6 +2197,8 @@ spec:
                     type: boolean
                   minimumNodeCount:
                     type: integer
+                  nodes:
+                    type: string
                   s3Override:
                     type: string
                   storageClassName:
