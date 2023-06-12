@@ -6,7 +6,7 @@ require (
 	github.com/evanphx/json-patch/v5 v5.6.0
 	github.com/google/go-cmp v0.5.9
 	github.com/mitchellh/mapstructure v1.5.0
-	github.com/onsi/gomega v1.27.7
+	github.com/onsi/gomega v1.27.8
 	github.com/open-policy-agent/opa v0.51.0
 	github.com/pkg/errors v0.9.1
 	github.com/replicatedhq/troubleshoot v0.69.0
