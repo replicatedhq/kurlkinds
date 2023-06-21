@@ -570,6 +570,23 @@ lint[output] {
 	}
 }
 
+# verifies if object store or storage is required
+lint[output] {
+	not installer.spec.minio.version
+	not installer.spec.rook.version
+	not installer.spec.openebs.version
+	not installer.spec.longhorn.version
+	installer.spec.registry.version != ""
+	output := {
+		"type": "misconfiguration",
+		"severity": "error",
+		"message": "Registry add-on requires an object store or a storage provisioner, please ensure that your installer also provides it with either MinIO or Rook or OpenEBS add-ons.",
+		"patch": [
+			{ "op": "remove", "path": "/spec/registry" },
+		]
+	}
+}
+
 # verifies docker is not compatible with rhel 9 compatible distributions
 lint[output] {
 	info_severity_enabled
