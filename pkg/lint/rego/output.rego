@@ -580,10 +580,10 @@ lint[output] {
 	output := {
 		"type": "misconfiguration",
 		"severity": "error",
-		"message": "Registry add-on requires an object store or a storage provision. Please ensure that your installer also provides an object store or a storage storage provision with either the MinIO or Rook or OpenEBS add-on.",
-        "patch": [
-            { "op": "remove", "path": "/spec/registry" },
-        ]
+		"message": "Registry add-on requires an object store or a storage provisioner, please ensure that your installer also provides it with either MinIO or Rook or OpenEBS add-ons.",
+		"patch": [
+			{ "op": "remove", "path": "/spec/registry" },
+		]
 	}
 }
 

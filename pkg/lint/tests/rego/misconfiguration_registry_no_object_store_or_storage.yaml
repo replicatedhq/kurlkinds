@@ -9,7 +9,7 @@ installer:
     containerd:
       version: 1.6.18
 output:
-  - message: "Registry add-on requires an object store or a storage provision. Please ensure that your installer also provides an object store or a storage storage provision with either the MinIO or Rook or OpenEBS add-on."
+  - message: "Registry add-on requires an object store or a storage provisioner, please ensure that your installer also provides it with either MinIO or Rook or OpenEBS add-ons."
     type: misconfiguration
     severity: error
     patch:
