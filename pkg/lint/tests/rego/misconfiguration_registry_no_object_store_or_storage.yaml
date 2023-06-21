@@ -1,0 +1,18 @@
+installer:
+  spec:
+    kubernetes:
+      version: 1.19.2
+    weave:
+      version: latest
+    registry:
+       version: 2.8.1
+    containerd:
+      version: 1.6.18
+output:
+  - message: "Registry add-on requires an object store or a storage provision. Please ensure that your installer also provides an object store or a storage storage provision with either the MinIO or Rook or OpenEBS add-on."
+    type: misconfiguration
+    severity: error
+    patch:
+      - op: remove
+        path: /spec/registry
+

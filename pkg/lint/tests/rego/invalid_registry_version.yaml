@@ -8,6 +8,10 @@ installer:
       version: latest
     registry:
       version: 0.1.0
+    openebs:
+      version: 3.3.x
+      isLocalPVEnabled: true
+      localPVStorageClassName: default
 output:
   - message: Unknown registry add-on version 0.1.0
     type: unknown-addon
