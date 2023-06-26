@@ -580,7 +580,7 @@ lint[output] {
 	output := {
 		"type": "misconfiguration",
 		"severity": "error",
-		"message": "Registry add-on requires an object store or a storage provisioner, please ensure that your installer also provides it with either MinIO or Rook or OpenEBS add-ons.",
+		"message": "The registry add-on requires an object store (MinIO, Rook) or a storage provisioner (OpenEBS, Longhorn).",
 		"patch": [
 			{ "op": "remove", "path": "/spec/registry" },
 		]
