@@ -675,4 +675,3 @@ lint[output] {
 			{ "op": "replace", "path": "/spec/openebs/version", "value": newest_add_on_version("openebs") }
 		]
 	}
-}
