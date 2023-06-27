@@ -1,0 +1,26 @@
+installer:
+  spec: 
+    kubernetes: 
+      version: 1.25.x
+    openebs: 
+      version: "3.5.0"
+      isLocalPVEnabled: true
+      localPVStorageClassName: "local"
+    rook:
+      version: "1.9.x"
+      minimumNodeCount: 3
+    flannel:
+      version: latest
+    containerd:
+      version: latest
+output:
+  - message: "Auto storage scaling requires at least OpenEBS 3.6.0 and Rook 1.11.5"
+    type: misconfiguration
+    severity: error
+    patch:
+      - op: replace
+        path: /spec/rook/version
+        value: "1.11.8"
+      - op: replace
+        path: /spec/openebs/version
+        value: "3.7.0"

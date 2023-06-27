@@ -23,7 +23,7 @@ installer:
     minio: 
       version: 2022-10-05T14-58-27Z
     openebs: 
-      version: 3.3.x
+      version: 3.7.x
       isLocalPVEnabled: true
       localPVStorageClassName: default
     collectd: 

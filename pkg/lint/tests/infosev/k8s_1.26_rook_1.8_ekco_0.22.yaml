@@ -11,20 +11,20 @@ installer:
     rook: 
       version: 1.8.x
 output:
-  - message: "Add-on rook has a more recent version: 1.10.8"
+  - message: "Add-on rook has a more recent version: 1.11.8"
     type: upgrade-available
     severity: info
     patch:
       - op: replace
         path: /spec/rook/version
-        value: 1.10.8
+        value: 1.11.8
   - message: "Rook versions <= 1.9.10 are not compatible with Kubernetes 1.25+"
     type: incompatibility
     severity: error
     patch:
       - op: replace
         path: /spec/rook/version
-        value: 1.10.8
+        value: 1.11.8
   - message: All installers v2023.04.06-1 and later will include the latest version of Ekco, even if a different version is specified in the spec
     type: misconfiguration
     severity: info

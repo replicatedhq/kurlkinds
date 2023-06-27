@@ -1,0 +1,23 @@
+installer:
+  spec: 
+    kubernetes: 
+      version: 1.25.x
+    openebs: 
+      version: "3.7.0"
+      isLocalPVEnabled: true
+      localPVStorageClassName: "local"
+    rook:
+      version: "1.11.5"
+      minimumNodeCount: 2
+    flannel:
+      version: latest
+    containerd:
+      version: latest
+output:
+  - message: "Rook minimumNodeCount must be 3 or greater"
+    type: misconfiguration
+    severity: error
+    patch:
+      - op: replace
+        path: /spec/rook/minimumNodeCount
+        value: 3
