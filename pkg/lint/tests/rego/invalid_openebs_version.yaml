@@ -15,4 +15,4 @@ output:
     patch:
       - op: replace
         path: /spec/openebs/version
-        value: 3.4.0
+        value: 3.7.0

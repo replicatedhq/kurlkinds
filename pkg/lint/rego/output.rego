@@ -644,3 +644,35 @@ lint[output] {
 		]
 	}
 }
+
+# generates error if rook minimum node count is set to less than 3
+
+lint[output] {
+	installer.spec.rook.minimumNodeCount != ""
+	installer.spec.rook.minimumNodeCount < 3
+	output :=  {
+		"type": "misconfiguration",
+		"severity": "error",
+		"message": "Rook minimumNodeCount must be 3 or greater",
+		"patch": [
+			{ "op": "replace", "path": "/spec/rook/minimumNodeCount", "value": 3 }
+		]
+	}
+}
+
+# generates an error if Rook and OpenEBS add-ons are not at the required versions
+
+lint[output] {
+	installer.spec.rook.minimumNodeCount != ""
+	is_addon_version_lower_than_or_equal("openebs", "3.6.0")
+	is_addon_version_lower_than_or_equal("rook", "1.11.7")
+	output :=  {
+		"type": "misconfiguration",
+		"severity": "error",
+		"message": "Auto storage scaling requires at least OpenEBS 3.6.0 and Rook 1.11.7",
+		"patch": [
+			{ "op": "replace", "path": "/spec/rook/version", "value": newest_add_on_version("rook") },
+			{ "op": "replace", "path": "/spec/openebs/version", "value": newest_add_on_version("openebs") }
+		]
+	}
+}
