@@ -14,7 +14,7 @@ installer:
     containerd:
       version: latest
 output:
-  - message: "Auto storage scaling requires at least OpenEBS 3.6.0 and Rook 1.11.5"
+  - message: "Auto storage scaling requires at least OpenEBS 3.6.0 and Rook 1.11.7"
     type: misconfiguration
     severity: error
     patch:

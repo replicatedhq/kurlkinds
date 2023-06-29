@@ -665,11 +665,11 @@ lint[output] {
 lint[output] {
 	installer.spec.rook.minimumNodeCount != ""
 	is_addon_version_lower_than_or_equal("openebs", "3.6.0")
-	is_addon_version_lower_than_or_equal("rook", "1.11.5")
+	is_addon_version_lower_than_or_equal("rook", "1.11.7")
 	output :=  {
 		"type": "misconfiguration",
 		"severity": "error",
-		"message": "Auto storage scaling requires at least OpenEBS 3.6.0 and Rook 1.11.5",
+		"message": "Auto storage scaling requires at least OpenEBS 3.6.0 and Rook 1.11.7",
 		"patch": [
 			{ "op": "replace", "path": "/spec/rook/version", "value": newest_add_on_version("rook") },
 			{ "op": "replace", "path": "/spec/openebs/version", "value": newest_add_on_version("openebs") }

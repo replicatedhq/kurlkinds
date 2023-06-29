@@ -7,7 +7,7 @@ installer:
       isLocalPVEnabled: true
       localPVStorageClassName: "local"
     rook:
-      version: "1.11.5"
+      version: "1.11.7"
       minimumNodeCount: 2
     flannel:
       version: latest
