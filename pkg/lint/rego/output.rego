@@ -660,7 +660,7 @@ lint[output] {
 	}
 }
 
-# generates error if rook minimum node count is set but not using openebs/rook
+# generates an error if Rook and OpenEBS add-ons are not at the required versions
 
 lint[output] {
 	installer.spec.rook.minimumNodeCount != ""
