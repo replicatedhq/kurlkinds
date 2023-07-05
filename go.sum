@@ -250,8 +250,8 @@ github.com/prometheus/common v0.42.0 h1:EKsfXEYo4JpWMHH5cg+KOUWeuJSov1Id8zGR8eeI
 github.com/prometheus/procfs v0.9.0 h1:wzCHvIvM5SxWqYvwgVL7yJY8Lz3PKn49KQtpgMYJfhI=
 github.com/rcrowley/go-metrics v0.0.0-20201227073835-cf1acfcdf475 h1:N/ElC8H3+5XpJzTSTfLsJV/mx9Q9g7kxmchpfZyxgzM=
 github.com/rcrowley/go-metrics v0.0.0-20201227073835-cf1acfcdf475/go.mod h1:bCqnVzQkZxMG4s8nGwiZ5l3QUCyqpo9Y+/ZMZ9VjZe4=
-github.com/replicatedhq/troubleshoot v0.69.1 h1:3X+okcRGEYsta8OUmduJYKrrhAHWxVey7qyAFBRNqCM=
-github.com/replicatedhq/troubleshoot v0.69.1/go.mod h1:Jex54ErMyWtt+yR5B9+koKGWrwXjTxsPHPb2/1kQoZ8=
+github.com/replicatedhq/troubleshoot v0.69.2 h1:1AstRrgBAUIRFCdyEPKxIEBCbhBRtjQJV+A+WuFTcLY=
+github.com/replicatedhq/troubleshoot v0.69.2/go.mod h1:Y27o0b/I5FY6PsAl67ww9eUgOt/8QiTS8wgETYpNhnY=
 github.com/rogpeppe/fastuuid v1.2.0/go.mod h1:jVj6XXZzXRy/MSR5jhDC/2q6DgLz+nrA6LYCDYWNEvQ=
 github.com/rogpeppe/go-internal v1.3.0/go.mod h1:M8bDsm7K2OlrFYOpmOWEs/qY81heoFRclV5y23lUDJ4=
 github.com/rogpeppe/go-internal v1.10.0 h1:TMyTOH3F/DB16zRVcYyreMH6GnZZrwQVAoYjRBZyWFQ=
