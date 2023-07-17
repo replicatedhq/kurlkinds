@@ -9,7 +9,7 @@ require (
 	github.com/onsi/gomega v1.27.8
 	github.com/open-policy-agent/opa v0.51.0
 	github.com/pkg/errors v0.9.1
-	github.com/replicatedhq/troubleshoot v0.69.2
+	github.com/replicatedhq/troubleshoot v0.70.0
 	github.com/spf13/cobra v1.7.0
 	github.com/spf13/viper v1.16.0
 	golang.org/x/net v0.11.0
@@ -67,7 +67,7 @@ require (
 	golang.org/x/oauth2 v0.7.0 // indirect
 	golang.org/x/sys v0.9.0 // indirect
 	golang.org/x/term v0.9.0 // indirect
-	golang.org/x/text v0.10.0 // indirect
+	golang.org/x/text v0.11.0 // indirect
 	golang.org/x/time v0.3.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/protobuf v1.30.0 // indirect
