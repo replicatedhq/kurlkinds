@@ -1,18 +1,18 @@
 installer:
   spec: 
     kubernetes: 
-      version: 1.25.x
+      version: 1.21.x
     containerd: 
       version: latest
     weave:
       version: latest
     rook: 
-      version: 1.8.10
+      version: 1.12.0
 output:
-  - message: Rook versions <= 1.9.10 are not compatible with Kubernetes 1.25+
+  - message: Rook versions >= 1.12.0 requires Kubernetes versions 1.22+
     type: incompatibility
     severity: error
     patch:
       - op: replace
-        path: /spec/rook/version
-        value: 1.12.0
+        path: /spec/kubernetes/version
+        value: 1.26.1

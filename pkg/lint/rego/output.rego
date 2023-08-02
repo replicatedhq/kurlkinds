@@ -226,6 +226,20 @@ lint[output] {
 	}
 }
 
+# returns an error if selected kubernetes is < 1.22 and rook is >= 1.12.0.
+lint[output] {
+	is_addon_version_lower_than("kubernetes", "1.22.0")
+	is_addon_version_greater_than_or_equal("rook", "1.12.0")
+	output := {
+		"type": "incompatibility",
+		"severity": "error",
+		"message": "Rook versions >= 1.12.0 requires Kubernetes versions 1.22+",
+		"patch": [
+			{ "op": "replace", "path": "/spec/kubernetes/version", "value": newest_add_on_version("kubernetes") }
+		]
+	}
+}
+
 # returns an error if longhorn <= 1.4.0 is selected with kubernetes >= 1.25.0, this
 # pair is incompatible.
 lint[output] {
