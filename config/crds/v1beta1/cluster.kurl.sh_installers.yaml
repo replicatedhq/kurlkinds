@@ -481,6 +481,55 @@ spec:
                                   required:
                                   - outcomes
                                   type: object
+                                certificatesCollection:
+                                  properties:
+                                    annotations:
+                                      additionalProperties:
+                                        type: string
+                                      type: object
+                                    checkName:
+                                      type: string
+                                    collectorName:
+                                      type: string
+                                    exclude:
+                                      type: string
+                                    outcomes:
+                                      items:
+                                        properties:
+                                          fail:
+                                            properties:
+                                              message:
+                                                type: string
+                                              uri:
+                                                type: string
+                                              when:
+                                                type: string
+                                            type: object
+                                          pass:
+                                            properties:
+                                              message:
+                                                type: string
+                                              uri:
+                                                type: string
+                                              when:
+                                                type: string
+                                            type: object
+                                          warn:
+                                            properties:
+                                              message:
+                                                type: string
+                                              uri:
+                                                type: string
+                                              when:
+                                                type: string
+                                            type: object
+                                        type: object
+                                      type: array
+                                    strict:
+                                      type: string
+                                  required:
+                                  - outcomes
+                                  type: object
                                 cpu:
                                   properties:
                                     annotations:
@@ -1216,6 +1265,67 @@ spec:
                                   required:
                                   - outcomes
                                   type: object
+                                textAnalyze:
+                                  properties:
+                                    annotations:
+                                      additionalProperties:
+                                        type: string
+                                      type: object
+                                    checkName:
+                                      type: string
+                                    collectorName:
+                                      type: string
+                                    exclude:
+                                      type: string
+                                    excludeFiles:
+                                      items:
+                                        type: string
+                                      type: array
+                                    fileName:
+                                      type: string
+                                    ignoreIfNoFiles:
+                                      type: boolean
+                                    outcomes:
+                                      items:
+                                        properties:
+                                          fail:
+                                            properties:
+                                              message:
+                                                type: string
+                                              uri:
+                                                type: string
+                                              when:
+                                                type: string
+                                            type: object
+                                          pass:
+                                            properties:
+                                              message:
+                                                type: string
+                                              uri:
+                                                type: string
+                                              when:
+                                                type: string
+                                            type: object
+                                          warn:
+                                            properties:
+                                              message:
+                                                type: string
+                                              uri:
+                                                type: string
+                                              when:
+                                                type: string
+                                            type: object
+                                        type: object
+                                      type: array
+                                    regex:
+                                      type: string
+                                    regexGroups:
+                                      type: string
+                                    strict:
+                                      type: string
+                                  required:
+                                  - outcomes
+                                  type: object
                                 time:
                                   properties:
                                     annotations:
@@ -1339,6 +1449,19 @@ spec:
                                   required:
                                   - certificatePath
                                   - keyPath
+                                  type: object
+                                certificatesCollection:
+                                  properties:
+                                    collectorName:
+                                      type: string
+                                    exclude:
+                                      type: string
+                                    paths:
+                                      items:
+                                        type: string
+                                      type: array
+                                  required:
+                                  - paths
                                   type: object
                                 copy:
                                   properties:

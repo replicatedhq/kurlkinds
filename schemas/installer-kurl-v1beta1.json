@@ -685,6 +685,82 @@
                               }
                             }
                           },
+                          "certificatesCollection": {
+                            "type": "object",
+                            "required": [
+                              "outcomes"
+                            ],
+                            "properties": {
+                              "annotations": {
+                                "type": "object",
+                                "additionalProperties": {
+                                  "type": "string"
+                                }
+                              },
+                              "checkName": {
+                                "type": "string"
+                              },
+                              "collectorName": {
+                                "type": "string"
+                              },
+                              "exclude": {
+                                "type": "string"
+                              },
+                              "outcomes": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "fail": {
+                                      "type": "object",
+                                      "properties": {
+                                        "message": {
+                                          "type": "string"
+                                        },
+                                        "uri": {
+                                          "type": "string"
+                                        },
+                                        "when": {
+                                          "type": "string"
+                                        }
+                                      }
+                                    },
+                                    "pass": {
+                                      "type": "object",
+                                      "properties": {
+                                        "message": {
+                                          "type": "string"
+                                        },
+                                        "uri": {
+                                          "type": "string"
+                                        },
+                                        "when": {
+                                          "type": "string"
+                                        }
+                                      }
+                                    },
+                                    "warn": {
+                                      "type": "object",
+                                      "properties": {
+                                        "message": {
+                                          "type": "string"
+                                        },
+                                        "uri": {
+                                          "type": "string"
+                                        },
+                                        "when": {
+                                          "type": "string"
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "strict": {
+                                "type": "string"
+                              }
+                            }
+                          },
                           "cpu": {
                             "type": "object",
                             "required": [
@@ -1825,6 +1901,100 @@
                               }
                             }
                           },
+                          "textAnalyze": {
+                            "type": "object",
+                            "required": [
+                              "outcomes"
+                            ],
+                            "properties": {
+                              "annotations": {
+                                "type": "object",
+                                "additionalProperties": {
+                                  "type": "string"
+                                }
+                              },
+                              "checkName": {
+                                "type": "string"
+                              },
+                              "collectorName": {
+                                "type": "string"
+                              },
+                              "exclude": {
+                                "type": "string"
+                              },
+                              "excludeFiles": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              },
+                              "fileName": {
+                                "type": "string"
+                              },
+                              "ignoreIfNoFiles": {
+                                "type": "boolean"
+                              },
+                              "outcomes": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "fail": {
+                                      "type": "object",
+                                      "properties": {
+                                        "message": {
+                                          "type": "string"
+                                        },
+                                        "uri": {
+                                          "type": "string"
+                                        },
+                                        "when": {
+                                          "type": "string"
+                                        }
+                                      }
+                                    },
+                                    "pass": {
+                                      "type": "object",
+                                      "properties": {
+                                        "message": {
+                                          "type": "string"
+                                        },
+                                        "uri": {
+                                          "type": "string"
+                                        },
+                                        "when": {
+                                          "type": "string"
+                                        }
+                                      }
+                                    },
+                                    "warn": {
+                                      "type": "object",
+                                      "properties": {
+                                        "message": {
+                                          "type": "string"
+                                        },
+                                        "uri": {
+                                          "type": "string"
+                                        },
+                                        "when": {
+                                          "type": "string"
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "regex": {
+                                "type": "string"
+                              },
+                              "regexGroups": {
+                                "type": "string"
+                              },
+                              "strict": {
+                                "type": "string"
+                              }
+                            }
+                          },
                           "time": {
                             "type": "object",
                             "required": [
@@ -2014,6 +2184,26 @@
                               },
                               "keyPath": {
                                 "type": "string"
+                              }
+                            }
+                          },
+                          "certificatesCollection": {
+                            "type": "object",
+                            "required": [
+                              "paths"
+                            ],
+                            "properties": {
+                              "collectorName": {
+                                "type": "string"
+                              },
+                              "exclude": {
+                                "type": "string"
+                              },
+                              "paths": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
                               }
                             }
                           },
