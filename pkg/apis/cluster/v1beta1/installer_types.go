@@ -122,6 +122,7 @@ type Kubernetes struct {
 	UpgradeIgnorePreflightErrors string `json:"upgradeIgnorePreflightErrors,omitempty" yaml:"upgradeIgnorePreflightErrors,omitempty"`
 }
 
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 type HostPreflight struct {
 	metav1.TypeMeta `json:",inline" yaml:",inline"`
 	Spec            troubleshootv1beta2.HostPreflightSpec `json:"spec,omitempty" yaml:"spec,omitempty"`
