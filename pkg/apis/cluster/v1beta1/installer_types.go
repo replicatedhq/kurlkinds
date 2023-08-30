@@ -123,7 +123,8 @@ type Kubernetes struct {
 }
 
 type HostPreflight struct {
-	Spec troubleshootv1beta2.HostPreflightSpec `json:"spec,omitempty" yaml:"spec,omitempty"`
+	metav1.TypeMeta `json:",inline" yaml:",inline"`
+	Spec            troubleshootv1beta2.HostPreflightSpec `json:"spec,omitempty" yaml:"spec,omitempty"`
 }
 
 type Kurl struct {
