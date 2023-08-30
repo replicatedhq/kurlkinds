@@ -122,25 +122,29 @@ type Kubernetes struct {
 	UpgradeIgnorePreflightErrors string `json:"upgradeIgnorePreflightErrors,omitempty" yaml:"upgradeIgnorePreflightErrors,omitempty"`
 }
 
+type HostPreflight struct {
+	Spec troubleshootv1beta2.HostPreflightSpec `json:"spec,omitempty" yaml:"spec,omitempty"`
+}
+
 type Kurl struct {
-	AdditionalNoProxyAddresses   []string                           `json:"additionalNoProxyAddresses,omitempty" yaml:"additionalNoProxyAddresses,omitempty"`
-	Airgap                       bool                               `json:"airgap,omitempty" yaml:"airgap,omitempty"`
-	HostnameCheck                string                             `json:"hostnameCheck,omitempty" yaml:"hostnameCheck,omitempty"`
-	IgnoreRemoteLoadImagesPrompt bool                               `json:"ignoreRemoteLoadImagesPrompt,omitempty" yaml:"ignoreRemoteLoadImagesPrompt,omitempty"`
-	IgnoreRemoteUpgradePrompt    bool                               `json:"ignoreRemoteUpgradePrompt,omitempty" yaml:"ignoreRemoteUpgradePrompt,omitempty"`
-	InstallerVersion             string                             `json:"installerVersion,omitempty" yaml:"installerVersion,omitempty"`
-	LicenseURL                   string                             `json:"licenseURL,omitempty" yaml:"licenseURL,omitempty"`
-	Nameserver                   string                             `json:"nameserver,omitempty" yaml:"nameserver,omitempty"`
-	NoProxy                      bool                               `json:"noProxy,omitempty" yaml:"noProxy,omitempty"`
-	HostPreflights               *troubleshootv1beta2.HostPreflight `json:"hostPreflights,omitempty" yaml:"hostPreflights,omitempty"`
-	HostPreflightIgnore          bool                               `json:"hostPreflightIgnore,omitempty" yaml:"hostPreflightIgnore,omitempty"`
-	HostPreflightEnforceWarnings bool                               `json:"hostPreflightEnforceWarnings,omitempty" yaml:"hostPreflightEnforceWarnings,omitempty"`
-	PrivateAddress               string                             `json:"privateAddress,omitempty" yaml:"privateAddress,omitempty"`
-	ProxyAddress                 string                             `json:"proxyAddress,omitempty" yaml:"proxyAddress,omitempty"`
-	PublicAddress                string                             `json:"publicAddress,omitempty" yaml:"publicAddress,omitempty"`
-	SkipSystemPackageInstall     bool                               `json:"skipSystemPackageInstall,omitempty" yaml:"skipSystemPackageInstall,omitempty"`
-	ExcludeBuiltinHostPreflights bool                               `json:"excludeBuiltinHostPreflights,omitempty" yaml:"excludeBuiltinHostPreflights,omitempty"`
-	IPv6                         bool                               `json:"ipv6,omitempty" yaml:"ipv6,omitempty"`
+	AdditionalNoProxyAddresses   []string       `json:"additionalNoProxyAddresses,omitempty" yaml:"additionalNoProxyAddresses,omitempty"`
+	Airgap                       bool           `json:"airgap,omitempty" yaml:"airgap,omitempty"`
+	HostnameCheck                string         `json:"hostnameCheck,omitempty" yaml:"hostnameCheck,omitempty"`
+	IgnoreRemoteLoadImagesPrompt bool           `json:"ignoreRemoteLoadImagesPrompt,omitempty" yaml:"ignoreRemoteLoadImagesPrompt,omitempty"`
+	IgnoreRemoteUpgradePrompt    bool           `json:"ignoreRemoteUpgradePrompt,omitempty" yaml:"ignoreRemoteUpgradePrompt,omitempty"`
+	InstallerVersion             string         `json:"installerVersion,omitempty" yaml:"installerVersion,omitempty"`
+	LicenseURL                   string         `json:"licenseURL,omitempty" yaml:"licenseURL,omitempty"`
+	Nameserver                   string         `json:"nameserver,omitempty" yaml:"nameserver,omitempty"`
+	NoProxy                      bool           `json:"noProxy,omitempty" yaml:"noProxy,omitempty"`
+	HostPreflights               *HostPreflight `json:"hostPreflights,omitempty" yaml:"hostPreflights,omitempty"`
+	HostPreflightIgnore          bool           `json:"hostPreflightIgnore,omitempty" yaml:"hostPreflightIgnore,omitempty"`
+	HostPreflightEnforceWarnings bool           `json:"hostPreflightEnforceWarnings,omitempty" yaml:"hostPreflightEnforceWarnings,omitempty"`
+	PrivateAddress               string         `json:"privateAddress,omitempty" yaml:"privateAddress,omitempty"`
+	ProxyAddress                 string         `json:"proxyAddress,omitempty" yaml:"proxyAddress,omitempty"`
+	PublicAddress                string         `json:"publicAddress,omitempty" yaml:"publicAddress,omitempty"`
+	SkipSystemPackageInstall     bool           `json:"skipSystemPackageInstall,omitempty" yaml:"skipSystemPackageInstall,omitempty"`
+	ExcludeBuiltinHostPreflights bool           `json:"excludeBuiltinHostPreflights,omitempty" yaml:"excludeBuiltinHostPreflights,omitempty"`
+	IPv6                         bool           `json:"ipv6,omitempty" yaml:"ipv6,omitempty"`
 }
 
 type Minio struct {
