@@ -5,6 +5,8 @@ data: |
   metadata:
     name: "latest"
   spec:
+    antrea:
+      version: ""
     calico:
       version: ""
     certManager:

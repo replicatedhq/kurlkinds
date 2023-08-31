@@ -36,6 +36,8 @@ installer:
       version: latest
     goldpinger: 
       version: latest
+    aws: 
+      version: latest
 output:
   - message: "Add-on contour has a more recent version: 1.24.1"
     type: upgrade-available

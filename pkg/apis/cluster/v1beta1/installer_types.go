@@ -29,6 +29,7 @@ type InstallerSpec struct {
 	Docker          *Docker          `json:"docker,omitempty" yaml:"docker,omitempty"`
 	Weave           *Weave           `json:"weave,omitempty" yaml:"weave,omitempty"`
 	Flannel         *Flannel         `json:"flannel,omitempty" yaml:"flannel,omitempty"`
+	Antrea          *Antrea          `json:"antrea,omitempty" yaml:"antrea,omitempty"`
 	Calico          *Calico          `json:"calico,omitempty" yaml:"calico,omitempty"`
 	Contour         *Contour         `json:"contour,omitempty" yaml:"contour,omitempty"`
 	Rook            *Rook            `json:"rook,omitempty" yaml:"rook,omitempty"`
@@ -53,6 +54,7 @@ type InstallerSpec struct {
 	Sonobuoy        *Sonobuoy        `json:"sonobuoy,omitempty" yaml:"sonobuoy,omitempty"`
 	UFWConfig       *UFWConfig       `json:"ufwConfig,omitempty" yaml:"ufwConfig,omitempty"`
 	Goldpinger      *Goldpinger      `json:"goldpinger,omitempty" yaml:"goldpinger,omitempty"`
+	AWS             *AWS             `json:"aws,omitempty" yaml:"aws,omitempty"`
 }
 
 type Contour struct {
@@ -233,6 +235,14 @@ type Flannel struct {
 	Version      string `json:"version" yaml:"version"`
 }
 
+type Antrea struct {
+	IsEncryptionDisabled bool   `json:"isEncryptionDisabled,omitempty" yaml:"isEncryptionDisabled,omitempty"`
+	PodCIDR              string `json:"podCIDR,omitempty" yaml:"podCIDR,omitempty"`
+	PodCidrRange         string `json:"podCidrRange,omitempty" yaml:"podCidrRange,omitempty"`
+	S3Override           string `json:"s3Override,omitempty" yaml:"s3Override,omitempty"`
+	Version              string `json:"version" yaml:"version"`
+}
+
 type SelinuxConfig struct {
 	ChconCmds      [][]string `json:"chconCmds,omitempty" yaml:"chconCmds,omitempty"`
 	DisableSelinux bool       `json:"disableSelinux,omitempty" yaml:"disableSelinux,omitempty"`
@@ -330,6 +340,12 @@ type UFWConfig struct {
 type Goldpinger struct {
 	S3Override string `json:"s3Override,omitempty" yaml:"s3Override,omitempty"`
 	Version    string `json:"version" yaml:"version"`
+}
+
+type AWS struct {
+	S3Override          string `json:"s3Override,omitempty" yaml:"s3Override,omitempty"`
+	Version             string `json:"version" yaml:"version"`
+	ExcludeStorageClass bool   `json:"excludeStorageClass,omitempty" yaml:"excludeStorageClass,omitempty"`
 }
 
 // InstallerStatus defines the observed state of Installer

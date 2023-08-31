@@ -51,22 +51,23 @@ lint[output] {
 	output :=  {
 		"type": "misconfiguration",
 		"severity": "error",
-		"message": "No CNI plugin (Flannel or Weave) selected",
+		"message": "No CNI plugin (Flannel, Weave or Antrea) selected",
 		"patch": [
 			{ "op": "add", "path": "/spec/flannel/version", "value": newest_add_on_version("flannel") }
 		]
 	}
 }
 
-# returns an error if the config has any two of flannel or weave selected at the same time.
+# returns an error if the config has any two of flannel, weave or antrea selected at the same time.
 lint[output] {
 	count(cni_providers) > 1
 	output := {
 		"type": "misconfiguration",
 		"severity": "error",
-		"message": "Multiple CNI plugins selected (choose one of Flannel or Weave)",
+		"message": "Multiple CNI plugins selected (choose one of Flannel, Weave or Antrea)",
 		"patch": [
 			{ "op": "remove", "path": "/spec/weave" },
+			{ "op": "remove", "path": "/spec/antrea" },
 			{ "op": "add", "path": "/spec/flannel/version", "value": newest_add_on_version("flannel") }
 		]
 	}
@@ -81,6 +82,7 @@ lint[output] {
 		"message": "No kubernetes distribution selected",
 		"patch": [
 			{ "op": "remove", "path": "/spec/docker" },
+			{ "op": "remove", "path": "/spec/antrea" },
 			{ "op": "remove", "path": "/spec/weave" },
 			{ "op": "add", "path": "/spec/kubernetes/version", "value": newest_add_on_version("kubernetes") },
 			{ "op": "add", "path": "/spec/flannel/version", "value": newest_add_on_version("flannel") },
@@ -165,6 +167,26 @@ lint[output] {
 		"type": "misconfiguration",
 		"severity": "error",
 		"message": "Invalid Flannel pod CIDR"
+	}
+}
+
+# verifies if the antrea pod cidr range override provided by the user is valid.
+lint[output] {
+	not valid_pod_cidr_range_override(installer.spec.antrea.podCidrRange)
+	output := {
+		"type": "misconfiguration",
+		"severity": "error",
+		"message": "Invalid Antrea pod CIDR range"
+	}
+}
+
+# verifies if the antrea pod cidr override provided by the user is valid.
+lint[output] {
+	not valid_antrea_pod_cidr_override
+	output := {
+		"type": "misconfiguration",
+		"severity": "error",
+		"message": "Invalid Antrea pod CIDR"
 	}
 }
 

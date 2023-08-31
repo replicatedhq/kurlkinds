@@ -1,0 +1,18 @@
+installer:
+  spec:
+    kubernetes:
+      version: latest
+    containerd:
+      version: latest
+    weave:
+      version: latest
+    aws:
+      version: 0.0.0
+output:
+  - message: Unknown aws add-on version 0.0.0
+    type: unknown-addon
+    severity: error
+    patch:
+      - op: replace
+        path: /spec/aws/version
+        value: 0.1.0

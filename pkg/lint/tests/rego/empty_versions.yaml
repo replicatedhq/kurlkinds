@@ -1,5 +1,7 @@
 installer:
   spec:
+    antrea:
+      version: ""
     calico:
       version: ""
     certManager:
