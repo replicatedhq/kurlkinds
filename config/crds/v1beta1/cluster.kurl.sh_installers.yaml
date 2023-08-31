@@ -33,32 +33,6 @@ spec:
             type: object
           spec:
             properties:
-              antrea:
-                properties:
-                  isEncryptionDisabled:
-                    type: boolean
-                  podCIDR:
-                    type: string
-                  podCidrRange:
-                    type: string
-                  s3Override:
-                    type: string
-                  version:
-                    type: string
-                required:
-                - version
-                type: object
-              aws:
-                properties:
-                  excludeStorageClass:
-                    type: boolean
-                  s3Override:
-                    type: string
-                  version:
-                    type: string
-                required:
-                - version
-                type: object
               calico:
                 properties:
                   s3Override:

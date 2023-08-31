@@ -9,14 +9,12 @@ installer:
     containerd:
       version: latest
 output:
-  - message: Multiple CNI plugins selected (choose one of Flannel, Weave or Antrea)
+  - message: Multiple CNI plugins selected (choose one of Flannel or Weave)
     type: misconfiguration
     severity: error
     patch:
       - op: remove
         path: /spec/weave
-      - op: remove
-        path: /spec/antrea
       - op: add
         path: /spec/flannel/version
         value: 0.21.1

@@ -42,10 +42,6 @@ cni_providers[runtime] {
 	installer.spec.weave.version != ""
 	runtime := "weave"
 }
-cni_providers[runtime] {
-	installer.spec.antrea.version != ""
-	runtime := "antrea"
-}
 
 # evaluates to true if the given addon has its version is lower (older) than or equal to the
 # provided semantic version.
@@ -145,15 +141,6 @@ valid_pod_cidr_range_override(podCidrRange) {
 }
 valid_pod_cidr_range_override(podCidrRange) {
 	valid_cidr_range(podCidrRange)
-}
-
-# valid_pod_cidr checks id the provided podCIDR property is valid. antrea pod cidr can be
-# either ipv4 or ipv6.
-valid_antrea_pod_cidr_override() {
-	not installer.spec.antrea.podCIDR
-}
-valid_antrea_pod_cidr_override() {
-	net.cidr_is_valid(installer.spec.antrea.podCIDR)
 }
 
 # valid_add_on_version checks if the version for the addon exists (is valid). if the addon

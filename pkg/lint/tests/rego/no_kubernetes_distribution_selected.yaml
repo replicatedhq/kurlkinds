@@ -10,8 +10,6 @@ output:
       - op: remove
         path: /spec/docker
       - op: remove
-        path: /spec/antrea
-      - op: remove
         path: /spec/weave
       - op: add
         path: /spec/kubernetes/version
