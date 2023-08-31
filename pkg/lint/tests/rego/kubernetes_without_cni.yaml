@@ -5,7 +5,7 @@ installer:
     containerd:
       version: latest
 output:
-  - message: No CNI plugin (Flannel, Weave or Antrea) selected
+  - message: No CNI plugin (Flannel or Weave) selected
     type: misconfiguration
     severity: error
     patch:

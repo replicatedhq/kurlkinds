@@ -8,7 +8,7 @@ data: |
     kubernetes:
       serviceCIDR: fde4:8dba:82e1:98a::/64
       version: 1.24.x
-    antrea:
+    flannel:
       podCIDR: 192.168.0.0/16
       version: latest
     containerd:
