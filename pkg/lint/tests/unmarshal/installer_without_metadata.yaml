@@ -37,6 +37,4 @@ data: |
       version: latest
     goldpinger:
       version: latest
-    aws:
-      version: latest
 output: []
