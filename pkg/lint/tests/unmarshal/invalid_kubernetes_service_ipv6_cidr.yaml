@@ -6,11 +6,13 @@ data: |
     name: "latest"
   spec:
     kubernetes:
-      serviceCIDR: fde4:8dba:82e1:98a::/64
+      serviceCIDR: fde4:8dba:82e1:98x::/64
       version: 1.24.x
     antrea:
-      podCIDR: 192.168.0.0/16
       version: latest
     containerd:
       version: latest
-output: []
+output:
+  - message: Invalid Kubernetes services CIDR
+    type: misconfiguration
+    severity: error

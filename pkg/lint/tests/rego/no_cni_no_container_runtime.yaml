@@ -11,7 +11,7 @@ installer:
 output:
 - type: misconfiguration
   severity: error
-  message: No CNI plugin (Flannel or Weave) selected
+  message: No CNI plugin (Flannel, Weave or Antrea) selected
   patch:
   - op: add
     path: /spec/flannel/version
