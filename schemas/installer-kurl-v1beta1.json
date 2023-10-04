@@ -2363,6 +2363,10 @@
                                   "insecureSkipVerify": {
                                     "type": "boolean"
                                   },
+                                  "timeout": {
+                                    "description": "Timeout is the time to wait for a server's response. Its a duration e.g 15s, 2h30m. Missing value or empty string or means no timeout.",
+                                    "type": "string"
+                                  },
                                   "url": {
                                     "type": "string"
                                   }
@@ -2386,6 +2390,10 @@
                                   "insecureSkipVerify": {
                                     "type": "boolean"
                                   },
+                                  "timeout": {
+                                    "description": "Timeout is the time to wait for a server's response. Its a duration e.g 15s, 2h30m. Missing value or empty string or means no timeout.",
+                                    "type": "string"
+                                  },
                                   "url": {
                                     "type": "string"
                                   }
@@ -2408,6 +2416,10 @@
                                   },
                                   "insecureSkipVerify": {
                                     "type": "boolean"
+                                  },
+                                  "timeout": {
+                                    "description": "Timeout is the time to wait for a server's response. Its a duration e.g 15s, 2h30m. Missing value or empty string or means no timeout.",
+                                    "type": "string"
                                   },
                                   "url": {
                                     "type": "string"
@@ -2937,6 +2949,10 @@
                                   "insecureSkipVerify": {
                                     "type": "boolean"
                                   },
+                                  "timeout": {
+                                    "description": "Timeout is the time to wait for a server's response. Its a duration e.g 15s, 2h30m. Missing value or empty string or means no timeout.",
+                                    "type": "string"
+                                  },
                                   "url": {
                                     "type": "string"
                                   }
@@ -2960,6 +2976,10 @@
                                   "insecureSkipVerify": {
                                     "type": "boolean"
                                   },
+                                  "timeout": {
+                                    "description": "Timeout is the time to wait for a server's response. Its a duration e.g 15s, 2h30m. Missing value or empty string or means no timeout.",
+                                    "type": "string"
+                                  },
                                   "url": {
                                     "type": "string"
                                   }
@@ -2982,6 +3002,10 @@
                                   },
                                   "insecureSkipVerify": {
                                     "type": "boolean"
+                                  },
+                                  "timeout": {
+                                    "description": "Timeout is the time to wait for a server's response. Its a duration e.g 15s, 2h30m. Missing value or empty string or means no timeout.",
+                                    "type": "string"
                                   },
                                   "url": {
                                     "type": "string"
