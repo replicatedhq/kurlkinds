@@ -12,7 +12,7 @@ require (
 	github.com/replicatedhq/troubleshoot v0.72.1
 	github.com/spf13/cobra v1.7.0
 	github.com/spf13/viper v1.16.0
-	golang.org/x/net v0.15.0
+	golang.org/x/net v0.17.0
 	gopkg.in/yaml.v2 v2.4.0
 	gopkg.in/yaml.v3 v3.0.1
 	k8s.io/apiextensions-apiserver v0.28.2
@@ -79,8 +79,8 @@ require (
 	go.opentelemetry.io/otel/sdk v1.17.0 // indirect
 	go.opentelemetry.io/otel/trace v1.17.0 // indirect
 	golang.org/x/oauth2 v0.10.0 // indirect
-	golang.org/x/sys v0.12.0 // indirect
-	golang.org/x/term v0.12.0 // indirect
+	golang.org/x/sys v0.13.0 // indirect
+	golang.org/x/term v0.13.0 // indirect
 	golang.org/x/text v0.13.0 // indirect
 	golang.org/x/time v0.3.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
