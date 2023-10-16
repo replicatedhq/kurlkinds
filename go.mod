@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	github.com/evanphx/json-patch/v5 v5.7.0
-	github.com/google/go-cmp v0.5.9
+	github.com/google/go-cmp v0.6.0
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/onsi/gomega v1.28.0
 	github.com/open-policy-agent/opa v0.57.0
