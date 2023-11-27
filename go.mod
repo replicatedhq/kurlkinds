@@ -9,7 +9,7 @@ require (
 	github.com/onsi/gomega v1.30.0
 	github.com/open-policy-agent/opa v0.58.0
 	github.com/pkg/errors v0.9.1
-	github.com/replicatedhq/troubleshoot v0.72.1
+	github.com/replicatedhq/troubleshoot v0.78.0
 	github.com/spf13/cobra v1.8.0
 	github.com/spf13/viper v1.17.0
 	golang.org/x/net v0.18.0
@@ -18,7 +18,7 @@ require (
 	k8s.io/apiextensions-apiserver v0.28.4
 	k8s.io/apimachinery v0.28.4
 	k8s.io/client-go v0.28.4
-	sigs.k8s.io/controller-runtime v0.16.1
+	sigs.k8s.io/controller-runtime v0.16.2
 )
 
 // TODO: when controller-runtime past v0.14.6 is released, remove this line
