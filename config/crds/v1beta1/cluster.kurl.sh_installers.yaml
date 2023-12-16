@@ -1713,7 +1713,23 @@ spec:
                                       type: string
                                     command:
                                       type: string
+                                    env:
+                                      items:
+                                        type: string
+                                      type: array
                                     exclude:
+                                      type: string
+                                    ignoreParentEnvs:
+                                      type: boolean
+                                    inheritEnvs:
+                                      items:
+                                        type: string
+                                      type: array
+                                    input:
+                                      additionalProperties:
+                                        type: string
+                                      type: object
+                                    outputDir:
                                       type: string
                                   required:
                                   - args

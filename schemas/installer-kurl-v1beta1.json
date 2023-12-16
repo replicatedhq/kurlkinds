@@ -2519,7 +2519,31 @@
                               "command": {
                                 "type": "string"
                               },
+                              "env": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              },
                               "exclude": {
+                                "type": "string"
+                              },
+                              "ignoreParentEnvs": {
+                                "type": "boolean"
+                              },
+                              "inheritEnvs": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              },
+                              "input": {
+                                "type": "object",
+                                "additionalProperties": {
+                                  "type": "string"
+                                }
+                              },
+                              "outputDir": {
                                 "type": "string"
                               }
                             }
