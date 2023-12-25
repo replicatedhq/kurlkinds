@@ -9,7 +9,7 @@ require (
 	github.com/onsi/gomega v1.30.0
 	github.com/open-policy-agent/opa v0.59.0
 	github.com/pkg/errors v0.9.1
-	github.com/replicatedhq/troubleshoot v0.78.1
+	github.com/replicatedhq/troubleshoot v0.79.0
 	github.com/spf13/cobra v1.8.0
 	github.com/spf13/viper v1.18.1
 	golang.org/x/net v0.19.0

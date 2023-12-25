@@ -136,8 +136,8 @@ github.com/prometheus/procfs v0.10.1 h1:kYK1Va/YMlutzCGazswoHKo//tZVlFpKYh+Pymzi
 github.com/prometheus/procfs v0.10.1/go.mod h1:nwNm2aOCAYw8uTR/9bWRREkZFxAUcWzPHWJq+XBB/FM=
 github.com/rcrowley/go-metrics v0.0.0-20201227073835-cf1acfcdf475 h1:N/ElC8H3+5XpJzTSTfLsJV/mx9Q9g7kxmchpfZyxgzM=
 github.com/rcrowley/go-metrics v0.0.0-20201227073835-cf1acfcdf475/go.mod h1:bCqnVzQkZxMG4s8nGwiZ5l3QUCyqpo9Y+/ZMZ9VjZe4=
-github.com/replicatedhq/troubleshoot v0.78.1 h1:b/Y3gR+xjVYWCSJN7sfLzJSXQ8hI2IQLg2KGie8pp94=
-github.com/replicatedhq/troubleshoot v0.78.1/go.mod h1:twdVJdLkvR2VgosPL1aCKb/qKQRIJnjz3KkBzgI5In8=
+github.com/replicatedhq/troubleshoot v0.79.0 h1:pQjaAOnk2l6kDLVmYJN67ljUzlu84tmqHREW99dhyNI=
+github.com/replicatedhq/troubleshoot v0.79.0/go.mod h1:18GeM7gFsx3EchFqsW8hJCL6ceUeFch1OVWCYxrPJSc=
 github.com/rogpeppe/go-internal v1.10.0 h1:TMyTOH3F/DB16zRVcYyreMH6GnZZrwQVAoYjRBZyWFQ=
 github.com/russross/blackfriday/v2 v2.1.0/go.mod h1:+Rmxgy9KzJVeS9/2gXHxylqXiyQDYRxCVz55jmeOWTM=
 github.com/sagikazarmark/locafero v0.4.0 h1:HApY1R9zGo4DBgr7dqsTH/JJxLTTsOt7u6keLGt6kNQ=
