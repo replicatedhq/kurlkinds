@@ -1,0 +1,20 @@
+installer:
+  spec:
+    kubernetes:
+      version: 1.33.0
+      s3Override: "https://path.to.the/version.tar.gz"
+    containerd:
+      version: latest
+    weave:
+      version: latest
+    rook:
+      version: 1.16.6
+      s3Override: "https://path.to.the/version.tar.gz"
+customPatch:
+  - op: replace
+    path: /spec/kubernetes/version
+    value: 1.32.0
+output:
+  - message: Rook 1.16.x is only tested upstream with Kubernetes 1.27 through 1.32
+    type: incompatibility
+    severity: warning

@@ -207,7 +207,7 @@ lint[output] {
 # returns an error if selected kubernetes is >= 1.20 and rook is less than 1.1.0.
 lint[output] {
 	is_addon_version_greater_than_or_equal("kubernetes", "1.20.0")
-	is_addon_version_lower_than("rook", "1.1.0")
+	is_addon_version_lower_than_or_equal("rook", "1.1.0")
 	output := {
 		"type": "incompatibility",
 		"severity": "error",
@@ -244,7 +244,7 @@ lint[output] {
 # pair is incompatible.
 lint[output] {
 	is_addon_version_greater_than_or_equal("kubernetes", "1.25.0")
-	is_addon_version_lower_than("longhorn", "1.4.0")
+	is_addon_version_lower_than_or_equal("longhorn", "1.4.0")
 	output := {
 		"type": "incompatibility",
 		"severity": "error",
@@ -338,14 +338,14 @@ lint[output] {
 	}
 }
 
-# reports incompatiblity error for the openebs <= 2.12.9 and kubernetes >= 1.22.0 duo.
+# reports incompatiblity error for the openebs < 2.12.9 and kubernetes >= 1.22.0 duo.
 lint[output] {
 	is_addon_version_greater_than_or_equal("kubernetes", "1.22.0")
-	is_addon_version_lower_than_or_equal("openebs", "2.12.9")
+	is_addon_version_lower_than("openebs", "2.12.9")
 	output := {
 		"type": "incompatibility",
 		"severity": "error",
-		"message": "OpenEBS versions <= 2.12.9 are not compatible with Kubernetes 1.22+"
+		"message": "OpenEBS versions < 2.12.9 are not compatible with Kubernetes 1.22+"
 	}
 }
 
@@ -688,5 +688,66 @@ lint[output] {
 			{ "op": "replace", "path": "/spec/rook/version", "value": newest_add_on_version("rook") },
 			{ "op": "replace", "path": "/spec/openebs/version", "value": newest_add_on_version("openebs") }
 		]
+	}
+}
+
+# warns if rook is used with a kubernetes version outside the range that rook version is
+# tested with upstream. these pairs are untested rather than known to fail.
+lint[output] {
+	r := rook_tested_kubernetes_versions[_]
+	is_addon_version_greater_than_or_equal("rook", sprintf("%v.0", [r.rook]))
+	is_addon_version_lower_than_or_equal("rook", sprintf("%v.999", [r.rook]))
+	kubernetes_outside_range(r.min, r.max)
+	output := {
+		"type": "incompatibility",
+		"severity": "warning",
+		"message": sprintf("Rook %v.x is only tested upstream with Kubernetes %v through %v", [r.rook, r.min, r.max])
+	}
+}
+
+# warns if metrics server 0.3.x is used with kubernetes 1.22+, upstream does not support this pair.
+lint[output] {
+	is_addon_version_greater_than_or_equal("kubernetes", "1.22.0")
+	is_addon_version_lower_than("metricsServer", "0.4.0")
+	output := {
+		"type": "incompatibility",
+		"severity": "warning",
+		"message": "Metrics Server versions < 0.4.0 are not supported upstream with Kubernetes 1.22+"
+	}
+}
+
+# warns if kots < 1.100.0 is used with kubernetes 1.27+, native helm applications do not work
+# with this pair.
+lint[output] {
+	is_addon_version_greater_than_or_equal("kubernetes", "1.27.0")
+	is_addon_version_lower_than("kotsadm", "1.100.0")
+	output := {
+		"type": "incompatibility",
+		"severity": "warning",
+		"message": "KOTS versions < 1.100.0 do not support native Helm applications on Kubernetes 1.27+"
+	}
+}
+
+# warns if openebs 4.x is used with kubernetes < 1.23, upstream does not support this pair.
+lint[output] {
+	is_addon_version_lower_than("kubernetes", "1.23.0")
+	is_addon_version_greater_than_or_equal("openebs", "4.0.0")
+	output := {
+		"type": "incompatibility",
+		"severity": "warning",
+		"message": "OpenEBS versions >= 4.0.0 are not supported upstream with Kubernetes versions < 1.23"
+	}
+}
+
+# warns if containerd 2.1.x is used with kubernetes 1.36+, this pair is outside the upstream
+# support matrix.
+lint[output] {
+	is_addon_version_greater_than_or_equal("kubernetes", "1.36.0")
+	is_addon_version_greater_than_or_equal("containerd", "2.1.0")
+	is_addon_version_lower_than("containerd", "2.2.0")
+	output := {
+		"type": "incompatibility",
+		"severity": "warning",
+		"message": "Containerd 2.1.x is not supported upstream with Kubernetes 1.36+"
 	}
 }

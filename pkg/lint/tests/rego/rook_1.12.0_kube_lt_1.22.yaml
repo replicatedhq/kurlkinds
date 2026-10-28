@@ -9,6 +9,9 @@ installer:
     rook: 
       version: 1.12.0
 output:
+  - message: Rook 1.12.x is only tested upstream with Kubernetes 1.22 through 1.28
+    type: incompatibility
+    severity: warning
   - message: Rook versions >= 1.12.0 requires Kubernetes versions 1.22+
     type: incompatibility
     severity: error
