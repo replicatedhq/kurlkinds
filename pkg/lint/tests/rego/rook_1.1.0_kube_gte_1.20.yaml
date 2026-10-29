@@ -1,0 +1,19 @@
+installer:
+  spec: 
+    kubernetes: 
+      version: 1.20.x
+    containerd: 
+      version: latest
+    weave:
+      version: latest
+    rook: 
+      version: 1.1.0
+      s3Override: "https://path.to.the/version.tar.gz"
+customPatch:
+  - op: replace
+    path: /spec/rook/version
+    value: 1.4.3
+output:
+  - message: Rook versions <= 1.1.0 are not compatible with Kubernetes versions 1.20+
+    type: incompatibility
+    severity: error

@@ -1,0 +1,12 @@
+installer:
+  spec:
+    kubernetes:
+      version: 1.23.x
+    containerd:
+      version: latest
+    weave:
+      version: latest
+    openebs:
+      version: 4.0.0
+      s3Override: "https://path.to.the/version.tar.gz"
+output: []

@@ -1,0 +1,13 @@
+installer:
+  spec:
+    kubernetes:
+      version: 1.26.x
+    containerd:
+      version: latest
+    weave:
+      version: latest
+    kotsadm:
+      version: 1.94.2
+    minio:
+      version: 2023-02-17T17-52-43Z
+output: []

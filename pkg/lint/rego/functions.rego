@@ -79,6 +79,15 @@ is_addon_version_greater_than(addon, version) {
 	semver.compare(no_version_x, version) > 0
 }
 
+# evaluates to true if the kubernetes version is lower than min.0 or greater than max.x, where
+# min and max are minor versions such as "1.22".
+kubernetes_outside_range(min, max) {
+	is_addon_version_lower_than("kubernetes", sprintf("%v.0", [min]))
+}
+kubernetes_outside_range(min, max) {
+	is_addon_version_greater_than("kubernetes", sprintf("%v.999", [max]))
+}
+
 # is_spec_property_valid checks if the provided property is valid inside the installer spec.
 is_spec_property_valid(prop) {
 	valid_spec_properties[_] == prop

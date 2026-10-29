@@ -47,6 +47,19 @@ add_ons_versions_endpoint = url {
         url := sprintf("%v/installer", [api_base_url])
 }
 
+# rook_tested_kubernetes_versions holds the kubernetes versions each rook minor is tested with
+# upstream (rook prerequisites docs). rook versions before 1.12 do not document an upper bound.
+rook_tested_kubernetes_versions = [
+	{"rook": "1.12", "min": "1.22", "max": "1.28"},
+	{"rook": "1.13", "min": "1.23", "max": "1.29"},
+	{"rook": "1.14", "min": "1.25", "max": "1.30"},
+	{"rook": "1.15", "min": "1.26", "max": "1.31"},
+	{"rook": "1.16", "min": "1.27", "max": "1.32"},
+	{"rook": "1.17", "min": "1.28", "max": "1.33"},
+	{"rook": "1.18", "min": "1.29", "max": "1.34"},
+	{"rook": "1.19", "min": "1.30", "max": "1.35"},
+]
+
 # remote_versions fetches the list of add-on versions from kurl.sh/installer endpoint.
 remote_versions = response {
 	http.send(
