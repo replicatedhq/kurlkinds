@@ -15,7 +15,7 @@ test: fmt vet envtest
 .PHONY: envtest
 envtest: $(ENVTEST) ## Download envtest-setup locally if necessary.
 $(ENVTEST): $(LOCALBIN)
-	test -s $(LOCALBIN)/setup-envtest || GOBIN=$(LOCALBIN) go install sigs.k8s.io/controller-runtime/tools/setup-envtest@latest
+	test -s $(LOCALBIN)/setup-envtest || GOBIN=$(LOCALBIN) go install sigs.k8s.io/controller-runtime/tools/setup-envtest@v0.0.0-20250308055145-5fe7bb3edc86
 
 ## Location to install dependencies to
 LOCALBIN ?= $(shell pwd)/bin
@@ -80,15 +80,15 @@ schemas: fmt generate
 
 .PHONY: update-controller-gen
 update-controller-gen:
-	go install sigs.k8s.io/controller-tools/cmd/controller-gen@latest
+	go install sigs.k8s.io/controller-tools/cmd/controller-gen@v0.14.0
 
 .PHONY: update-client-gen
 update-client-gen:
-	go install k8s.io/code-generator/cmd/client-gen@latest
+	go install k8s.io/code-generator/cmd/client-gen@v0.28.4
 
 .PHONY: update-deepcopy-gen
 update-deepcopy-gen:
-	go install k8s.io/code-generator/cmd/deepcopy-gen@latest
+	go install k8s.io/code-generator/cmd/deepcopy-gen@v0.28.4
 
 pkg/lint/tests/versions.json:
 	curl -sSL https://k8s.kurl.sh/installer | jq '.' > pkg/lint/tests/versions.json
