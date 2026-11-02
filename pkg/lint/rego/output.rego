@@ -807,21 +807,17 @@ lint[output] {
 	}
 }
 
-# verifies containerd 1.x is not used with kubernetes 1.36+. upstream kubernetes support for
-# containerd 1.x ends at 1.35 and kurl's containerd add-on requires 2.x for kubernetes 1.36+. like
-# kURL-api, specs that pin kurl.installerVersion are only checked from kubernetes 1.37, as no kurl
-# release has the 1.36 check yet.
+# verifies containerd 1.x is not used with kubernetes 1.37+, kurl's containerd add-on requires 2.x.
 lint[output] {
-	is_addon_version_greater_than_or_equal("kubernetes", containerd_2_kubernetes_floor)
+	is_addon_version_greater_than_or_equal("kubernetes", "1.37.0")
 	is_addon_version_lower_than("containerd", "2.0.0")
 	output := {
 		"type": "incompatibility",
 		"severity": "error",
-		"message": "Containerd versions < 2.0.0 are not compatible with Kubernetes 1.36+"
+		"message": "Containerd versions < 2.0.0 are not compatible with Kubernetes 1.37+"
 	}
 }
 
-# verifies contour 1.29.0 and later are not used with kubernetes versions < 1.21.
 lint[output] {
 	is_addon_version_lower_than("kubernetes", "1.21.0")
 	is_addon_version_greater_than_or_equal("contour", "1.29.0")

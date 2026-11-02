@@ -202,11 +202,6 @@ weave_containerd_floor = "1.6.0" {
 	rule_applies("v2022.09.08-0")
 } else = "1.6.4"
 
-# the kubernetes version from which containerd 2.x is required, see the containerd rule.
-containerd_2_kubernetes_floor = "1.36.0" {
-	rule_applies("")
-} else = "1.37.0"
-
 # kurl_release_number turns a kurl release name such as "v2026.06.22-0", which is not valid
 # semver, into a number that sorts like the release.
 kurl_release_number(release) = number {

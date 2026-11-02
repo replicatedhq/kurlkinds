@@ -13,6 +13,6 @@ customPatch:
     path: /spec/containerd/version
     value: 2.3.6
 output:
-  - message: Containerd versions < 2.0.0 are not compatible with Kubernetes 1.36+
+  - message: Containerd versions < 2.0.0 are not compatible with Kubernetes 1.37+
     type: incompatibility
     severity: error

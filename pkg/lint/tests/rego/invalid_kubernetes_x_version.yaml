@@ -7,7 +7,7 @@ installer:
     weave:
       version: latest
 output:
-  - message: Containerd versions < 2.0.0 are not compatible with Kubernetes 1.36+
+  - message: Containerd versions < 2.0.0 are not compatible with Kubernetes 1.37+
     type: incompatibility
     severity: error
   - message: Unknown kubernetes add-on version 99.99.x
