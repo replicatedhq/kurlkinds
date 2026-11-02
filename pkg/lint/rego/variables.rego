@@ -104,5 +104,23 @@ default known_versions = { addon_name: { "versions": versions, "latest": latest 
 	some addon_name
 	allversions := remote_versions.body[addon_name]
 	versions := { version | version := allversions[_]; version != "latest" }
-	latest = find_latest_version(allversions)
+	latest = latest_version(addon_name, allversions, versions)
+}
+
+# latest_version returns the version "latest" resolves to. the kubernetes versions list is not
+# ordered newest first, so like kURL-api "latest" kubernetes is the greatest version. for other
+# add-ons it is the version listed after "latest".
+latest_version(addon_name, allversions, versions) = version {
+	addon_name == "kubernetes"
+	version := versions[_]
+	semver.is_valid(version)
+	not greater_version_exists(version, versions)
+} else = version {
+	version := find_latest_version(allversions)
+}
+
+greater_version_exists(version, versions) {
+	other := versions[_]
+	semver.is_valid(other)
+	semver.compare(other, version) > 0
 }
