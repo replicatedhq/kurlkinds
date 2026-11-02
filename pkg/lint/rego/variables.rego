@@ -48,16 +48,29 @@ add_ons_versions_endpoint = url {
 }
 
 # rook_tested_kubernetes_versions holds the kubernetes versions each rook minor is tested with
-# upstream (rook prerequisites docs). rook versions before 1.12 do not document an upper bound.
-rook_tested_kubernetes_versions = [
-	{"rook": "1.12", "min": "1.22", "max": "1.28"},
-	{"rook": "1.13", "min": "1.23", "max": "1.29"},
-	{"rook": "1.14", "min": "1.25", "max": "1.30"},
-	{"rook": "1.15", "min": "1.26", "max": "1.31"},
-	{"rook": "1.16", "min": "1.27", "max": "1.32"},
-	{"rook": "1.17", "min": "1.28", "max": "1.33"},
-	{"rook": "1.18", "min": "1.29", "max": "1.34"},
-	{"rook": "1.19", "min": "1.30", "max": "1.35"},
+# upstream (rook prerequisites docs), indexed by rook minor. rook versions before 1.12 do not
+# document an upper bound. kurl requires a newer kubernetes than upstream for some of these, see
+# rook_kubernetes_minimums.
+rook_tested_kubernetes_versions = {
+	"1.12": {"min": "1.22", "max": "1.28"},
+	"1.13": {"min": "1.23", "max": "1.29"},
+	"1.14": {"min": "1.25", "max": "1.30"},
+	"1.15": {"min": "1.26", "max": "1.31"},
+	"1.16": {"min": "1.27", "max": "1.32"},
+	"1.17": {"min": "1.28", "max": "1.33"},
+	"1.18": {"min": "1.29", "max": "1.34"},
+	"1.19": {"min": "1.30", "max": "1.35"},
+}
+
+# rook_kubernetes_minimums holds the minimum kubernetes version kurl requires for each rook
+# version, sorted by rook version. rook 1.18 and later are gated to kubernetes 1.31 by kurl's rook
+# add-on. keep in sync with kURL-api addonKubernetesRules.
+rook_kubernetes_minimums = [
+	{"rook": "1.9.12", "kubernetes": "1.17"},
+	{"rook": "1.10.0", "kubernetes": "1.19"},
+	{"rook": "1.12.0", "kubernetes": "1.22"},
+	{"rook": "1.13.0", "kubernetes": "1.23"},
+	{"rook": "1.18.0", "kubernetes": "1.31"},
 ]
 
 # remote_versions fetches the list of add-on versions from kurl.sh/installer endpoint.

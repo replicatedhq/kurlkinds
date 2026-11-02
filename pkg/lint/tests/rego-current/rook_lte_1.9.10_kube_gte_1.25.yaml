@@ -1,0 +1,19 @@
+installer:
+  spec:
+    kubernetes:
+      version: 1.25.14
+    containerd:
+      version: 1.7.29
+    flannel:
+      version: latest
+    rook:
+      version: 1.9.10
+      s3Override: "https://path.to.the/version.tar.gz"
+output:
+  - message: Rook versions <= 1.9.10 are not compatible with Kubernetes 1.25+
+    type: incompatibility
+    severity: error
+    patch:
+      - op: replace
+        path: /spec/rook/version
+        value: 1.14.12

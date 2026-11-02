@@ -1,0 +1,18 @@
+installer:
+  spec:
+    kubernetes:
+      version: 1.25.16
+      s3Override: "https://path.to.the/version.tar.gz"
+    containerd:
+      version: 2.0.5
+      s3Override: "https://path.to.the/version.tar.gz"
+    weave:
+      version: latest
+customPatch:
+  - op: replace
+    path: /spec/containerd/version
+    value: 1.7.29
+output:
+  - message: Containerd versions >= 2.0.0 require Kubernetes 1.26+
+    type: incompatibility
+    severity: error

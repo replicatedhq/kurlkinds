@@ -13,6 +13,6 @@ customPatch:
     path: /spec/rook/version
     value: 1.10.8
 output:
-  - message: Rook versions <= 1.4.9 are not compatible with Kubernetes versions 1.22+
+  - message: Rook versions < 1.6.7 are not compatible with Kubernetes versions 1.22+
     type: incompatibility
     severity: error

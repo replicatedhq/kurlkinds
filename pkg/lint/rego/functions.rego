@@ -79,13 +79,106 @@ is_addon_version_greater_than(addon, version) {
 	semver.compare(no_version_x, version) > 0
 }
 
-# evaluates to true if the kubernetes version is lower than min.0 or greater than max.x, where
-# min and max are minor versions such as "1.22".
-kubernetes_outside_range(min, max) {
-	is_addon_version_lower_than("kubernetes", sprintf("%v.0", [min]))
+# returns the minor version ("1.22") of the given add-on, with "latest" resolved.
+addon_minor_version(addon) = minor {
+	no_latest := replace(installer.spec[addon].version, "latest", known_versions[addon].latest)
+	minor := minor_version(no_latest)
 }
-kubernetes_outside_range(min, max) {
-	is_addon_version_greater_than("kubernetes", sprintf("%v.999", [max]))
+
+# returns the minor version ("1.22") of the given semantic version.
+minor_version(version) = minor {
+	parts := split(version, ".")
+	minor := sprintf("%v.%v", [parts[0], parts[1]])
+}
+
+# evaluates to true if the kubernetes version is within the given minor versions (inclusive).
+kubernetes_within(min, max) {
+	not is_addon_version_lower_than("kubernetes", sprintf("%v.0", [min]))
+	not is_addon_version_greater_than("kubernetes", sprintf("%v.999", [max]))
+}
+
+# returns the strictest entry of rook_kubernetes_minimums that applies to the selected rook
+# version. the table is sorted by rook version so the last match is the strictest.
+rook_kubernetes_minimum = minimum {
+	some i
+	minimum := rook_kubernetes_minimums[i]
+	is_addon_version_greater_than_or_equal("rook", minimum.rook)
+	not rook_kubernetes_minimum_after(i)
+}
+
+rook_kubernetes_minimum_after(i) {
+	some j
+	rook_kubernetes_minimums[j]
+	j > i
+	is_addon_version_greater_than_or_equal("rook", rook_kubernetes_minimums[j].rook)
+}
+
+# evaluates to true if the selected kubernetes is older than kurl requires for the selected rook.
+rook_below_kubernetes_minimum {
+	is_addon_version_lower_than("kubernetes", sprintf("%v.0", [rook_kubernetes_minimum.kubernetes]))
+}
+
+# evaluates to true if kurl allows the given rook version with the selected kubernetes and rook
+# tests that pair upstream.
+rook_version_fits_kubernetes(version) {
+	range := rook_tested_kubernetes_versions[minor_version(version)]
+	kubernetes_within(range.min, range.max)
+	not rook_version_below_kubernetes_minimum(version)
+}
+
+rook_version_below_kubernetes_minimum(version) {
+	minimum := rook_kubernetes_minimums[_]
+	semver.compare(version, minimum.rook) >= 0
+	is_addon_version_lower_than("kubernetes", sprintf("%v.0", [minimum.kubernetes]))
+}
+
+# returns the newest known rook version that fits the selected kubernetes, see
+# rook_version_fits_kubernetes. falls back to the newest rook version.
+newest_rook_for_kubernetes = newest {
+	candidates := [v | v := known_versions.rook.versions[_]; semver.is_valid(v); rook_version_fits_kubernetes(v)]
+	count(candidates) > 0
+	sorted := sort_versions(candidates)
+	newest := sorted[count(sorted)-1]
+} else = newest {
+	newest := newest_add_on_version("rook")
+}
+
+# returns the newest known kubernetes version kurl allows with the selected rook version and that
+# rook tests upstream. falls back to the newest kubernetes version.
+newest_kubernetes_for_rook = newest {
+	range := rook_tested_kubernetes_versions[addon_minor_version("rook")]
+	floor := rook_kubernetes_floor(range.min)
+	candidates := [v |
+		v := known_versions.kubernetes.versions[_]
+		semver.is_valid(v)
+		semver.compare(v, sprintf("%v.0", [floor])) >= 0
+		semver.compare(v, sprintf("%v.999", [range.max])) <= 0
+	]
+	count(candidates) > 0
+	sorted := sort_versions(candidates)
+	newest := sorted[count(sorted)-1]
+} else = newest {
+	newest := newest_add_on_version("kubernetes")
+}
+
+# returns the greater of the given minor version and the kubernetes minimum kurl requires for the
+# selected rook.
+rook_kubernetes_floor(min) = floor {
+	required := rook_kubernetes_minimum.kubernetes
+	semver.compare(sprintf("%v.0", [required]), sprintf("%v.0", [min])) > 0
+	floor := required
+} else = floor {
+	floor := min
+}
+
+# evaluates to true unless the spec pins kurl.installerVersion. kURL-api skips its
+# addonKubernetesRules for pinned installers, so the rules mirroring that table do too.
+addon_kubernetes_rules_apply {
+	not pins_installer_version
+}
+
+pins_installer_version {
+	installer.spec.kurl.installerVersion != ""
 }
 
 # is_spec_property_valid checks if the provided property is valid inside the installer spec.
