@@ -216,14 +216,26 @@ lint[output] {
 }
 
 # returns an error if selected kubernetes is >= 1.22 and rook is less than 1.6.7. rook moved its
-# CSIDriver to storage.k8s.io/v1 in 1.6.7.
+# CSIDriver to storage.k8s.io/v1 in 1.6.7. specs that pin kurl.installerVersion only get the
+# older rook <= 1.4.9 rule, as in kURL-api.
 lint[output] {
+	rule_applies("")
 	is_addon_version_greater_than_or_equal("kubernetes", "1.22.0")
 	is_addon_version_lower_than("rook", "1.6.7")
 	output := {
 		"type": "incompatibility",
 		"severity": "error",
 		"message": "Rook versions < 1.6.7 are not compatible with Kubernetes versions 1.22+"
+	}
+}
+lint[output] {
+	not rule_applies("")
+	is_addon_version_greater_than_or_equal("kubernetes", "1.22.0")
+	is_addon_version_lower_than("rook", "1.5.0")
+	output := {
+		"type": "incompatibility",
+		"severity": "error",
+		"message": "Rook versions <= 1.4.9 are not compatible with Kubernetes versions 1.22+"
 	}
 }
 
@@ -325,10 +337,11 @@ lint[output] {
 }
 
 # returns an error if weave has been selected with containerd in versions between 1.6.0 and
-# 1.6.4 as this pair is incompatible.
+# 1.6.4 as this pair is incompatible. like kURL-api, specs pinned to a kurl release before the
+# containerd and weave host preflight only reject 1.6.4.
 lint[output] {
 	installer.spec.weave.version
-	is_addon_version_greater_than_or_equal("containerd", "1.6.0")
+	is_addon_version_greater_than_or_equal("containerd", weave_containerd_floor)
 	is_addon_version_lower_than_or_equal("containerd", "1.6.4")
 	output := {
 		"type": "incompatibility",
@@ -509,14 +522,29 @@ lint[output] {
 	}
 }
 
-# verifies Contour 1.15.1 and earlier are not compatible with kubernetes versions >= 1.22+
+# verifies Contour 1.15.1 and earlier are not compatible with kubernetes versions >= 1.22+. specs
+# that pin kurl.installerVersion only get the older contour <= 1.7.0 rule, as in kURL-api.
 lint[output] {
+	rule_applies("")
 	is_addon_version_greater_than_or_equal("kubernetes", "1.22.0")
 	is_addon_version_lower_than_or_equal("contour", "1.15.1")
 	output := {
 		"type": "incompatibility",
 		"severity": "error",
 		"message": "Contour versions <= 1.15.1 are not compatible with Kubernetes 1.22+",
+		"patch": [
+			{ "op": "replace", "path": "/spec/contour/version", "value": newest_add_on_version("contour") }
+		]
+	}
+}
+lint[output] {
+	not rule_applies("")
+	is_addon_version_greater_than_or_equal("kubernetes", "1.22.0")
+	is_addon_version_lower_than("contour", "1.7.1")
+	output := {
+		"type": "incompatibility",
+		"severity": "error",
+		"message": "Contour versions <= 1.7.0 are not compatible with Kubernetes 1.22+",
 		"patch": [
 			{ "op": "replace", "path": "/spec/contour/version", "value": newest_add_on_version("contour") }
 		]
@@ -555,8 +583,9 @@ lint[output] {
 	}
 }
 
-# verifies if object store is required
+# verifies if object store is required. kurl's kotsadm add-on fails without one.
 lint[output] {
+	rule_applies("v2021.12.17-0")
 	not installer.spec.minio.version
 	not installer.spec.rook.version
 	not installer.spec.openebs.version
@@ -571,6 +600,7 @@ lint[output] {
 
 # verifies if object store is required and if openebs is not nil then pacth minio
 lint[output] {
+	rule_applies("v2021.12.17-0")
 	not installer.spec.minio.version
 	not installer.spec.rook.version
 	installer.spec.kotsadm.version != ""
@@ -680,6 +710,7 @@ lint[output] {
 # generates an error if Rook and OpenEBS add-ons are both selected and either is older than
 # auto storage scaling requires. kurl checks this whenever both add-ons are present.
 lint[output] {
+	rule_applies("v2023.07.06-0")
 	installer.spec.rook.version != ""
 	installer.spec.openebs.version != ""
 	rook_or_openebs_below_storage_scaling_minimum
@@ -777,9 +808,11 @@ lint[output] {
 }
 
 # verifies containerd 1.x is not used with kubernetes 1.36+. upstream kubernetes support for
-# containerd 1.x ends at 1.35 and kurl's containerd add-on requires 2.x for kubernetes 1.36+.
+# containerd 1.x ends at 1.35 and kurl's containerd add-on requires 2.x for kubernetes 1.36+. like
+# kURL-api, specs that pin kurl.installerVersion are only checked from kubernetes 1.37, as no kurl
+# release has the 1.36 check yet.
 lint[output] {
-	is_addon_version_greater_than_or_equal("kubernetes", "1.36.0")
+	is_addon_version_greater_than_or_equal("kubernetes", containerd_2_kubernetes_floor)
 	is_addon_version_lower_than("containerd", "2.0.0")
 	output := {
 		"type": "incompatibility",
@@ -799,13 +832,13 @@ lint[output] {
 	}
 }
 
-# the rules below mirror kURL-api addonKubernetesRules, keep both in sync. like kURL-api, they
-# are skipped when the spec pins kurl.installerVersion.
+# the rules below mirror kURL-api addonKubernetesRules, keep both in sync, including their pinned
+# policy (see rule_applies).
 
 # verifies velero 1.16.2 and later are not used with kubernetes < 1.25, kurl's velero add-on
 # fails on this pair.
 lint[output] {
-	addon_kubernetes_rules_apply
+	rule_applies("v2025.08.26-0")
 	is_addon_version_lower_than("kubernetes", "1.25.0")
 	is_addon_version_greater_than_or_equal("velero", "1.16.2")
 	output := {
@@ -818,7 +851,7 @@ lint[output] {
 # verifies kots 1.105.1 and earlier are not used with kubernetes 1.29+. kubernetes 1.29 support
 # starts at kots 1.105.2.
 lint[output] {
-	addon_kubernetes_rules_apply
+	rule_applies("")
 	is_addon_version_greater_than_or_equal("kubernetes", "1.29.0")
 	is_addon_version_lower_than_or_equal("kotsadm", "1.105.1")
 	output := {
@@ -830,7 +863,7 @@ lint[output] {
 
 # verifies containerd 2.x is not used with kubernetes < 1.26, containerd 2.x only supports CRI v1.
 lint[output] {
-	addon_kubernetes_rules_apply
+	rule_applies("")
 	is_addon_version_lower_than("kubernetes", "1.26.0")
 	is_addon_version_greater_than_or_equal("containerd", "2.0.0")
 	output := {
@@ -843,7 +876,7 @@ lint[output] {
 # verifies the aws add-on is not used with kubernetes 1.27+, the in-tree aws cloud provider was
 # removed in kubernetes 1.27.
 lint[output] {
-	addon_kubernetes_rules_apply
+	rule_applies("")
 	installer.spec.aws.version != ""
 	is_addon_version_greater_than_or_equal("kubernetes", "1.27.0")
 	output := {
@@ -855,7 +888,7 @@ lint[output] {
 
 # verifies longhorn < 1.2.0 is not used with kubernetes 1.22+.
 lint[output] {
-	addon_kubernetes_rules_apply
+	rule_applies("")
 	is_addon_version_greater_than_or_equal("kubernetes", "1.22.0")
 	is_addon_version_lower_than("longhorn", "1.2.0")
 	output := {
@@ -867,7 +900,7 @@ lint[output] {
 
 # verifies longhorn 1.2.0 and later are not used with kubernetes < 1.18.
 lint[output] {
-	addon_kubernetes_rules_apply
+	rule_applies("")
 	is_addon_version_lower_than("kubernetes", "1.18.0")
 	is_addon_version_greater_than_or_equal("longhorn", "1.2.0")
 	output := {
@@ -879,7 +912,7 @@ lint[output] {
 
 # verifies contour 1.16.0 and later are not used with kubernetes < 1.19.
 lint[output] {
-	addon_kubernetes_rules_apply
+	rule_applies("")
 	is_addon_version_lower_than("kubernetes", "1.19.0")
 	is_addon_version_greater_than_or_equal("contour", "1.16.0")
 	output := {
@@ -891,7 +924,7 @@ lint[output] {
 
 # verifies cert-manager < 1.5.0 is not used with kubernetes 1.22+.
 lint[output] {
-	addon_kubernetes_rules_apply
+	rule_applies("")
 	is_addon_version_greater_than_or_equal("kubernetes", "1.22.0")
 	is_addon_version_lower_than("certManager", "1.5.0")
 	output := {
@@ -903,7 +936,7 @@ lint[output] {
 
 # verifies flannel is not used with kubernetes < 1.17.
 lint[output] {
-	addon_kubernetes_rules_apply
+	rule_applies("")
 	installer.spec.flannel.version != ""
 	is_addon_version_lower_than("kubernetes", "1.17.0")
 	output := {

@@ -102,15 +102,17 @@ kubernetes_within(min, max) {
 rook_kubernetes_minimum = minimum {
 	some i
 	minimum := rook_kubernetes_minimums[i]
+	rule_applies(minimum.pinned)
 	is_addon_version_greater_than_or_equal("rook", minimum.rook)
 	not rook_kubernetes_minimum_after(i)
 }
 
 rook_kubernetes_minimum_after(i) {
 	some j
-	rook_kubernetes_minimums[j]
+	later := rook_kubernetes_minimums[j]
 	j > i
-	is_addon_version_greater_than_or_equal("rook", rook_kubernetes_minimums[j].rook)
+	rule_applies(later.pinned)
+	is_addon_version_greater_than_or_equal("rook", later.rook)
 }
 
 # evaluates to true if the selected kubernetes is older than kurl requires for the selected rook.
@@ -128,6 +130,7 @@ rook_version_fits_kubernetes(version) {
 
 rook_version_below_kubernetes_minimum(version) {
 	minimum := rook_kubernetes_minimums[_]
+	rule_applies(minimum.pinned)
 	semver.compare(version, minimum.rook) >= 0
 	is_addon_version_lower_than("kubernetes", sprintf("%v.0", [minimum.kubernetes]))
 }
@@ -171,14 +174,46 @@ rook_kubernetes_floor(min) = floor {
 	floor := min
 }
 
-# evaluates to true unless the spec pins kurl.installerVersion. kURL-api skips its
-# addonKubernetesRules for pinned installers, so the rules mirroring that table do too.
-addon_kubernetes_rules_apply {
+# rule_applies evaluates to true if a rule with the given pinned policy applies to the spec. this
+# matches kURL-api's PinnedPolicy for specs that pin kurl.installerVersion:
+#   "always":       every pinned release.
+#   a kurl release: pinned releases from that one on, the first release whose scripts reject the
+#                   spec (e.g. "v2026.06.22-0").
+#   "":             unpinned specs only.
+# unpinned specs get every rule. a pinned release that does not parse only gets "always" rules.
+rule_applies(policy) {
 	not pins_installer_version
+}
+rule_applies(policy) {
+	policy == "always"
+}
+rule_applies(policy) {
+	policy != "always"
+	policy != ""
+	kurl_release_number(installer.spec.kurl.installerVersion) >= kurl_release_number(policy)
 }
 
 pins_installer_version {
 	installer.spec.kurl.installerVersion != ""
+}
+
+# the lowest containerd version rejected with weave, see the weave rule.
+weave_containerd_floor = "1.6.0" {
+	rule_applies("v2022.09.08-0")
+} else = "1.6.4"
+
+# the kubernetes version from which containerd 2.x is required, see the containerd rule.
+containerd_2_kubernetes_floor = "1.36.0" {
+	rule_applies("")
+} else = "1.37.0"
+
+# kurl_release_number turns a kurl release name such as "v2026.06.22-0", which is not valid
+# semver, into a number that sorts like the release.
+kurl_release_number(release) = number {
+	match := regex.find_all_string_submatch_n(`^v?(\d{4})\.(\d{2})\.(\d{2})-(\d+)$`, release, 1)
+	count(match) == 1
+	parts := match[0]
+	number := ((to_number(parts[1]) * 10000 + to_number(parts[2]) * 100 + to_number(parts[3])) * 10000) + to_number(parts[4])
 }
 
 # is_spec_property_valid checks if the provided property is valid inside the installer spec.

@@ -1,0 +1,18 @@
+installer:
+  spec:
+    kurl:
+      installerVersion: v2023.07.05-0
+    kubernetes:
+      version: 1.25.x
+    containerd:
+      version: latest
+    flannel:
+      version: latest
+    openebs:
+      version: "3.7.0"
+      isLocalPVEnabled: true
+      localPVStorageClassName: "local"
+    rook:
+      version: "1.11.6"
+      s3Override: "https://path.to.the/version.tar.gz"
+output: []

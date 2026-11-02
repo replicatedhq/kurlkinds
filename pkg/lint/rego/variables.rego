@@ -64,13 +64,14 @@ rook_tested_kubernetes_versions = {
 
 # rook_kubernetes_minimums holds the minimum kubernetes version kurl requires for each rook
 # version, sorted by rook version. rook 1.18 and later are gated to kubernetes 1.31 by kurl's rook
-# add-on. keep in sync with kURL-api addonKubernetesRules.
+# add-on. "pinned" is the pinned policy of each entry, see rule_applies. keep in sync with
+# kURL-api addonKubernetesRules.
 rook_kubernetes_minimums = [
-	{"rook": "1.9.12", "kubernetes": "1.17"},
-	{"rook": "1.10.0", "kubernetes": "1.19"},
-	{"rook": "1.12.0", "kubernetes": "1.22"},
-	{"rook": "1.13.0", "kubernetes": "1.23"},
-	{"rook": "1.18.0", "kubernetes": "1.31"},
+	{"rook": "1.9.12", "kubernetes": "1.17", "pinned": "v2022.10.13-0"},
+	{"rook": "1.10.0", "kubernetes": "1.19", "pinned": ""},
+	{"rook": "1.12.0", "kubernetes": "1.22", "pinned": "always"},
+	{"rook": "1.13.0", "kubernetes": "1.23", "pinned": ""},
+	{"rook": "1.18.0", "kubernetes": "1.31", "pinned": "v2026.06.22-0"},
 ]
 
 # remote_versions fetches the list of add-on versions from kurl.sh/installer endpoint.
