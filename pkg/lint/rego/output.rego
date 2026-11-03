@@ -616,6 +616,39 @@ lint[output] {
 	}
 }
 
+# verifies that an airgap spec does not set a license url. kurl's prompt_license fails on airgap
+# installs. this only catches specs that set kurl.airgap; an airgap bundle installed from a spec
+# without it cannot be known when the spec is linted.
+lint[output] {
+	rule_applies("v2021.08.16-0")
+	installer.spec.kurl.airgap == true
+	installer.spec.kurl.licenseURL != ""
+	output := {
+		"type": "misconfiguration",
+		"severity": "error",
+		"message": "kurl.licenseURL is not supported with airgap installs. Remove kurl.licenseURL or kurl.airgap.",
+		"patch": [
+			{ "op": "remove", "path": "/spec/kurl/licenseURL" }
+		]
+	}
+}
+
+# verifies that an airgap spec does not use the helm add-on. kurl's helm_load fails on airgap
+# installs when the helmfileSpec is not empty.
+lint[output] {
+	rule_applies("v2021.02.05-0")
+	installer.spec.kurl.airgap == true
+	installer.spec.helm.helmfileSpec != ""
+	output := {
+		"type": "misconfiguration",
+		"severity": "error",
+		"message": "The Helm add-on is not supported with airgap installs. Remove the Helm add-on or kurl.airgap.",
+		"patch": [
+			{ "op": "remove", "path": "/spec/helm" }
+		]
+	}
+}
+
 # warns if the registry has no object store or storage provisioner in the spec. kurl then stores
 # images on a pvc from the default storage class, which the cluster must provide.
 lint[output] {
