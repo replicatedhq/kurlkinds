@@ -1,0 +1,19 @@
+installer:
+  spec:
+    kubernetes:
+      version: 1.22.0
+      s3Override: "https://path.to.the/version.tar.gz"
+    containerd:
+      version: latest
+    weave:
+      version: latest
+    certManager:
+      version: 1.0.3
+customPatch:
+  - op: replace
+    path: /spec/certManager/version
+    value: 1.9.1
+output:
+  - message: Cert-manager versions < 1.5.0 are not compatible with Kubernetes 1.22+
+    type: incompatibility
+    severity: error

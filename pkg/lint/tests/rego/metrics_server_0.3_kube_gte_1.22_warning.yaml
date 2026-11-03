@@ -1,0 +1,18 @@
+installer:
+  spec:
+    kubernetes:
+      version: 1.22.x
+    containerd:
+      version: latest
+    weave:
+      version: latest
+    metricsServer:
+      version: 0.3.7
+customPatch:
+  - op: replace
+    path: /spec/metricsServer/version
+    value: 0.4.1
+output:
+  - message: Metrics Server versions < 0.4.0 are not supported upstream with Kubernetes 1.22+
+    type: incompatibility
+    severity: warning

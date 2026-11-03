@@ -1,0 +1,18 @@
+installer:
+  spec:
+    kubernetes:
+      version: latest
+    containerd:
+      version: latest
+    flannel:
+      version: latest
+    rook:
+      version: 1.19.7
+customPatch:
+  - op: replace
+    path: /spec/kubernetes/version
+    value: 1.35.9
+output:
+  - message: Rook 1.19.x is only tested upstream with Kubernetes 1.30 through 1.35
+    type: incompatibility
+    severity: warning

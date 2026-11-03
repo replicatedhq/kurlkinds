@@ -1,0 +1,18 @@
+installer:
+  spec:
+    kurl:
+      airgap: true
+      licenseURL: https://example.com/license.yaml
+    kubernetes:
+      version: latest
+    containerd:
+      version: latest
+    flannel:
+      version: latest
+output:
+  - message: "kurl.licenseURL is not supported with airgap installs. Remove kurl.licenseURL or kurl.airgap."
+    type: misconfiguration
+    severity: error
+    patch:
+      - op: remove
+        path: /spec/kurl/licenseURL

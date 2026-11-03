@@ -1,0 +1,12 @@
+installer:
+  spec:
+    kubernetes:
+      version: latest
+    containerd:
+      version: latest
+    flannel:
+      version: latest
+    helm:
+      helmfileSpec: |
+        repositories: []
+output: []

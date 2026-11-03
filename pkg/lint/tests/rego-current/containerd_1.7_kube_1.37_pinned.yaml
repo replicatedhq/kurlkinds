@@ -1,0 +1,18 @@
+installer:
+  spec:
+    kurl:
+      installerVersion: v2026.10.30-0
+    kubernetes:
+      version: 1.37.1
+    containerd:
+      version: 1.7.29
+    flannel:
+      version: latest
+customPatch:
+  - op: replace
+    path: /spec/containerd/version
+    value: 2.3.6
+output:
+  - message: Containerd versions < 2.0.0 are not compatible with Kubernetes 1.37+
+    type: incompatibility
+    severity: error

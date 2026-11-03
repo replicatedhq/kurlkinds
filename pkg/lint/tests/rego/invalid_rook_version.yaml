@@ -9,6 +9,13 @@ installer:
     rook:
       version: 100.0.0 # this version does not exit
 output:
+  - message: Rook versions >= 1.18.0 requires Kubernetes versions 1.31+
+    type: incompatibility
+    severity: error
+    patch:
+      - op: replace
+        path: /spec/kubernetes/version
+        value: 1.26.1
   - message: Unknown rook add-on version 100.0.0
     type: unknown-addon
     severity: error

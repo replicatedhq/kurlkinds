@@ -3,11 +3,11 @@
   "type": "object",
   "properties": {
     "apiVersion": {
-      "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+      "description": "APIVersion defines the versioned schema of this representation of an object.\nServers should convert recognized schemas to the latest internal value, and\nmay reject unrecognized values.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
       "type": "string"
     },
     "kind": {
-      "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "description": "Kind is a string value representing the REST resource this object represents.\nServers may infer this from the endpoint the client submits requests to.\nCannot be updated.\nIn CamelCase.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
       "type": "string"
     },
     "metadata": {
@@ -353,7 +353,7 @@
           }
         },
         "k3s": {
-          "description": "K3S is no longer supported (do not remove from spec for compatibility)",
+          "description": "K3S is no longer supported\n(do not remove from spec for compatibility)",
           "type": "object",
           "required": [
             "version"
@@ -504,11 +504,11 @@
               "type": "object",
               "properties": {
                 "apiVersion": {
-                  "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+                  "description": "APIVersion defines the versioned schema of this representation of an object.\nServers should convert recognized schemas to the latest internal value, and\nmay reject unrecognized values.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
                   "type": "string"
                 },
                 "kind": {
-                  "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+                  "description": "Kind is a string value representing the REST resource this object represents.\nServers may infer this from the endpoint the client submits requests to.\nCannot be updated.\nIn CamelCase.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
                   "type": "string"
                 },
                 "spec": {
@@ -2249,7 +2249,7 @@
                             }
                           },
                           "filesystemPerformance": {
-                            "description": "FilesystemPerformance benchmarks sequential write latency on a single file. The optional background IOPS feature attempts to mimic real-world conditions by running read and write workloads prior to and during benchmark execution.",
+                            "description": "FilesystemPerformance benchmarks sequential write latency on a single file.\nThe optional background IOPS feature attempts to mimic real-world conditions by running read and\nwrite workloads prior to and during benchmark execution.",
                             "type": "object",
                             "required": [
                               "backgroundIOPSWarmupSeconds",
@@ -2265,26 +2265,26 @@
                                 "type": "integer"
                               },
                               "backgroundReadIOPS": {
-                                "description": "The target read IOPS to run while benchmarking. This is a limit and there is no guarantee it will be reached. This is the total IOPS for all background read jobs.",
+                                "description": "The target read IOPS to run while benchmarking. This is a limit and there is no guarantee\nit will be reached. This is the total IOPS for all background read jobs.",
                                 "type": "integer"
                               },
                               "backgroundReadIOPSJobs": {
-                                "description": "Number of threads to use for background read IOPS. This should be set high enough to reach the target specified in BackgrounReadIOPS.",
+                                "description": "Number of threads to use for background read IOPS. This should be set high enough to reach\nthe target specified in BackgrounReadIOPS.",
                                 "type": "integer"
                               },
                               "backgroundWriteIOPS": {
-                                "description": "The target write IOPS to run while benchmarking. This is a limit and there is no guarantee it will be reached. This is the total IOPS for all background write jobs.",
+                                "description": "The target write IOPS to run while benchmarking. This is a limit and there is no guarantee\nit will be reached. This is the total IOPS for all background write jobs.",
                                 "type": "integer"
                               },
                               "backgroundWriteIOPSJobs": {
-                                "description": "Number of threads to use for background write IOPS. This should be set high enough to reach the target specified in BackgroundWriteIOPS. Example: If BackgroundWriteIOPS is 100 and write latency is 10ms then a single job would barely be able to reach 100 IOPS so this should be at least 2.",
+                                "description": "Number of threads to use for background write IOPS. This should be set high enough to reach\nthe target specified in BackgroundWriteIOPS.\nExample: If BackgroundWriteIOPS is 100 and write latency is 10ms then a single job would\nbarely be able to reach 100 IOPS so this should be at least 2.",
                                 "type": "integer"
                               },
                               "collectorName": {
                                 "type": "string"
                               },
                               "datasync": {
-                                "description": "Whether to call datasync on the file after each write. Skipped if Sync is also true. Does not apply to background IOPS task.",
+                                "description": "Whether to call datasync on the file after each write. Skipped if Sync is also true. Does not\napply to background IOPS task.",
                                 "type": "boolean"
                               },
                               "directory": {
@@ -2299,11 +2299,11 @@
                                 "type": "string"
                               },
                               "fileSize": {
-                                "description": "The size of the file used in the benchmark. The number of IO operations for the benchmark will be FileSize / OperationSizeBytes. Accepts valid Kubernetes resource units such as Mi.",
+                                "description": "The size of the file used in the benchmark. The number of IO operations for the benchmark\nwill be FileSize / OperationSizeBytes. Accepts valid Kubernetes resource units such as Mi.",
                                 "type": "string"
                               },
                               "operationSize": {
-                                "description": "The size of each write operation performed while benchmarking. This does not apply to the background IOPS feature if enabled, since those must be fixed at 4096.",
+                                "description": "The size of each write operation performed while benchmarking. This does not apply to the\nbackground IOPS feature if enabled, since those must be fixed at 4096.",
                                 "type": "integer",
                                 "format": "int64"
                               },
@@ -2364,7 +2364,7 @@
                                     "type": "boolean"
                                   },
                                   "timeout": {
-                                    "description": "Timeout is the time to wait for a server's response. Its a duration e.g 15s, 2h30m. Missing value or empty string or means no timeout.",
+                                    "description": "Timeout is the time to wait for a server's response. Its a duration e.g 15s, 2h30m.\nMissing value or empty string or means no timeout.",
                                     "type": "string"
                                   },
                                   "url": {
@@ -2391,7 +2391,7 @@
                                     "type": "boolean"
                                   },
                                   "timeout": {
-                                    "description": "Timeout is the time to wait for a server's response. Its a duration e.g 15s, 2h30m. Missing value or empty string or means no timeout.",
+                                    "description": "Timeout is the time to wait for a server's response. Its a duration e.g 15s, 2h30m.\nMissing value or empty string or means no timeout.",
                                     "type": "string"
                                   },
                                   "url": {
@@ -2418,7 +2418,7 @@
                                     "type": "boolean"
                                   },
                                   "timeout": {
-                                    "description": "Timeout is the time to wait for a server's response. Its a duration e.g 15s, 2h30m. Missing value or empty string or means no timeout.",
+                                    "description": "Timeout is the time to wait for a server's response. Its a duration e.g 15s, 2h30m.\nMissing value or empty string or means no timeout.",
                                     "type": "string"
                                   },
                                   "url": {
@@ -2870,7 +2870,7 @@
                             }
                           },
                           "filesystemPerformance": {
-                            "description": "RemoteFilesystemPerformance benchmarks sequential write latency on a single file. The optional background IOPS feature attempts to mimic real-world conditions by running read and write workloads prior to and during benchmark execution.",
+                            "description": "RemoteFilesystemPerformance benchmarks sequential write latency on a single file.\nThe optional background IOPS feature attempts to mimic real-world conditions by running read and\nwrite workloads prior to and during benchmark execution.",
                             "type": "object",
                             "required": [
                               "backgroundIOPSWarmupSeconds",
@@ -2886,26 +2886,26 @@
                                 "type": "integer"
                               },
                               "backgroundReadIOPS": {
-                                "description": "The target read IOPS to run while benchmarking. This is a limit and there is no guarantee it will be reached. This is the total IOPS for all background read jobs.",
+                                "description": "The target read IOPS to run while benchmarking. This is a limit and there is no guarantee\nit will be reached. This is the total IOPS for all background read jobs.",
                                 "type": "integer"
                               },
                               "backgroundReadIOPSJobs": {
-                                "description": "Number of threads to use for background read IOPS. This should be set high enough to reach the target specified in BackgrounReadIOPS.",
+                                "description": "Number of threads to use for background read IOPS. This should be set high enough to reach\nthe target specified in BackgrounReadIOPS.",
                                 "type": "integer"
                               },
                               "backgroundWriteIOPS": {
-                                "description": "The target write IOPS to run while benchmarking. This is a limit and there is no guarantee it will be reached. This is the total IOPS for all background write jobs.",
+                                "description": "The target write IOPS to run while benchmarking. This is a limit and there is no guarantee\nit will be reached. This is the total IOPS for all background write jobs.",
                                 "type": "integer"
                               },
                               "backgroundWriteIOPSJobs": {
-                                "description": "Number of threads to use for background write IOPS. This should be set high enough to reach the target specified in BackgroundWriteIOPS. Example: If BackgroundWriteIOPS is 100 and write latency is 10ms then a single job would barely be able to reach 100 IOPS so this should be at least 2.",
+                                "description": "Number of threads to use for background write IOPS. This should be set high enough to reach\nthe target specified in BackgroundWriteIOPS.\nExample: If BackgroundWriteIOPS is 100 and write latency is 10ms then a single job would\nbarely be able to reach 100 IOPS so this should be at least 2.",
                                 "type": "integer"
                               },
                               "collectorName": {
                                 "type": "string"
                               },
                               "datasync": {
-                                "description": "Whether to call datasync on the file after each write. Skipped if Sync is also true. Does not apply to background IOPS task.",
+                                "description": "Whether to call datasync on the file after each write. Skipped if Sync is also true. Does not\napply to background IOPS task.",
                                 "type": "boolean"
                               },
                               "directory": {
@@ -2920,11 +2920,11 @@
                                 "type": "string"
                               },
                               "fileSize": {
-                                "description": "The size of the file used in the benchmark. The number of IO operations for the benchmark will be FileSize / OperationSizeBytes. Accepts valid Kubernetes resource units such as Mi.",
+                                "description": "The size of the file used in the benchmark. The number of IO operations for the benchmark\nwill be FileSize / OperationSizeBytes. Accepts valid Kubernetes resource units such as Mi.",
                                 "type": "string"
                               },
                               "operationSize": {
-                                "description": "The size of each write operation performed while benchmarking. This does not apply to the background IOPS feature if enabled, since those must be fixed at 4096.",
+                                "description": "The size of each write operation performed while benchmarking. This does not apply to the\nbackground IOPS feature if enabled, since those must be fixed at 4096.",
                                 "type": "integer",
                                 "format": "int64"
                               },
@@ -2974,7 +2974,7 @@
                                     "type": "boolean"
                                   },
                                   "timeout": {
-                                    "description": "Timeout is the time to wait for a server's response. Its a duration e.g 15s, 2h30m. Missing value or empty string or means no timeout.",
+                                    "description": "Timeout is the time to wait for a server's response. Its a duration e.g 15s, 2h30m.\nMissing value or empty string or means no timeout.",
                                     "type": "string"
                                   },
                                   "url": {
@@ -3001,7 +3001,7 @@
                                     "type": "boolean"
                                   },
                                   "timeout": {
-                                    "description": "Timeout is the time to wait for a server's response. Its a duration e.g 15s, 2h30m. Missing value or empty string or means no timeout.",
+                                    "description": "Timeout is the time to wait for a server's response. Its a duration e.g 15s, 2h30m.\nMissing value or empty string or means no timeout.",
                                     "type": "string"
                                   },
                                   "url": {
@@ -3028,7 +3028,7 @@
                                     "type": "boolean"
                                   },
                                   "timeout": {
-                                    "description": "Timeout is the time to wait for a server's response. Its a duration e.g 15s, 2h30m. Missing value or empty string or means no timeout.",
+                                    "description": "Timeout is the time to wait for a server's response. Its a duration e.g 15s, 2h30m.\nMissing value or empty string or means no timeout.",
                                     "type": "string"
                                   },
                                   "url": {
@@ -3395,7 +3395,7 @@
           }
         },
         "rke2": {
-          "description": "RKE2 is no longer supported (do not remove from spec for compatibility)",
+          "description": "RKE2 is no longer supported\n(do not remove from spec for compatibility)",
           "type": "object",
           "required": [
             "version"
@@ -3558,7 +3558,7 @@
               "type": "boolean"
             },
             "noMasqLocal": {
-              "description": "NoMasqLocal if not present defaults to true, which will expose the original client IP address in the X-Forwarded-For header.",
+              "description": "NoMasqLocal if not present defaults to true, which will expose the original client IP address in the\nX-Forwarded-For header.",
               "type": "boolean"
             },
             "podCIDR": {

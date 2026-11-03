@@ -1,0 +1,12 @@
+installer:
+  spec:
+    kubernetes:
+      version: 1.20.x
+    containerd:
+      version: latest
+    weave:
+      version: latest
+    rook:
+      version: 1.1.1
+      s3Override: "https://path.to.the/version.tar.gz"
+output: []

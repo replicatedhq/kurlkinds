@@ -1,0 +1,20 @@
+installer:
+  spec:
+    kurl:
+      airgap: true
+    kubernetes:
+      version: latest
+    containerd:
+      version: latest
+    flannel:
+      version: latest
+    helm:
+      helmfileSpec: |
+        repositories: []
+output:
+  - message: "The Helm add-on is not supported with airgap installs. Remove the Helm add-on or kurl.airgap."
+    type: misconfiguration
+    severity: error
+    patch:
+      - op: remove
+        path: /spec/helm

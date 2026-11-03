@@ -223,6 +223,16 @@ func TestValidateWithInfoSeverity(t *testing.T) {
 }
 
 func TestValidate(t *testing.T) {
+	runValidateTests(t, "tests/rego", "tests/versions.json")
+}
+
+// TestValidateCurrentVersions runs the tests in tests/rego-current against a recent copy of the
+// kurl.sh/installer versions list, so "latest" and suggested patches resolve to current versions.
+func TestValidateCurrentVersions(t *testing.T) {
+	runValidateTests(t, "tests/rego-current", "tests/versions-current.json")
+}
+
+func runValidateTests(t *testing.T, testsDir, versionsFile string) {
 	type test struct {
 		Name        string
 		Installer   v1beta1.Installer        `yaml:"installer"`
@@ -230,14 +240,14 @@ func TestValidate(t *testing.T) {
 		Output      []Output                 `yaml:"output"`
 	}
 
-	entries, err := staticTests.ReadDir("tests/rego")
+	entries, err := staticTests.ReadDir(testsDir)
 	if err != nil {
 		t.Fatalf("unable to read test files: %s", err)
 	}
 
 	var tests []test
 	for _, entry := range entries {
-		fpath := path.Join("tests", "rego", entry.Name())
+		fpath := path.Join(testsDir, entry.Name())
 		data, err := staticTests.ReadFile(fpath)
 		if err != nil {
 			t.Fatalf("unable to read test file %q: %s", fpath, err)
@@ -252,7 +262,7 @@ func TestValidate(t *testing.T) {
 		tests = append(tests, onetest)
 	}
 
-	apires, err := staticTests.ReadFile("tests/versions.json")
+	apires, err := staticTests.ReadFile(versionsFile)
 	if err != nil {
 		t.Fatalf("unable to read mock webserver result: %s", err)
 	}

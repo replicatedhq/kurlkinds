@@ -79,6 +79,138 @@ is_addon_version_greater_than(addon, version) {
 	semver.compare(no_version_x, version) > 0
 }
 
+# returns the minor version ("1.22") of the given add-on, with "latest" resolved.
+addon_minor_version(addon) = minor {
+	no_latest := replace(installer.spec[addon].version, "latest", known_versions[addon].latest)
+	minor := minor_version(no_latest)
+}
+
+# returns the minor version ("1.22") of the given semantic version.
+minor_version(version) = minor {
+	parts := split(version, ".")
+	minor := sprintf("%v.%v", [parts[0], parts[1]])
+}
+
+# evaluates to true if the kubernetes version is within the given minor versions (inclusive).
+kubernetes_within(min, max) {
+	not is_addon_version_lower_than("kubernetes", sprintf("%v.0", [min]))
+	not is_addon_version_greater_than("kubernetes", sprintf("%v.999", [max]))
+}
+
+# returns the strictest entry of rook_kubernetes_minimums that applies to the selected rook
+# version. the table is sorted by rook version so the last match is the strictest.
+rook_kubernetes_minimum = minimum {
+	some i
+	minimum := rook_kubernetes_minimums[i]
+	rule_applies(minimum.pinned)
+	is_addon_version_greater_than_or_equal("rook", minimum.rook)
+	not rook_kubernetes_minimum_after(i)
+}
+
+rook_kubernetes_minimum_after(i) {
+	some j
+	later := rook_kubernetes_minimums[j]
+	j > i
+	rule_applies(later.pinned)
+	is_addon_version_greater_than_or_equal("rook", later.rook)
+}
+
+# evaluates to true if the selected kubernetes is older than kurl requires for the selected rook.
+rook_below_kubernetes_minimum {
+	is_addon_version_lower_than("kubernetes", sprintf("%v.0", [rook_kubernetes_minimum.kubernetes]))
+}
+
+# evaluates to true if kurl allows the given rook version with the selected kubernetes and rook
+# tests that pair upstream.
+rook_version_fits_kubernetes(version) {
+	range := rook_tested_kubernetes_versions[minor_version(version)]
+	kubernetes_within(range.min, range.max)
+	not rook_version_below_kubernetes_minimum(version)
+}
+
+rook_version_below_kubernetes_minimum(version) {
+	minimum := rook_kubernetes_minimums[_]
+	rule_applies(minimum.pinned)
+	semver.compare(version, minimum.rook) >= 0
+	is_addon_version_lower_than("kubernetes", sprintf("%v.0", [minimum.kubernetes]))
+}
+
+# returns the newest known rook version that fits the selected kubernetes, see
+# rook_version_fits_kubernetes. falls back to the newest rook version.
+newest_rook_for_kubernetes = newest {
+	candidates := [v | v := known_versions.rook.versions[_]; semver.is_valid(v); rook_version_fits_kubernetes(v)]
+	count(candidates) > 0
+	sorted := sort_versions(candidates)
+	newest := sorted[count(sorted)-1]
+} else = newest {
+	newest := newest_add_on_version("rook")
+}
+
+# returns the newest known kubernetes version kurl allows with the selected rook version and that
+# rook tests upstream. falls back to the newest kubernetes version.
+newest_kubernetes_for_rook = newest {
+	range := rook_tested_kubernetes_versions[addon_minor_version("rook")]
+	floor := rook_kubernetes_floor(range.min)
+	candidates := [v |
+		v := known_versions.kubernetes.versions[_]
+		semver.is_valid(v)
+		semver.compare(v, sprintf("%v.0", [floor])) >= 0
+		semver.compare(v, sprintf("%v.999", [range.max])) <= 0
+	]
+	count(candidates) > 0
+	sorted := sort_versions(candidates)
+	newest := sorted[count(sorted)-1]
+} else = newest {
+	newest := newest_add_on_version("kubernetes")
+}
+
+# returns the greater of the given minor version and the kubernetes minimum kurl requires for the
+# selected rook.
+rook_kubernetes_floor(min) = floor {
+	required := rook_kubernetes_minimum.kubernetes
+	semver.compare(sprintf("%v.0", [required]), sprintf("%v.0", [min])) > 0
+	floor := required
+} else = floor {
+	floor := min
+}
+
+# rule_applies evaluates to true if a rule with the given pinned policy applies to the spec. this
+# matches kURL-api's PinnedPolicy for specs that pin kurl.installerVersion:
+#   "always":       every pinned release.
+#   a kurl release: pinned releases from that one on, the first release whose scripts reject the
+#                   spec (e.g. "v2026.06.22-0").
+#   "":             unpinned specs only.
+# unpinned specs get every rule. a pinned release that does not parse only gets "always" rules.
+rule_applies(policy) {
+	not pins_installer_version
+}
+rule_applies(policy) {
+	policy == "always"
+}
+rule_applies(policy) {
+	policy != "always"
+	policy != ""
+	kurl_release_number(installer.spec.kurl.installerVersion) >= kurl_release_number(policy)
+}
+
+pins_installer_version {
+	installer.spec.kurl.installerVersion != ""
+}
+
+# the lowest containerd version rejected with weave, see the weave rule.
+weave_containerd_floor = "1.6.0" {
+	rule_applies("v2022.09.08-0")
+} else = "1.6.4"
+
+# kurl_release_number turns a kurl release name such as "v2026.06.22-0", which is not valid
+# semver, into a number that sorts like the release.
+kurl_release_number(release) = number {
+	match := regex.find_all_string_submatch_n(`^v?(\d{4})\.(\d{2})\.(\d{2})-(\d+)$`, release, 1)
+	count(match) == 1
+	parts := match[0]
+	number := ((to_number(parts[1]) * 10000 + to_number(parts[2]) * 100 + to_number(parts[3])) * 10000) + to_number(parts[4])
+}
+
 # is_spec_property_valid checks if the provided property is valid inside the installer spec.
 is_spec_property_valid(prop) {
 	valid_spec_properties[_] == prop

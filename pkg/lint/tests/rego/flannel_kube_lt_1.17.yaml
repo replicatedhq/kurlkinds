@@ -1,0 +1,17 @@
+installer:
+  spec:
+    kubernetes:
+      version: 1.16.15
+      s3Override: "https://path.to.the/version.tar.gz"
+    containerd:
+      version: latest
+    flannel:
+      version: latest
+customPatch:
+  - op: replace
+    path: /spec/kubernetes/version
+    value: 1.19.16
+output:
+  - message: Flannel requires Kubernetes 1.17+
+    type: incompatibility
+    severity: error

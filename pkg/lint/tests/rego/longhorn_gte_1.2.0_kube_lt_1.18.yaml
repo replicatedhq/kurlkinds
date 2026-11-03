@@ -1,0 +1,19 @@
+installer:
+  spec:
+    kubernetes:
+      version: 1.17.17
+      s3Override: "https://path.to.the/version.tar.gz"
+    containerd:
+      version: latest
+    weave:
+      version: latest
+    longhorn:
+      version: 1.2.4
+customPatch:
+  - op: replace
+    path: /spec/longhorn/version
+    value: 1.1.2
+output:
+  - message: Longhorn versions >= 1.2.0 require Kubernetes 1.18+
+    type: incompatibility
+    severity: error

@@ -1,0 +1,13 @@
+installer:
+  spec:
+    kurl:
+      installerVersion: v2021.08.13-0
+      airgap: true
+      licenseURL: https://example.com/license.yaml
+    kubernetes:
+      version: 1.21.14
+    containerd:
+      version: 1.4.13
+    weave:
+      version: 2.6.5
+output: []

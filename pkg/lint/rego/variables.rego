@@ -47,6 +47,33 @@ add_ons_versions_endpoint = url {
         url := sprintf("%v/installer", [api_base_url])
 }
 
+# rook_tested_kubernetes_versions holds the kubernetes versions each rook minor is tested with
+# upstream (rook prerequisites docs), indexed by rook minor. rook versions before 1.12 do not
+# document an upper bound. kurl requires a newer kubernetes than upstream for some of these, see
+# rook_kubernetes_minimums.
+rook_tested_kubernetes_versions = {
+	"1.12": {"min": "1.22", "max": "1.28"},
+	"1.13": {"min": "1.23", "max": "1.29"},
+	"1.14": {"min": "1.25", "max": "1.30"},
+	"1.15": {"min": "1.26", "max": "1.31"},
+	"1.16": {"min": "1.27", "max": "1.32"},
+	"1.17": {"min": "1.28", "max": "1.33"},
+	"1.18": {"min": "1.29", "max": "1.34"},
+	"1.19": {"min": "1.30", "max": "1.35"},
+}
+
+# rook_kubernetes_minimums holds the minimum kubernetes version kurl requires for each rook
+# version, sorted by rook version. rook 1.18 and later are gated to kubernetes 1.31 by kurl's rook
+# add-on. "pinned" is the pinned policy of each entry, see rule_applies. keep in sync with
+# kURL-api addonKubernetesRules.
+rook_kubernetes_minimums = [
+	{"rook": "1.9.12", "kubernetes": "1.17", "pinned": "v2022.10.13-0"},
+	{"rook": "1.10.0", "kubernetes": "1.19", "pinned": ""},
+	{"rook": "1.12.0", "kubernetes": "1.22", "pinned": "always"},
+	{"rook": "1.13.0", "kubernetes": "1.23", "pinned": ""},
+	{"rook": "1.18.0", "kubernetes": "1.31", "pinned": "v2026.06.22-0"},
+]
+
 # remote_versions fetches the list of add-on versions from kurl.sh/installer endpoint.
 remote_versions = response {
 	http.send(
@@ -91,5 +118,23 @@ default known_versions = { addon_name: { "versions": versions, "latest": latest 
 	some addon_name
 	allversions := remote_versions.body[addon_name]
 	versions := { version | version := allversions[_]; version != "latest" }
-	latest = find_latest_version(allversions)
+	latest = latest_version(addon_name, allversions, versions)
+}
+
+# latest_version returns the version "latest" resolves to. the kubernetes versions list is not
+# ordered newest first, so like kURL-api "latest" kubernetes is the greatest version. for other
+# add-ons it is the version listed after "latest".
+latest_version(addon_name, allversions, versions) = version {
+	addon_name == "kubernetes"
+	version := versions[_]
+	semver.is_valid(version)
+	not greater_version_exists(version, versions)
+} else = version {
+	version := find_latest_version(allversions)
+}
+
+greater_version_exists(version, versions) {
+	other := versions[_]
+	semver.is_valid(other)
+	semver.compare(other, version) > 0
 }

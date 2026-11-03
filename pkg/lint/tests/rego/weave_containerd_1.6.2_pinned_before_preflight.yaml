@@ -1,0 +1,13 @@
+installer:
+  spec:
+    kurl:
+      installerVersion: v2022.09.07-0
+    kubernetes:
+      version: 1.23.17
+      s3Override: "https://path.to.the/version.tar.gz"
+    containerd:
+      version: 1.6.2
+      s3Override: "https://path.to.the/version.tar.gz"
+    weave:
+      version: latest
+output: []
