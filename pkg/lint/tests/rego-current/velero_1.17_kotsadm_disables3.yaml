@@ -1,0 +1,22 @@
+installer:
+  spec:
+    kubernetes:
+      version: latest
+    containerd:
+      version: latest
+    flannel:
+      version: latest
+    minio:
+      version: latest
+    kotsadm:
+      version: latest
+      disableS3: true
+    velero:
+      version: 1.17.2
+output:
+  - message: "Velero 1.17 and later cannot be used with kotsadm.disableS3. Velero 1.17 and later use Kopia, which requires an S3-compatible object store. Remove kotsadm.disableS3, or choose Velero 1.16.x or earlier."
+    type: incompatibility
+    severity: error
+    patch:
+      - op: remove
+        path: /spec/kotsadm/disableS3

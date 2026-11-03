@@ -616,6 +616,22 @@ lint[output] {
 	}
 }
 
+# verifies that velero 1.17 and later are not used with kotsadm.disableS3. velero 1.17 and later
+# use kopia, which needs an s3-compatible object store, so kurl's velero_pre_init_117_gate fails.
+lint[output] {
+	rule_applies("v2026.09.20-0")
+	is_addon_version_greater_than_or_equal("velero", "1.17.0")
+	installer.spec.kotsadm.disableS3 == true
+	output := {
+		"type": "incompatibility",
+		"severity": "error",
+		"message": "Velero 1.17 and later cannot be used with kotsadm.disableS3. Velero 1.17 and later use Kopia, which requires an S3-compatible object store. Remove kotsadm.disableS3, or choose Velero 1.16.x or earlier.",
+		"patch": [
+			{ "op": "remove", "path": "/spec/kotsadm/disableS3" }
+		]
+	}
+}
+
 # verifies that an airgap spec does not set a license url. kurl's prompt_license fails on airgap
 # installs. this only catches specs that set kurl.airgap; an airgap bundle installed from a spec
 # without it cannot be known when the spec is linted.

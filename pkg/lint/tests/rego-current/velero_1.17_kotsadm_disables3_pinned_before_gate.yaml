@@ -1,0 +1,18 @@
+installer:
+  spec:
+    kurl:
+      installerVersion: v2026.09.19-0
+    kubernetes:
+      version: latest
+    containerd:
+      version: latest
+    flannel:
+      version: latest
+    minio:
+      version: latest
+    kotsadm:
+      version: latest
+      disableS3: true
+    velero:
+      version: 1.17.2
+output: []
