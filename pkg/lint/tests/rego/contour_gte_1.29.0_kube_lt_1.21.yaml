@@ -1,0 +1,20 @@
+installer:
+  spec:
+    kubernetes:
+      version: 1.20.15
+      s3Override: "https://path.to.the/version.tar.gz"
+    containerd:
+      version: latest
+    weave:
+      version: latest
+    contour:
+      version: 1.29.2
+      s3Override: "https://path.to.the/version.tar.gz"
+customPatch:
+  - op: replace
+    path: /spec/contour/version
+    value: 1.24.1
+output:
+  - message: Contour versions >= 1.29.0 require Kubernetes 1.21+
+    type: incompatibility
+    severity: error

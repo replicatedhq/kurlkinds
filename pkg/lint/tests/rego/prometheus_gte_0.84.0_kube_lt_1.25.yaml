@@ -1,0 +1,20 @@
+installer:
+  spec:
+    kubernetes:
+      version: 1.24.17
+      s3Override: "https://path.to.the/version.tar.gz"
+    containerd:
+      version: latest
+    weave:
+      version: latest
+    prometheus:
+      version: 0.84.0-72.9.1
+      s3Override: "https://path.to.the/version.tar.gz"
+customPatch:
+  - op: replace
+    path: /spec/prometheus/version
+    value: 0.63.0-45.1.1
+output:
+  - message: Prometheus versions >= 0.84.0 are not supported upstream with Kubernetes versions < 1.25
+    type: incompatibility
+    severity: warning

@@ -9,9 +9,9 @@ installer:
     containerd:
       version: 1.6.18
 output:
-  - message: "The registry add-on requires an object store (MinIO, Rook) or a storage provisioner (OpenEBS, Longhorn)."
+  - message: "Without an object store (MinIO, Rook) or a storage provisioner (OpenEBS, Longhorn), the registry add-on needs a default StorageClass."
     type: misconfiguration
-    severity: error
+    severity: warning
     patch:
       - op: remove
         path: /spec/registry

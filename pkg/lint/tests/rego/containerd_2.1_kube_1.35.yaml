@@ -1,0 +1,11 @@
+installer:
+  spec:
+    kubernetes:
+      version: 1.35.0
+      s3Override: "https://path.to.the/version.tar.gz"
+    containerd:
+      version: 2.1.5
+      s3Override: "https://path.to.the/version.tar.gz"
+    weave:
+      version: latest
+output: []

@@ -1,0 +1,19 @@
+installer:
+  spec:
+    kubernetes:
+      version: 1.22.x
+    containerd:
+      version: latest
+    weave:
+      version: latest
+    openebs:
+      version: 4.0.0
+      s3Override: "https://path.to.the/version.tar.gz"
+customPatch:
+  - op: replace
+    path: /spec/openebs/version
+    value: 3.7.0
+output:
+  - message: OpenEBS versions >= 4.0.0 are not supported upstream with Kubernetes versions < 1.23
+    type: incompatibility
+    severity: warning

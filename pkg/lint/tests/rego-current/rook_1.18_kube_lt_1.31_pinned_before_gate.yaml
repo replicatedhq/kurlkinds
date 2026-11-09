@@ -1,0 +1,13 @@
+installer:
+  spec:
+    kurl:
+      installerVersion: v2026.06.21-0
+    kubernetes:
+      version: 1.30.14
+    containerd:
+      version: latest
+    flannel:
+      version: latest
+    rook:
+      version: 1.18.11
+output: []

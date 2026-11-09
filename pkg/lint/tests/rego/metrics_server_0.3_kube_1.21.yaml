@@ -1,0 +1,11 @@
+installer:
+  spec:
+    kubernetes:
+      version: 1.21.x
+    containerd:
+      version: latest
+    weave:
+      version: latest
+    metricsServer:
+      version: 0.3.7
+output: []

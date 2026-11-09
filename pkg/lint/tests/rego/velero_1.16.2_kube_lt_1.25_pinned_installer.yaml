@@ -1,0 +1,15 @@
+installer:
+  spec:
+    kurl:
+      installerVersion: v2023.01.03-0
+    kubernetes:
+      version: 1.24.17
+      s3Override: "https://path.to.the/version.tar.gz"
+    containerd:
+      version: latest
+    weave:
+      version: latest
+    velero:
+      version: 1.16.2
+      s3Override: "https://path.to.the/version.tar.gz"
+output: []

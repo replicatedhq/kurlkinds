@@ -1,0 +1,20 @@
+installer:
+  spec:
+    kubernetes:
+      version: 1.22.0
+      s3Override: "https://path.to.the/version.tar.gz"
+    containerd:
+      version: latest
+    weave:
+      version: latest
+    longhorn:
+      version: 1.1.2
+      s3Override: "https://path.to.the/version.tar.gz"
+customPatch:
+  - op: replace
+    path: /spec/longhorn/version
+    value: 1.2.4
+output:
+  - message: Longhorn versions < 1.2.0 are not compatible with Kubernetes 1.22+
+    type: incompatibility
+    severity: error
